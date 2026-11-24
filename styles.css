@@ -300,8 +300,9 @@ html {
    IA APLICADA
 ========================================= */
 .ia-section { position: relative; z-index: 10; background: #000; color: #fff; padding: 130px 5% 120px; display: flex; flex-direction: column; align-items: center; overflow: hidden; }
-.ia-section::before { content: ''; position: absolute; top: -20vh; left: 50%; transform: translateX(-50%); width: 90vw; height: 60vh; background: radial-gradient(ellipse at center, rgba(137,20,37,0.35) 0%, rgba(137,20,37,0) 70%); pointer-events: none; }
-.ia-header { max-width: 1100px; text-align: center; position: relative; z-index: 1; margin-bottom: 80px; }
+.ia-hero-bg { position: absolute; top: 0; left: 0; width: 100%; height: min(115vh, 1050px); background: url('img/ia-hero.jpg') center 70% / cover no-repeat; z-index: 0; pointer-events: none; }
+.ia-hero-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.35) 75%, #000 100%); }
+.ia-header { max-width: 1100px; text-align: center; position: relative; z-index: 1; margin-bottom: 42vh; }
 .ia-kicker { display: inline-block; font-size: 0.85rem; letter-spacing: 4px; text-transform: uppercase; color: #fff; border: 1px solid rgba(255,255,255,0.18); border-radius: 40px; padding: 8px 18px; margin-bottom: 30px; }
 .ia-kicker::before { content: ''; display: inline-block; width: 7px; height: 7px; background: var(--brand); margin-right: 10px; vertical-align: middle; border-radius: 1px; }
 .ia-lead { font-size: clamp(1.05rem, 1.6vw, 1.35rem); color: #bdbdbd; line-height: 1.6; max-width: 820px; margin: 36px auto 0; }
@@ -328,7 +329,8 @@ html {
 }
 @media (max-width: 768px) {
     .ia-section { padding: 90px 6% 80px; }
-    .ia-header { margin-bottom: 50px; }
+    .ia-header { margin-bottom: 30vh; }
+    .ia-hero-bg { height: 95vh; background-position: 62% 75%; }
     .ia-kicker { font-size: 0.7rem; letter-spacing: 2px; padding: 8px 14px; }
     .ia-grid, .ia-cases-grid, .ia-process { grid-template-columns: 1fr; }
     .ia-card, .ia-case { padding: 28px 24px; border-radius: 22px; }
