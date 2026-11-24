@@ -413,30 +413,59 @@
             </div>
         </section>
 
-        <!-- 6. ECOSISTEMA -->
-        <section id="ecosistema" class="sticky-sequence ecosistema-sequence">
+        <!-- 6. ECOSISTEMA (escenas fijas) -->
+        <section id="ecosistema" class="sticky-sequence ecosistema-sequence" data-scene="0">
             <div class="snap-grid">
                 <div class="snap-point"></div><div class="snap-point"></div>
+                <div class="snap-point"></div><div class="snap-point"></div>
+                <div class="snap-point"></div><div class="snap-point"></div>
+                <div class="snap-point"></div>
             </div>
             <div class="sticky-container" id="sticky-ecosistema">
                 <div class="seq-bg active" style="background-color: var(--bg-white);"></div>
-                <!-- Imagen final de Ecosistema ajustada a bordes con versión móvil -->
-<div class="seq-bg bg-picture">
-    <picture>
-        <!-- IMAGEN PARA CELULAR (Vertical) -->
-        <source media="(max-width: 768px)" srcset="img/ecosistemav.jpg">
-        
-        <!-- IMAGEN PARA ESCRITORIO (Horizontal) -->
-        <img src="img/ecosistema.jpg" alt="Ecosistema" class="responsive-seq-img">
-    </picture>
-</div>
+                <div class="seq-bg bg-picture eco-bg">
+                    <div class="eco-stage">
+                        <picture>
+                            <source media="(max-width: 768px)" srcset="img/ecosistemav.jpg">
+                            <img src="img/ecosistema.jpg" alt="Maqueta de infraestructura: peaje, estación de tren, puerto y túneles de fibra óptica conectados por un núcleo de datos" class="eco-img">
+                        </picture>
+                        <div class="eco-shade"></div>
+                    </div>
+                </div>
 
                 <div class="text-slider-mask">
                     <div class="text-slider-track" id="ecosistema-text-track">
                         <div class="text-slider-item">
                             <h2 class="edge-title text-dark">El Ecosistema en Acción</h2>
                         </div>
-                        <div class="text-slider-item"></div>
+                        <div class="text-slider-item eco-item eco-item-intro">
+                            <p class="seq-desc eco-desc eco-intro">Cuatro frentes de infraestructura, conectados por una capa de inteligencia artificial.</p>
+                        </div>
+                        <div class="text-slider-item eco-item">
+                            <p class="ally-tag">Alianza · SICE</p>
+                            <h3 class="edge-title text-light eco-title">Movilidad</h3>
+                            <p class="seq-desc eco-desc">Peaje inteligente con inteligencia artificial, control de tráfico y monitoreo de túneles en tiempo real.</p>
+                        </div>
+                        <div class="text-slider-item eco-item">
+                            <p class="ally-tag">Alianza · Vista Alegre</p>
+                            <h3 class="edge-title text-light eco-title">Suministro</h3>
+                            <p class="seq-desc eco-desc">Materiales y logística pesada para obra e infraestructura.</p>
+                        </div>
+                        <div class="text-slider-item eco-item">
+                            <p class="ally-tag">Alianza · NUCTECH</p>
+                            <h3 class="edge-title text-light eco-title">Seguridad</h3>
+                            <p class="seq-desc eco-desc">Inspección no intrusiva de mercancías y control de alto flujo de pasajeros.</p>
+                        </div>
+                        <div class="text-slider-item eco-item">
+                            <p class="ally-tag">Alianza · ENTELAR</p>
+                            <h3 class="edge-title text-light eco-title">Conectividad</h3>
+                            <p class="seq-desc eco-desc">Fibra óptica de alta velocidad y redes Flexi WAN para infraestructura crítica.</p>
+                        </div>
+                        <div class="text-slider-item eco-item">
+                            <p class="ally-tag">4ward</p>
+                            <h3 class="edge-title text-light eco-title">Capa de IA 4ward</h3>
+                            <p class="seq-desc eco-desc">Conecta los datos de los cuatro frentes.</p>
+                        </div>
                     </div>
                 </div>
             </div>

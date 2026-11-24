@@ -48,6 +48,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const ecosistemaTrack = document.getElementById('ecosistema-text-track');
     const ecosistemaBgs = sequenceSectionEcosistema ? sequenceSectionEcosistema.querySelectorAll('.seq-bg') : [];
 
+    // ECOSISTEMA: escenas fijas (título, maqueta, 4 alianzas y capa de IA)
+    const ecoSceneCount = sequenceSectionEcosistema ? sequenceSectionEcosistema.querySelectorAll('.snap-point').length : 0;
+    let ecoCurrent = -1;
+    function setEcoScene(index) {
+        if (index === ecoCurrent) return;
+        ecoCurrent = index;
+        sequenceSectionEcosistema.dataset.scene = index;
+        if (ecosistemaTrack) ecosistemaTrack.style.transform = `translateY(-${index * 100}vh)`;
+        ecosistemaBgs.forEach((bg, idx) => bg.classList.toggle('active', idx === Math.min(index, 1)));
+    }
+
     window.addEventListener('scroll', () => {
         const currentScrollY = window.scrollY;
         const windowHeight = window.innerHeight;
@@ -149,19 +160,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (sequenceSectionEcosistema) {
             const rect = sequenceSectionEcosistema.getBoundingClientRect();
-            if (rect.top <= 0 && rect.bottom >= windowHeight) {
-                const totalScroll = rect.height - windowHeight;
-                const progress = Math.abs(rect.top) / totalScroll;
-                
-                const segment = 1 / ecosistemaBgs.length; 
-                let activeIndex = Math.floor(progress / segment);
-                if (activeIndex >= ecosistemaBgs.length) activeIndex = ecosistemaBgs.length - 1;
-
-                if(ecosistemaTrack) ecosistemaTrack.style.transform = `translateY(-${activeIndex * 100}vh)`;
-                ecosistemaBgs.forEach((bg, idx) => {
-                    if (idx === activeIndex) bg.classList.add('active');
-                    else bg.classList.remove('active');
-                });
+            // Misma lógica que IA: una escena por pantalla, alineada con los puntos de anclaje
+            if (rect.top <= 2 && rect.bottom >= windowHeight - 2) {
+                let activeIndex = Math.round(Math.max(0, -rect.top) / windowHeight);
+                if (activeIndex >= ecoSceneCount) activeIndex = ecoSceneCount - 1;
+                setEcoScene(activeIndex);
             }
         }
     });
