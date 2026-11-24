@@ -385,25 +385,42 @@ html {
 }
 
 /* =========================================
-   ECOSISTEMA — escenas fijas con etiquetas en HTML
-   Escena 0: título sobre blanco · 1: maqueta limpia · 2: capa de IA (maqueta oscurecida). Las alianzas se presentan en Experiencia.
+   ECOSISTEMA — maqueta pentagonal con las alianzas señaladas en HTML
+   Escena 0: título sobre blanco · 1–4: SICE, Vista Alegre, NUCTECH, ENTELAR · 5: Capa de IA (cubo central).
+   Usa el mismo sistema de puntos que Operaciones (.op-spot, .op-shade, .op-cap); en escritorio la leyenda
+   va en una tarjeta en la esquina libre de la imagen, unida a su zona por una línea (como la imagen original).
 ========================================= */
-.ecosistema-sequence { height: 300vh; }
+.ecosistema-sequence { height: 600vh; }
 .eco-bg { background: #000; }
-.eco-stage { position: relative; width: min(100vw, 150vh); aspect-ratio: 3 / 2; }
+.eco-stage { position: relative; width: min(100vw, 150vh); aspect-ratio: 3 / 2; container-type: size; }
 .eco-stage picture, .eco-img { display: block; width: 100%; height: 100%; }
 .eco-img { object-fit: cover; }
-.eco-shade { position: absolute; inset: 0; pointer-events: none; background: rgba(0,0,0,0.62); opacity: 0; transition: opacity 0.8s ease; }
-.ecosistema-sequence:not([data-scene="0"]):not([data-scene="1"]) .eco-shade { opacity: 1; }
-.eco-title { font-size: clamp(2.6rem, 5.2vw, 6vw); }
-.eco-allies { margin-top: 34px; font-size: 0.85rem; letter-spacing: 4px; text-transform: uppercase; color: #fff; opacity: 0.85; text-align: center; }
-.eco-allies span { color: var(--brand); padding: 0 8px; }
+.ecosistema-sequence .op-name { font-size: clamp(0.62rem, 0.9cqw, 0.78rem); }
+.spot-extra .op-name, .spot-core .op-name { display: none; }
+.op-spot.spot-extra.is-seen { opacity: 0; }
+.ecosistema-sequence .eco-img { -webkit-mask-image: linear-gradient(to right, transparent 0, #000 5%, #000 95%, transparent 100%); mask-image: linear-gradient(to right, transparent 0, #000 5%, #000 95%, transparent 100%); }
+
+.eco-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; overflow: visible; }
+.eco-lines line { stroke: #fff; stroke-width: 1.5; opacity: 0; transition: opacity 0.5s ease 0.2s; }
+.eco-lines line.is-on { opacity: 0.85; }
+
+.eco-card { position: absolute; z-index: 4; width: 23cqw; padding: 1.6cqw 1.8cqw; background: rgba(8,8,8,0.84); border: 1px solid rgba(137,20,37,0.7); border-radius: 1.6cqw; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); opacity: 0; transform: translateY(10px); transition: opacity 0.6s ease 0.25s, transform 0.6s ease 0.25s; pointer-events: none; }
+.eco-card::before { content: ''; position: absolute; top: 0; left: 1.8cqw; width: 3.4cqw; height: 3px; background: var(--brand); }
+.eco-card.is-on { opacity: 1; transform: translateY(0); }
+.eco-card .op-num { font-size: clamp(0.6rem, 0.85cqw, 0.8rem); letter-spacing: 2px; }
+.eco-card h3 { font-size: clamp(1.4rem, 2.4cqw, 2.4rem); text-transform: uppercase; letter-spacing: -0.03em; line-height: 1; margin: 0.6cqw 0 0.8cqw; color: #fff; }
+.eco-card p { color: #d0d0d0; font-size: clamp(0.78rem, 1.08cqw, 1.05rem); line-height: 1.45; }
+.eco-card p strong { color: #fff; font-weight: 700; }
+.c-tl { left: 2.5cqw; top: 9cqh; }
+.c-tr { right: 2.5cqw; top: 9cqh; }
+.c-bl { left: 2.5cqw; bottom: 4cqh; }
+.c-br { right: 2.5cqw; bottom: 4cqh; }
 
 @media (max-width: 768px) {
     .eco-stage { width: min(100vw, 66.667vh); aspect-ratio: 2 / 3; }
-    .eco-title { font-size: 11vw; }
-    .eco-allies { font-size: 0.68rem; letter-spacing: 2px; margin-top: 26px; line-height: 2; }
-    .eco-allies span { padding: 0 4px; }
+    .eco-card, .eco-lines { display: none; }
+    .ecosistema-sequence .op-name { font-size: 0.58rem; }
+    .ecosistema-sequence .eco-img { -webkit-mask-image: none; mask-image: none; }
 }
 
 /* =========================================

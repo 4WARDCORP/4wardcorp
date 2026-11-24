@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const sequenceSectionOperaciones = document.getElementById('operaciones');
     const operacionesTrack = document.getElementById('operaciones-text-track');
-    const operacionesBgs = sequenceSectionOperaciones ? sequenceSectionOperaciones.querySelectorAll('.seq-bg') : [];
 
     const sequenceSectionPilares = document.getElementById('experiencia');
     const pilaresTrack = document.getElementById('pilares-text-track');
@@ -46,57 +45,85 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const sequenceSectionEcosistema = document.getElementById('ecosistema');
     const ecosistemaTrack = document.getElementById('ecosistema-text-track');
-    const ecosistemaBgs = sequenceSectionEcosistema ? sequenceSectionEcosistema.querySelectorAll('.seq-bg') : [];
 
-    // OPERACIONES: escenas fijas (título y 4 regiones señaladas en el mapa)
-    const opSceneCount = sequenceSectionOperaciones ? sequenceSectionOperaciones.querySelectorAll('.snap-point').length : 0;
-    const opStage = sequenceSectionOperaciones ? sequenceSectionOperaciones.querySelector('.op-stage') : null;
-    const opSpots = sequenceSectionOperaciones ? sequenceSectionOperaciones.querySelectorAll('.op-spot') : [];
-    let opCurrent = -1;
+    // ESCENAS CON PUNTOS SOBRE UNA IMAGEN (Operaciones y Ecosistema)
+    // Escena 0: título sobre blanco. Escenas 1+: se enciende el punto (y su tarjeta) de esa escena;
+    // los anteriores quedan con su nombre.
+    function makeSpotSequence(section, track) {
+        const stage = section.querySelector('.op-stage');
+        const bgs = section.querySelectorAll(':scope > .sticky-container > .seq-bg');
+        const spots = section.querySelectorAll('.op-spot');
+        const cards = section.querySelectorAll('.eco-card');
+        const svg = section.querySelector('.eco-lines');
+        const lines = svg ? svg.querySelectorAll('line') : [];
+        const count = section.querySelectorAll('.snap-point').length;
+        let current = -1;
 
-    function placeOpSpots() {
-        const vertical = window.innerWidth <= 768;
-        opSpots.forEach(spot => {
-            spot.style.left = (vertical ? spot.dataset.xv : spot.dataset.x) + '%';
-            spot.style.top = (vertical ? spot.dataset.yv : spot.dataset.y) + '%';
-        });
-        if (opCurrent >= 0) { const c = opCurrent; opCurrent = -1; setOpScene(c); }
-    }
-
-    function setOpScene(index) {
-        if (index === opCurrent) return;
-        opCurrent = index;
-        sequenceSectionOperaciones.dataset.scene = index;
-        if (operacionesTrack) operacionesTrack.style.transform = `translateY(-${index * 100}vh)`;
-        operacionesBgs.forEach((bg, idx) => bg.classList.toggle('active', idx === Math.min(index, 1)));
-        let focus = null;
-        opSpots.forEach(spot => {
-            const n = Number(spot.dataset.scene);
-            spot.classList.toggle('is-on', n === index);
-            spot.classList.toggle('is-seen', n < index);
-            if (n === index) focus = spot;
-        });
-        if (opStage && focus) {
-            opStage.style.setProperty('--fx', focus.style.left);
-            opStage.style.setProperty('--fy', focus.style.top);
+        function drawLines() {
+            if (!svg || !stage) return;
+            const sr = stage.getBoundingClientRect();
+            svg.setAttribute('viewBox', `0 0 ${sr.width} ${sr.height}`);
+            lines.forEach(line => {
+                const spot = section.querySelector('#spot-' + line.dataset.from);
+                const card = Array.from(cards).find(c => c.dataset.for.split(' ').includes(line.dataset.from));
+                if (!spot || !card) return;
+                const px = parseFloat(spot.style.left) / 100 * sr.width;
+                const py = parseFloat(spot.style.top) / 100 * sr.height;
+                const cl = card.offsetLeft, ct = card.offsetTop, cw = card.offsetWidth, ch = card.offsetHeight;
+                // Punto del borde de la tarjeta más cercano al punto de la maqueta
+                const cx = Math.min(Math.max(px, cl), cl + cw);
+                const cy = Math.min(Math.max(py, ct), ct + ch);
+                line.setAttribute('x1', cx); line.setAttribute('y1', cy);
+                line.setAttribute('x2', px); line.setAttribute('y2', py);
+            });
         }
+
+        function place() {
+            const vertical = window.innerWidth <= 768;
+            spots.forEach(spot => {
+                spot.style.left = (vertical ? spot.dataset.xv : spot.dataset.x) + '%';
+                spot.style.top = (vertical ? spot.dataset.yv : spot.dataset.y) + '%';
+            });
+            drawLines();
+            if (current >= 0) { const c = current; current = -1; setScene(c); }
+        }
+
+        function setScene(index) {
+            if (index === current) return;
+            current = index;
+            section.dataset.scene = index;
+            if (track) track.style.transform = `translateY(-${index * 100}vh)`;
+            bgs.forEach((bg, idx) => bg.classList.toggle('active', idx === Math.min(index, 1)));
+            let focus = null;
+            section.querySelectorAll('.op-spot, .eco-card, .eco-lines line').forEach(el => {
+                const n = Number(el.dataset.scene);
+                el.classList.toggle('is-on', n === index);
+                el.classList.toggle('is-seen', n < index);
+                if (n === index && !focus && el.classList.contains('op-spot')) focus = el;
+            });
+            if (stage && focus) {
+                stage.style.setProperty('--fx', focus.style.left);
+                stage.style.setProperty('--fy', focus.style.top);
+            }
+        }
+
+        place();
+        window.addEventListener('resize', place);
+        window.addEventListener('load', drawLines);
+
+        return function onScroll(windowHeight) {
+            const rect = section.getBoundingClientRect();
+            // Una escena por pantalla, alineada con los puntos de anclaje (tolerancia de 2px)
+            if (rect.top <= 2 && rect.bottom >= windowHeight - 2) {
+                let activeIndex = Math.round(Math.max(0, -rect.top) / windowHeight);
+                if (activeIndex >= count) activeIndex = count - 1;
+                setScene(activeIndex);
+            }
+        };
     }
 
-    if (sequenceSectionOperaciones) {
-        placeOpSpots();
-        window.addEventListener('resize', placeOpSpots);
-    }
-
-    // ECOSISTEMA: escenas fijas (título, maqueta y capa de IA)
-    const ecoSceneCount = sequenceSectionEcosistema ? sequenceSectionEcosistema.querySelectorAll('.snap-point').length : 0;
-    let ecoCurrent = -1;
-    function setEcoScene(index) {
-        if (index === ecoCurrent) return;
-        ecoCurrent = index;
-        sequenceSectionEcosistema.dataset.scene = index;
-        if (ecosistemaTrack) ecosistemaTrack.style.transform = `translateY(-${index * 100}vh)`;
-        ecosistemaBgs.forEach((bg, idx) => bg.classList.toggle('active', idx === Math.min(index, 1)));
-    }
+    const operacionesScroll = sequenceSectionOperaciones ? makeSpotSequence(sequenceSectionOperaciones, operacionesTrack) : null;
+    const ecosistemaScroll = sequenceSectionEcosistema ? makeSpotSequence(sequenceSectionEcosistema, ecosistemaTrack) : null;
 
     window.addEventListener('scroll', () => {
         const currentScrollY = window.scrollY;
@@ -125,15 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        if (sequenceSectionOperaciones) {
-            const rect = sequenceSectionOperaciones.getBoundingClientRect();
-            // Misma lógica que IA: una escena por pantalla, alineada con los puntos de anclaje
-            if (rect.top <= 2 && rect.bottom >= windowHeight - 2) {
-                let activeIndex = Math.round(Math.max(0, -rect.top) / windowHeight);
-                if (activeIndex >= opSceneCount) activeIndex = opSceneCount - 1;
-                setOpScene(activeIndex);
-            }
-        }
+        if (operacionesScroll) operacionesScroll(windowHeight);
 
         if (sequenceSectionIA) {
             const rect = sequenceSectionIA.getBoundingClientRect();
@@ -189,15 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        if (sequenceSectionEcosistema) {
-            const rect = sequenceSectionEcosistema.getBoundingClientRect();
-            // Misma lógica que IA: una escena por pantalla, alineada con los puntos de anclaje
-            if (rect.top <= 2 && rect.bottom >= windowHeight - 2) {
-                let activeIndex = Math.round(Math.max(0, -rect.top) / windowHeight);
-                if (activeIndex >= ecoSceneCount) activeIndex = ecoSceneCount - 1;
-                setEcoScene(activeIndex);
-            }
-        }
+        if (ecosistemaScroll) ecosistemaScroll(windowHeight);
     });
 
     /* ==================================================
