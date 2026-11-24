@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const operacionesTrack = document.getElementById('operaciones-text-track');
     const operacionesBgs = sequenceSectionOperaciones ? sequenceSectionOperaciones.querySelectorAll('.seq-bg') : [];
 
-    const sequenceSectionPilares = document.getElementById('pilares');
+    const sequenceSectionPilares = document.getElementById('experiencia');
     const pilaresTrack = document.getElementById('pilares-text-track');
     const pilaresBgs = sequenceSectionPilares ? sequenceSectionPilares.querySelectorAll('.pilares-mobile-view .seq-bg') : [];
     const pilaresDesktopCards = document.querySelectorAll('.pilares-desktop-view .quadrant-card');
