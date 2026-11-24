@@ -40,6 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const pilaresBgs = sequenceSectionPilares ? sequenceSectionPilares.querySelectorAll('.pilares-mobile-view .seq-bg') : [];
     const pilaresDesktopCards = document.querySelectorAll('.pilares-desktop-view .quadrant-card');
 
+    const sequenceSectionIA = document.getElementById('ia');
+    const iaTrack = document.getElementById('ia-text-track');
+    const iaBgs = sequenceSectionIA ? sequenceSectionIA.querySelectorAll('.seq-bg') : [];
+
     const sequenceSectionEcosistema = document.getElementById('ecosistema');
     const ecosistemaTrack = document.getElementById('ecosistema-text-track');
     const ecosistemaBgs = sequenceSectionEcosistema ? sequenceSectionEcosistema.querySelectorAll('.seq-bg') : [];
@@ -83,6 +87,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if(operacionesTrack) operacionesTrack.style.transform = `translateY(-${activeIndex * 100}vh)`;
                 operacionesBgs.forEach((bg, idx) => {
+                    if (idx === activeIndex) bg.classList.add('active');
+                    else bg.classList.remove('active');
+                });
+            }
+        }
+
+        if (sequenceSectionIA) {
+            const rect = sequenceSectionIA.getBoundingClientRect();
+            // Tolerancia de 2px: la sección empieza en una posición con decimales
+            if (rect.top <= 2 && rect.bottom >= windowHeight - 2) {
+                // Una escena por pantalla, alineada con los puntos de anclaje del scroll
+                let activeIndex = Math.round(Math.max(0, -rect.top) / windowHeight);
+                if (activeIndex >= iaBgs.length) activeIndex = iaBgs.length - 1;
+
+                if(iaTrack) iaTrack.style.transform = `translateY(-${activeIndex * 100}vh)`;
+                iaBgs.forEach((bg, idx) => {
                     if (idx === activeIndex) bg.classList.add('active');
                     else bg.classList.remove('active');
                 });
