@@ -112,22 +112,40 @@
             </div>
         </section>
 
-        <!-- 2. OPERACIONES (escenas fijas) -->
+        <!-- 2. OPERACIONES (escenas fijas: título y 4 regiones señaladas en el mapa) -->
         <section id="operaciones" class="sticky-sequence operaciones-sequence" data-scene="0">
             <div class="snap-grid">
                 <div class="snap-point"></div><div class="snap-point"></div>
                 <div class="snap-point"></div><div class="snap-point"></div>
-                <div class="snap-point"></div><div class="snap-point"></div>
+                <div class="snap-point"></div>
             </div>
             <div class="sticky-container" id="sticky-operaciones">
                 <div class="seq-bg active" style="background-color: var(--bg-white);"></div>
                 <div class="seq-bg bg-picture eco-bg">
-                    <div class="eco-stage">
+                    <div class="eco-stage op-stage">
                         <picture>
                             <source media="(max-width: 768px)" srcset="img/dominiov.jpg">
-                            <img src="img/dominio.jpg" alt="Mapa de la República Mexicana en cristal con cuatro puntos de luz conectados" class="eco-img">
+                            <img src="img/dominio.jpg" alt="Mapa de la República Mexicana en cristal con cuatro regiones señaladas: Norte, Bajío, Centro y Sur" class="eco-img">
                         </picture>
-                        <div class="eco-shade"></div>
+                        <div class="op-shade"></div>
+                        <div class="op-spots">
+                            <div class="op-spot op-side-r" data-scene="1" data-x="53.3" data-y="34.4" data-xv="53.9" data-yv="42.6">
+                                <span class="eco-dot"></span><span class="op-name">Norte</span>
+                                <div class="op-card"><span class="op-num">01 / 04</span><h3>Norte</h3><p>Potencia industrial y fronteriza.</p></div>
+                            </div>
+                            <div class="op-spot op-side-l" data-scene="2" data-x="42.7" data-y="51.4" data-xv="42.8" data-yv="50.3">
+                                <span class="eco-dot"></span><span class="op-name">Bajío</span>
+                                <div class="op-card"><span class="op-num">02 / 04</span><h3>Bajío</h3><p>El motor logístico y manufacturero.</p></div>
+                            </div>
+                            <div class="op-spot op-side-bl" data-scene="3" data-x="50.0" data-y="61.6" data-xv="50.7" data-yv="55.1">
+                                <span class="eco-dot"></span><span class="op-name">Centro</span>
+                                <div class="op-card"><span class="op-num">03 / 04</span><h3>Centro</h3><p>El núcleo corporativo y de consumo.</p></div>
+                            </div>
+                            <div class="op-spot op-side-b" data-scene="4" data-x="77.3" data-y="72.0" data-xv="80.0" data-yv="59.8">
+                                <span class="eco-dot"></span><span class="op-name">Sur</span>
+                                <div class="op-card"><span class="op-num">04 / 04</span><h3>Sur</h3><p>La nueva frontera de desarrollo e infraestructura.</p></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -137,25 +155,24 @@
                             <h2 class="edge-title text-dark">Dominio Táctico: Operaciones</h2>
                             <p class="seq-desc">No diluimos nuestros esfuerzos en promesas globales. <br/>Somos especialistas quirúrgicos en la República Mexicana, conectando los polos económicos más vitales del país.</p>
                         </div>
-                        <div class="text-slider-item"></div>
-                        <div class="text-slider-item">
-                            <span class="ia-num ia-scene-num">01 / 04</span>
-                            <h3 class="edge-title text-light eco-title">Norte</h3>
+                        <div class="text-slider-item op-cap">
+                            <span class="op-num">01 / 04</span>
+                            <h3 class="edge-title text-light">Norte</h3>
                             <p class="seq-desc">Potencia industrial y fronteriza.</p>
                         </div>
-                        <div class="text-slider-item">
-                            <span class="ia-num ia-scene-num">02 / 04</span>
-                            <h3 class="edge-title text-light eco-title">Centro</h3>
-                            <p class="seq-desc">El núcleo corporativo y de consumo.</p>
-                        </div>
-                        <div class="text-slider-item">
-                            <span class="ia-num ia-scene-num">03 / 04</span>
-                            <h3 class="edge-title text-light eco-title">Bajío</h3>
+                        <div class="text-slider-item op-cap">
+                            <span class="op-num">02 / 04</span>
+                            <h3 class="edge-title text-light">Bajío</h3>
                             <p class="seq-desc">El motor logístico y manufacturero.</p>
                         </div>
-                        <div class="text-slider-item">
-                            <span class="ia-num ia-scene-num">04 / 04</span>
-                            <h3 class="edge-title text-light eco-title">Sur</h3>
+                        <div class="text-slider-item op-cap">
+                            <span class="op-num">03 / 04</span>
+                            <h3 class="edge-title text-light">Centro</h3>
+                            <p class="seq-desc">El núcleo corporativo y de consumo.</p>
+                        </div>
+                        <div class="text-slider-item op-cap">
+                            <span class="op-num">04 / 04</span>
+                            <h3 class="edge-title text-light">Sur</h3>
                             <p class="seq-desc">La nueva frontera de desarrollo e infraestructura.</p>
                         </div>
                     </div>

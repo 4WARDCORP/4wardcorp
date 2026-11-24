@@ -48,15 +48,43 @@ document.addEventListener('DOMContentLoaded', () => {
     const ecosistemaTrack = document.getElementById('ecosistema-text-track');
     const ecosistemaBgs = sequenceSectionEcosistema ? sequenceSectionEcosistema.querySelectorAll('.seq-bg') : [];
 
-    // OPERACIONES: escenas fijas (título, mapa y 4 regiones)
+    // OPERACIONES: escenas fijas (título y 4 regiones señaladas en el mapa)
     const opSceneCount = sequenceSectionOperaciones ? sequenceSectionOperaciones.querySelectorAll('.snap-point').length : 0;
+    const opStage = sequenceSectionOperaciones ? sequenceSectionOperaciones.querySelector('.op-stage') : null;
+    const opSpots = sequenceSectionOperaciones ? sequenceSectionOperaciones.querySelectorAll('.op-spot') : [];
     let opCurrent = -1;
+
+    function placeOpSpots() {
+        const vertical = window.innerWidth <= 768;
+        opSpots.forEach(spot => {
+            spot.style.left = (vertical ? spot.dataset.xv : spot.dataset.x) + '%';
+            spot.style.top = (vertical ? spot.dataset.yv : spot.dataset.y) + '%';
+        });
+        if (opCurrent >= 0) { const c = opCurrent; opCurrent = -1; setOpScene(c); }
+    }
+
     function setOpScene(index) {
         if (index === opCurrent) return;
         opCurrent = index;
         sequenceSectionOperaciones.dataset.scene = index;
         if (operacionesTrack) operacionesTrack.style.transform = `translateY(-${index * 100}vh)`;
         operacionesBgs.forEach((bg, idx) => bg.classList.toggle('active', idx === Math.min(index, 1)));
+        let focus = null;
+        opSpots.forEach(spot => {
+            const n = Number(spot.dataset.scene);
+            spot.classList.toggle('is-on', n === index);
+            spot.classList.toggle('is-seen', n < index);
+            if (n === index) focus = spot;
+        });
+        if (opStage && focus) {
+            opStage.style.setProperty('--fx', focus.style.left);
+            opStage.style.setProperty('--fy', focus.style.top);
+        }
+    }
+
+    if (sequenceSectionOperaciones) {
+        placeOpSpots();
+        window.addEventListener('resize', placeOpSpots);
     }
 
     // ECOSISTEMA: escenas fijas (título, maqueta y capa de IA)
