@@ -48,7 +48,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const ecosistemaTrack = document.getElementById('ecosistema-text-track');
     const ecosistemaBgs = sequenceSectionEcosistema ? sequenceSectionEcosistema.querySelectorAll('.seq-bg') : [];
 
-    // ECOSISTEMA: escenas fijas (título, maqueta, 4 alianzas y capa de IA)
+    // OPERACIONES: escenas fijas (título, mapa y 4 regiones)
+    const opSceneCount = sequenceSectionOperaciones ? sequenceSectionOperaciones.querySelectorAll('.snap-point').length : 0;
+    let opCurrent = -1;
+    function setOpScene(index) {
+        if (index === opCurrent) return;
+        opCurrent = index;
+        sequenceSectionOperaciones.dataset.scene = index;
+        if (operacionesTrack) operacionesTrack.style.transform = `translateY(-${index * 100}vh)`;
+        operacionesBgs.forEach((bg, idx) => bg.classList.toggle('active', idx === Math.min(index, 1)));
+    }
+
+    // ECOSISTEMA: escenas fijas (título, maqueta y capa de IA)
     const ecoSceneCount = sequenceSectionEcosistema ? sequenceSectionEcosistema.querySelectorAll('.snap-point').length : 0;
     let ecoCurrent = -1;
     function setEcoScene(index) {
@@ -88,19 +99,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (sequenceSectionOperaciones) {
             const rect = sequenceSectionOperaciones.getBoundingClientRect();
-            if (rect.top <= 0 && rect.bottom >= windowHeight) {
-                const totalScroll = rect.height - windowHeight;
-                const progress = Math.abs(rect.top) / totalScroll;
-                
-                const segment = 1 / operacionesBgs.length; 
-                let activeIndex = Math.floor(progress / segment);
-                if (activeIndex >= operacionesBgs.length) activeIndex = operacionesBgs.length - 1;
-
-                if(operacionesTrack) operacionesTrack.style.transform = `translateY(-${activeIndex * 100}vh)`;
-                operacionesBgs.forEach((bg, idx) => {
-                    if (idx === activeIndex) bg.classList.add('active');
-                    else bg.classList.remove('active');
-                });
+            // Misma lógica que IA: una escena por pantalla, alineada con los puntos de anclaje
+            if (rect.top <= 2 && rect.bottom >= windowHeight - 2) {
+                let activeIndex = Math.round(Math.max(0, -rect.top) / windowHeight);
+                if (activeIndex >= opSceneCount) activeIndex = opSceneCount - 1;
+                setOpScene(activeIndex);
             }
         }
 

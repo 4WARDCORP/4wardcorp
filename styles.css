@@ -223,9 +223,6 @@ html {
     pointer-events: none;
 }
 
-.operaciones-sequence { 
-    height: 200vh !important; 
-}
 .bg-picture {
     display: flex; align-items: center; justify-content: center;
     background-color: var(--bg-dark);
@@ -389,22 +386,27 @@ html {
 
 /* =========================================
    ECOSISTEMA — escenas fijas con etiquetas en HTML
-   Escena 0: título sobre blanco · 1: maqueta con intro · 2–6: alianzas y capa de IA (maqueta oscurecida)
+   Escena 0: título sobre blanco · 1: maqueta limpia · 2: capa de IA (maqueta oscurecida). Las alianzas se presentan en Experiencia.
 ========================================= */
-.ecosistema-sequence { height: 700vh; }
+.ecosistema-sequence { height: 300vh; }
 .eco-bg { background: #000; }
 .eco-stage { position: relative; width: min(100vw, 150vh); aspect-ratio: 3 / 2; }
 .eco-stage picture, .eco-img { display: block; width: 100%; height: 100%; }
 .eco-img { object-fit: cover; }
 .eco-shade { position: absolute; inset: 0; pointer-events: none; background: rgba(0,0,0,0.62); opacity: 0; transition: opacity 0.8s ease; }
-.ecosistema-sequence:not([data-scene="0"]):not([data-scene="1"]) .eco-shade { opacity: 1; }
+.ecosistema-sequence:not([data-scene="0"]):not([data-scene="1"]) .eco-shade,
+.operaciones-sequence:not([data-scene="0"]):not([data-scene="1"]) .eco-shade { opacity: 1; }
+.operaciones-sequence { height: 600vh; }
 .eco-title { font-size: clamp(2.6rem, 5.2vw, 6vw); }
-.eco-item-intro { justify-content: flex-end; padding-bottom: 10vh; position: relative; }
-.eco-item-intro::before { content: ''; position: absolute; left: 0; bottom: 0; width: 100%; height: 45vh; background: linear-gradient(to top, rgba(0,0,0,0.9) 30%, rgba(0,0,0,0)); pointer-events: none; }
-.eco-intro { position: relative; color: #fff; font-size: clamp(1.25rem, 2.2vw, 1.9rem); line-height: 1.5; max-width: 900px; margin-top: 0; }
+.eco-allies { margin-top: 34px; font-size: 0.85rem; letter-spacing: 4px; text-transform: uppercase; color: #fff; opacity: 0.85; text-align: center; }
+.eco-allies span { color: var(--brand); padding: 0 8px; }
 
 @media (max-width: 768px) {
     .eco-stage { width: min(100vw, 66.667vh); aspect-ratio: 2 / 3; }
     .eco-title { font-size: 11vw; }
-    .eco-intro { font-size: 1.1rem; }
+    .eco-allies { font-size: 0.68rem; letter-spacing: 2px; margin-top: 26px; line-height: 2; }
+    .eco-allies span { padding: 0 4px; }
 }
+
+/* Texto bajo un título oscuro sobre fondo blanco (escena 0 de Operaciones) */
+.edge-title.text-dark + .seq-desc { color: #444; }

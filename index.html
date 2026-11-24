@@ -112,19 +112,23 @@
             </div>
         </section>
 
-        <!-- 2. OPERACIONES -->
-        <section id="operaciones" class="sticky-sequence operaciones-sequence">
+        <!-- 2. OPERACIONES (escenas fijas) -->
+        <section id="operaciones" class="sticky-sequence operaciones-sequence" data-scene="0">
             <div class="snap-grid">
+                <div class="snap-point"></div><div class="snap-point"></div>
+                <div class="snap-point"></div><div class="snap-point"></div>
                 <div class="snap-point"></div><div class="snap-point"></div>
             </div>
             <div class="sticky-container" id="sticky-operaciones">
                 <div class="seq-bg active" style="background-color: var(--bg-white);"></div>
-                
-                <div class="seq-bg bg-picture">
-                    <picture>
-                        <source media="(max-width: 768px)" srcset="img/dominiov.jpg">
-                        <img src="img/dominio.jpg" alt="Operaciones" class="responsive-seq-img">
-                    </picture>
+                <div class="seq-bg bg-picture eco-bg">
+                    <div class="eco-stage">
+                        <picture>
+                            <source media="(max-width: 768px)" srcset="img/dominiov.jpg">
+                            <img src="img/dominio.jpg" alt="Mapa de la República Mexicana en cristal con cuatro puntos de luz conectados" class="eco-img">
+                        </picture>
+                        <div class="eco-shade"></div>
+                    </div>
                 </div>
 
                 <div class="text-slider-mask">
@@ -134,6 +138,26 @@
                             <p class="seq-desc">No diluimos nuestros esfuerzos en promesas globales. <br/>Somos especialistas quirúrgicos en la República Mexicana, conectando los polos económicos más vitales del país.</p>
                         </div>
                         <div class="text-slider-item"></div>
+                        <div class="text-slider-item">
+                            <span class="ia-num ia-scene-num">01 / 04</span>
+                            <h3 class="edge-title text-light eco-title">Norte</h3>
+                            <p class="seq-desc">Potencia industrial y fronteriza.</p>
+                        </div>
+                        <div class="text-slider-item">
+                            <span class="ia-num ia-scene-num">02 / 04</span>
+                            <h3 class="edge-title text-light eco-title">Centro</h3>
+                            <p class="seq-desc">El núcleo corporativo y de consumo.</p>
+                        </div>
+                        <div class="text-slider-item">
+                            <span class="ia-num ia-scene-num">03 / 04</span>
+                            <h3 class="edge-title text-light eco-title">Bajío</h3>
+                            <p class="seq-desc">El motor logístico y manufacturero.</p>
+                        </div>
+                        <div class="text-slider-item">
+                            <span class="ia-num ia-scene-num">04 / 04</span>
+                            <h3 class="edge-title text-light eco-title">Sur</h3>
+                            <p class="seq-desc">La nueva frontera de desarrollo e infraestructura.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -417,8 +441,6 @@
         <section id="ecosistema" class="sticky-sequence ecosistema-sequence" data-scene="0">
             <div class="snap-grid">
                 <div class="snap-point"></div><div class="snap-point"></div>
-                <div class="snap-point"></div><div class="snap-point"></div>
-                <div class="snap-point"></div><div class="snap-point"></div>
                 <div class="snap-point"></div>
             </div>
             <div class="sticky-container" id="sticky-ecosistema">
@@ -438,33 +460,12 @@
                         <div class="text-slider-item">
                             <h2 class="edge-title text-dark">El Ecosistema en Acción</h2>
                         </div>
-                        <div class="text-slider-item eco-item eco-item-intro">
-                            <p class="seq-desc eco-desc eco-intro">Cuatro frentes de infraestructura, conectados por una capa de inteligencia artificial.</p>
-                        </div>
-                        <div class="text-slider-item eco-item">
-                            <p class="ally-tag">Alianza · SICE</p>
-                            <h3 class="edge-title text-light eco-title">Movilidad</h3>
-                            <p class="seq-desc eco-desc">Peaje inteligente con inteligencia artificial, control de tráfico y monitoreo de túneles en tiempo real.</p>
-                        </div>
-                        <div class="text-slider-item eco-item">
-                            <p class="ally-tag">Alianza · Vista Alegre</p>
-                            <h3 class="edge-title text-light eco-title">Suministro</h3>
-                            <p class="seq-desc eco-desc">Materiales y logística pesada para obra e infraestructura.</p>
-                        </div>
-                        <div class="text-slider-item eco-item">
-                            <p class="ally-tag">Alianza · NUCTECH</p>
-                            <h3 class="edge-title text-light eco-title">Seguridad</h3>
-                            <p class="seq-desc eco-desc">Inspección no intrusiva de mercancías y control de alto flujo de pasajeros.</p>
-                        </div>
-                        <div class="text-slider-item eco-item">
-                            <p class="ally-tag">Alianza · ENTELAR</p>
-                            <h3 class="edge-title text-light eco-title">Conectividad</h3>
-                            <p class="seq-desc eco-desc">Fibra óptica de alta velocidad y redes Flexi WAN para infraestructura crítica.</p>
-                        </div>
-                        <div class="text-slider-item eco-item">
+                        <div class="text-slider-item"></div>
+                        <div class="text-slider-item">
                             <p class="ally-tag">4ward</p>
                             <h3 class="edge-title text-light eco-title">Capa de IA 4ward</h3>
-                            <p class="seq-desc eco-desc">Conecta los datos de los cuatro frentes.</p>
+                            <p class="seq-desc">Conecta los datos de los cuatro frentes.</p>
+                            <p class="eco-allies">SICE <span>·</span> Vista Alegre <span>·</span> NUCTECH <span>·</span> ENTELAR</p>
                         </div>
                     </div>
                 </div>
