@@ -113,6 +113,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return function onScroll(windowHeight) {
             const rect = section.getBoundingClientRect();
+            // Al pasar el final de la sección (pie de página), el texto se desvanece
+            section.classList.toggle('is-past', rect.bottom < windowHeight - 2);
             // Una escena por pantalla, alineada con los puntos de anclaje (tolerancia de 2px)
             if (rect.top <= 2 && rect.bottom >= windowHeight - 2) {
                 let activeIndex = Math.round(Math.max(0, -rect.top) / windowHeight);
