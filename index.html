@@ -180,25 +180,41 @@
             </div>
         </section>
 
-        <!-- 3. CRECIMIENTO (una escena: título y 3 frentes en tarjetas) -->
-        <section id="crecimiento" class="crec-b push-up">
-            <h2 class="crec-b-title reveal-up">Ecosistema de Crecimiento</h2>
-            <div class="crec-b-grid">
-                <article class="crec-b-card reveal-up" style="--img:url('img/c1.jpg')">
-                    <span class="ia-num">01 / 03</span>
-                    <h3>Representación Comercial</h3>
-                    <p>Nos enfocamos en encontrar el prospecto exacto, construir capital relacional a largo plazo y ejecutar operaciones.</p>
-                </article>
-                <article class="crec-b-card reveal-up" style="--img:url('img/c2.jpg')">
-                    <span class="ia-num">02 / 03</span>
-                    <h3>Integración de Soluciones</h3>
-                    <p>Desplegamos tecnología multisectorial. Dominamos la movilidad, puertos, aeropuertos y automatización.</p>
-                </article>
-                <article class="crec-b-card reveal-up" style="--img:url('img/c3.jpg')">
-                    <span class="ia-num">03 / 03</span>
-                    <h3>Comercialización Tech</h3>
-                    <p>Identificamos activos con alto potencial de disrupción y estructuramos estrategias ágiles para llevarlos al mercado.</p>
-                </article>
+        <!-- 3. CRECIMIENTO (escenas fijas: título sobre blanco y 3 frentes en tarjetas) -->
+        <section id="crecimiento" class="sticky-sequence crecimiento-sequence" data-scene="0">
+            <div class="snap-grid">
+                <div class="snap-point"></div><div class="snap-point"></div>
+            </div>
+            <div class="sticky-container" id="sticky-crecimiento">
+                <div class="seq-bg active" style="background-color: var(--bg-white);"></div>
+                <div class="seq-bg" style="background-color: #000;"></div>
+
+                <div class="text-slider-mask">
+                    <div class="text-slider-track" id="crecimiento-text-track">
+                        <div class="text-slider-item">
+                            <h2 class="edge-title text-dark">Ecosistema de Crecimiento</h2>
+                        </div>
+                        <div class="text-slider-item crec-scene">
+                            <div class="crec-b-grid">
+                                <article class="crec-b-card" style="--img:url('img/c1.jpg')">
+                                    <span class="ia-num">01 / 03</span>
+                                    <h3>Representación Comercial</h3>
+                                    <p>Nos enfocamos en encontrar el prospecto exacto, construir capital relacional a largo plazo y ejecutar operaciones.</p>
+                                </article>
+                                <article class="crec-b-card" style="--img:url('img/c2.jpg')">
+                                    <span class="ia-num">02 / 03</span>
+                                    <h3>Integración de Soluciones</h3>
+                                    <p>Desplegamos tecnología multisectorial. Dominamos la movilidad, puertos, aeropuertos y automatización.</p>
+                                </article>
+                                <article class="crec-b-card" style="--img:url('img/c3.jpg')">
+                                    <span class="ia-num">03 / 03</span>
+                                    <h3>Comercialización Tech</h3>
+                                    <p>Identificamos activos con alto potencial de disrupción y estructuramos estrategias ágiles para llevarlos al mercado.</p>
+                                </article>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 

@@ -124,6 +124,28 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
+    // ESCENAS SIMPLES (fondo con fundido + contenido que sube una pantalla por escena): Crecimiento
+    function makeSimpleSequence(section, track) {
+        const bgs = section.querySelectorAll(':scope > .sticky-container > .seq-bg');
+        const count = section.querySelectorAll('.snap-point').length;
+        let current = -1;
+        return function onScroll(windowHeight) {
+            const rect = section.getBoundingClientRect();
+            if (rect.top <= 2 && rect.bottom >= windowHeight - 2) {
+                let index = Math.round(Math.max(0, -rect.top) / windowHeight);
+                if (index >= count) index = count - 1;
+                if (index === current) return;
+                current = index;
+                section.dataset.scene = index;
+                if (track) track.style.transform = `translateY(-${index * 100}vh)`;
+                bgs.forEach((bg, idx) => bg.classList.toggle('active', idx === index));
+            }
+        };
+    }
+    const sequenceSectionCrecimiento = document.getElementById('crecimiento');
+    const crecimientoScroll = sequenceSectionCrecimiento
+        ? makeSimpleSequence(sequenceSectionCrecimiento, document.getElementById('crecimiento-text-track')) : null;
+
     const operacionesScroll = sequenceSectionOperaciones ? makeSpotSequence(sequenceSectionOperaciones, operacionesTrack) : null;
     const ecosistemaScroll = sequenceSectionEcosistema ? makeSpotSequence(sequenceSectionEcosistema, ecosistemaTrack) : null;
 
@@ -155,6 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (operacionesScroll) operacionesScroll(windowHeight);
+        if (crecimientoScroll) crecimientoScroll(windowHeight);
 
         if (sequenceSectionIA) {
             const rect = sequenceSectionIA.getBoundingClientRect();
@@ -174,39 +197,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (sequenceSectionPilares) {
             const rect = sequenceSectionPilares.getBoundingClientRect();
-            if (rect.top <= 0 && rect.bottom >= windowHeight) {
-                const totalScroll = rect.height - windowHeight;
-                const progress = Math.abs(rect.top) / totalScroll; 
-                const isMobile = window.innerWidth <= 768;
-                
-                if (isMobile) {
-                    const segment = 1 / pilaresBgs.length; 
-                    let activeIndex = Math.floor(progress / segment);
-                    if (activeIndex >= pilaresBgs.length) activeIndex = pilaresBgs.length - 1;
-
-                    if(pilaresTrack) pilaresTrack.style.transform = `translateY(-${activeIndex * 100}vh)`;
-                    pilaresBgs.forEach((bg, idx) => {
-                        if (idx === activeIndex) bg.classList.add('active');
-                        else bg.classList.remove('active');
-                    });
-                } else {
-                    pilaresDesktopCards.forEach((card, index) => {
-                        const start = 0.15 + (index * 0.2); 
-                        let p = (progress - start) / 0.2;
-                        if (p < 0) p = 0; if (p > 1) p = 1;
-
-                        card.style.opacity = p > 0 ? 1 : 0; 
-
-                        let x = 0, y = 0;
-                        if(index === 0) { x = -100; y = -100; } 
-                        else if(index === 1) { x = 100; y = -100; } 
-                        else if(index === 2) { x = -100; y = 100; } 
-                        else if(index === 3) { x = 100; y = 100; }  
-                        
-                        card.style.transform = `translate(${x * (1 - p)}%, ${y * (1 - p)}%)`;
-                        card.style.borderRadius = `${80 * (1 - p)}px`; 
-                    });
-                }
+            // Una escena por pantalla (misma lógica que IA, Operaciones y Ecosistema):
+            // escena 0 = título; escenas 1–4 = cada sector entra completo con un solo movimiento
+            if (rect.top <= 2 && rect.bottom >= windowHeight - 2) {
+                let activeIndex = Math.round(Math.max(0, -rect.top) / windowHeight);
+                if (activeIndex > 4) activeIndex = 4;
+                if (pilaresTrack) pilaresTrack.style.transform = `translateY(-${activeIndex * 100}vh)`;
+                pilaresBgs.forEach((bg, idx) => bg.classList.toggle('active', idx === activeIndex));
+                pilaresDesktopCards.forEach((card, index) => card.classList.toggle('is-in', activeIndex >= index + 1));
             }
         }
 
