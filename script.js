@@ -264,7 +264,9 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (targetSection) {
                 morphNav.classList.remove('mobile-menu-open');
-                const offset = 100; 
+                // Llevar al inicio exacto de la sección (antes se detenía 100 px antes y en celular
+                // se asomaba la sección anterior o la siguiente)
+                const offset = 0;
                 const sectionPosition = targetSection.getBoundingClientRect().top;
                 const offsetPosition = sectionPosition + window.pageYOffset - offset;
                 window.scrollTo({ top: offsetPosition, behavior: 'smooth' });

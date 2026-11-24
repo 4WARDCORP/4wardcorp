@@ -479,7 +479,7 @@ html {
    CRECIMIENTO — una escena fija: título y 3 tarjetas (estilo "Desarrollos 4ward")
    Escritorio: 3 columnas · Celular: apiladas, compactas para que quepan en pantallas chicas
 ========================================= */
-.crec-b { position: relative; z-index: 10; height: 100vh; height: 100svh; min-height: 560px; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 90px 5% 50px; scroll-snap-align: start; scroll-snap-stop: always; }
+.crec-b { position: relative; z-index: 10; height: 100vh; min-height: 560px; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 90px 5% 50px; scroll-snap-align: start; scroll-snap-stop: always; }
 .crec-b-title { font-size: clamp(2.2rem, 4.4vw, 4.4rem); text-transform: uppercase; letter-spacing: -0.03em; line-height: 0.95; text-align: center; margin-bottom: 5vh; color: #fff; }
 .crec-b-grid { width: 100%; max-width: 1400px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
 .crec-b-card { position: relative; min-height: 52vh; border-radius: 28px; overflow: hidden; border: 1px solid rgba(137,20,37,0.45); padding: 36px 30px; display: flex; flex-direction: column; justify-content: flex-end; background: linear-gradient(to top, rgba(0,0,0,0.95) 30%, rgba(0,0,0,0.55) 100%), var(--img) center / cover; transition: border-color 0.4s ease; }
@@ -494,7 +494,8 @@ html {
   .crec-b-card p { font-size: 0.92rem; }
 }
 @media (max-width: 768px) {
-  .crec-b { padding: 76px 5% 18px; }
+  /* Altura completa (como las demás secciones); el espacio de abajo compensa la barra del navegador cuando aparece */
+  .crec-b { padding: 76px 5% 18px; padding-bottom: calc(18px + (100vh - 100svh)); }
   .crec-b-title { font-size: min(9vw, 4.6vh); margin-bottom: 2.2vh; }
   .crec-b-grid { grid-template-columns: 1fr; gap: 1.4vh; }
   .crec-b-card { min-height: 0; padding: 2.2vh 18px; border-radius: 18px; }
