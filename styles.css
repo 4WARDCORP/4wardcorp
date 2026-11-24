@@ -533,3 +533,21 @@ html {
 .pilares-desktop-view .q-bottom-left { transform: translate(-100%, 100%); }
 .pilares-desktop-view .q-bottom-right { transform: translate(100%, 100%); }
 .pilares-desktop-view .quadrant-card.is-in { transform: translate(0, 0); border-radius: 0; }
+
+/* =========================================
+   PIE DE PÁGINA — contacto legible (antes gris #272727 sobre negro)
+========================================= */
+.footer-contact p { color: #bdbdbd; }
+.footer-contact strong { color: #fff; }
+.footer-contact a { font-size: inherit; color: #fff; text-decoration: none; border-bottom: 1px solid var(--brand); padding-bottom: 2px; }
+.footer-contact a:hover { border-bottom-color: #fff; }
+.footer-contact p:last-child { color: #8a8a8a; }
+.footer-legal p { color: #5e5e5e; }
+.footer-legal a { color: #8a8a8a; }
+/* Contacto más grande (variante B elegida por el usuario) */
+.footer-info.footer-contact p { font-size: 1.25rem; line-height: 1.8; }
+.footer-info.footer-contact p:first-child { font-size: 1.45rem; }
+@media (max-width: 768px) {
+    .footer-info.footer-contact p { font-size: 1rem; line-height: 1.7; }
+    .footer-info.footer-contact p:first-child { font-size: 1.12rem; }
+}
