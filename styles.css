@@ -320,13 +320,6 @@ html {
 .ia-cases { width: 100%; max-width: 1400px; margin-top: 110px; position: relative; z-index: 1; }
 .ia-subtitle { font-size: clamp(2rem, 4vw, 3.6rem); text-transform: uppercase; letter-spacing: -0.03em; text-align: center; margin-bottom: 50px; }
 .ia-cases-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-.ia-case { background: #fff; color: #111; border-radius: 28px; padding: 38px 32px; }
-.ia-case h4 { font-size: 1.35rem; text-transform: uppercase; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 3px solid var(--brand); display: inline-block; }
-.ia-case p { color: #444; line-height: 1.6; font-size: 1rem; }
-.ia-process { width: 100%; max-width: 1400px; margin-top: 90px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid rgba(255,255,255,0.15); position: relative; z-index: 1; }
-.ia-step { padding: 34px 28px 0 0; }
-.ia-step h4 { font-size: 1.4rem; text-transform: uppercase; margin-bottom: 10px; }
-.ia-step p { color: #a9a9a9; line-height: 1.55; }
 @media (max-width: 1100px) and (min-width: 769px) {
     .ia-grid, .ia-cases-grid { grid-template-columns: repeat(2, 1fr); }
 }
@@ -335,10 +328,57 @@ html {
     .ia-header { margin-bottom: 30vh; }
     .ia-hero-bg { height: 95vh; background-position: 62% 75%; }
     .ia-kicker { font-size: 0.7rem; letter-spacing: 2px; padding: 8px 14px; }
-    .ia-grid, .ia-cases-grid, .ia-process { grid-template-columns: 1fr; }
-    .ia-card, .ia-case { padding: 28px 24px; border-radius: 22px; }
+    .ia-grid, .ia-cases-grid { grid-template-columns: 1fr; }
+    .ia-card { padding: 28px 24px; border-radius: 22px; }
     .ia-card-img { margin: -28px -24px 22px; height: 190px; }
     .ia-cases { margin-top: 80px; }
-    .ia-process { margin-top: 60px; }
     .sector-title-m { font-size: 12vw; }
+}
+
+/* DESARROLLOS 4WARD — base oscura */
+.ia-case { color: #fff; }
+.ia-case h4 { text-transform: uppercase; }
+.ia-case p { color: #a9a9a9; line-height: 1.6; font-size: 1rem; }
+.ia-case-num { display: block; font-weight: 700; color: var(--brand); letter-spacing: 2px; }
+
+/* Variante A: tarjetas oscuras con acento vino */
+.v-a .ia-case { background: linear-gradient(160deg, #1c0a0e 0%, #0c0c0c 60%); border: 1px solid rgba(137,20,37,0.45); border-radius: 28px; padding: 40px 32px; position: relative; transition: border-color 0.4s ease; }
+.v-a .ia-case::before { content: ''; position: absolute; top: 0; left: 32px; width: 56px; height: 3px; background: var(--brand); }
+.v-a .ia-case:hover { border-color: rgba(137,20,37,1); }
+.v-a .ia-case-num { font-size: 0.9rem; margin-bottom: 18px; }
+.v-a .ia-case h4 { font-size: 1.35rem; margin-bottom: 14px; }
+
+@media (max-width: 768px) {
+    .v-a .ia-case { padding: 32px 24px; border-radius: 22px; }
+}
+
+/* PROCESO: "Nuestro proceso es simple" */
+.ia-process-block { width: 100%; max-width: 1400px; margin-top: 110px; display: grid; grid-template-columns: 1.2fr 0.85fr; background: #000; border: 1px solid rgba(255,255,255,0.08); border-radius: 32px; overflow: hidden; position: relative; z-index: 1; }
+.ia-process-img { position: relative; min-height: 720px; background: url('img/ia-proceso.jpg') 4% center / cover no-repeat; }
+.ia-process-img::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,0) 75%, #000 100%); }
+.ia-process-content { padding: 60px 56px 60px 20px; display: flex; flex-direction: column; justify-content: center; }
+.ia-process-content .ia-kicker { align-self: flex-start; margin-bottom: 24px; }
+.ia-process-title { font-size: clamp(2.2rem, 3.8vw, 3.8rem); text-transform: uppercase; line-height: 0.95; letter-spacing: -0.03em; margin-bottom: 20px; }
+.ia-process-lead { color: #bdbdbd; font-size: 1.1rem; line-height: 1.6; margin-bottom: 36px; max-width: 560px; }
+.ia-steps { list-style: none; border-top: 1px solid rgba(255,255,255,0.12); }
+.ia-step { padding: 24px 0; border-bottom: 1px solid rgba(255,255,255,0.12); }
+.ia-step-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 12px; }
+.ia-step-head .ia-num { margin: 0; font-size: 1rem; }
+.ia-step-head h4 { font-size: 1.45rem; text-transform: uppercase; letter-spacing: -0.01em; }
+.ia-step p { color: #a9a9a9; line-height: 1.55; font-size: 0.98rem; display: grid; grid-template-columns: 74px 1fr; gap: 12px; align-items: baseline; margin-top: 8px; }
+.role { font-size: 0.68rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; text-align: center; padding: 4px 0; border-radius: 20px; }
+.role-client { border: 1px solid rgba(255,255,255,0.35); color: #fff; }
+.role-4w { background: var(--brand); color: #fff; border: 1px solid var(--brand); }
+@media (max-width: 1100px) and (min-width: 769px) {
+    .ia-process-block { grid-template-columns: 1fr; }
+    .ia-process-img { min-height: 420px; background-position: 20% center; }
+    .ia-process-img::after { background: linear-gradient(180deg, rgba(0,0,0,0) 60%, #000 100%); }
+    .ia-process-content { padding: 40px 50px 60px; }
+}
+@media (max-width: 768px) {
+    .ia-process-block { grid-template-columns: 1fr; margin-top: 80px; border-radius: 22px; }
+    .ia-process-img { min-height: 250px; background-position: 15% center; }
+    .ia-process-img::after { background: linear-gradient(180deg, rgba(0,0,0,0) 55%, #000 100%); }
+    .ia-process-content { padding: 26px 22px 34px; }
+    .ia-step p { grid-template-columns: 62px 1fr; font-size: 0.92rem; }
 }
