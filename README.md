@@ -73,7 +73,7 @@ Se publica con un push a `main`; GitHub Pages actualiza el sitio en 2 a 5 minuto
 4. **Commit y push** a `main`. El mensaje del commit va en español y dice qué cambió y dónde.
 5. **Verificar** en línea con `?v=<versión>` al final de la dirección, en celular y en escritorio.
 
-Ramas de respaldo existentes: `respaldo-original` (sitio original), `respaldo-20261124b` (estado anterior a la medida `--vh`) , `respaldo-20261125a` (antes de la limpieza del código) y `respaldo-20261125c` (antes de la revisión de seguridad).
+Ramas de respaldo existentes: `respaldo-original` (sitio original), `respaldo-20261124b` (estado anterior a la medida `--vh`), `respaldo-20261125a` (antes de la limpieza del código) y `respaldo-20261125c` (antes de la revisión de seguridad).
 
 ## 4. Reglas que no se deben romper
 

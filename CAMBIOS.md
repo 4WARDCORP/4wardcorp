@@ -19,7 +19,7 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). L
 
 _(Nada pendiente.)_
 
-## [20261125d] — 2026-11-25
+## [20261125d] — 2026-11-25 · commit `ab359de`
 
 Revisión de seguridad (diagnóstico del 25-nov-2026). Lo visible del sitio no cambia: se comparó contra 20261125c el estilo computado de cada elemento y una captura en las 36 paradas (1440×900, 1280×720, 1462×663, 390×844 y 375×667) y los estados del menú y del formulario.
 

@@ -1,6 +1,6 @@
 # Documentación técnica — sitio 4ward Solutions
 
-Referencia para quien mantenga o modifique el sitio. Describe el código tal como está en la versión **`20261125c`** (ver [CAMBIOS.md](CAMBIOS.md)).
+Referencia para quien mantenga o modifique el sitio. Describe el código tal como está en la versión **`20261125d`** (ver [CAMBIOS.md](CAMBIOS.md)).
 La forma de probar y publicar está en el [README](README.md) y el historial en [CAMBIOS.md](CAMBIOS.md).
 
 **Regla de mantenimiento:** si un cambio contradice algo de este documento, el documento se actualiza en el mismo commit.
@@ -261,6 +261,7 @@ Otros colores que se repiten sin variable: `#a51a2e` (vino al pasar el cursor), 
 | `validar()` | función (formulario) | Revisa obligatorios, formato del correo y casilla de aceptación; marca `.is-error`. |
 | `respaldoCorreo()` | función (formulario) | Abre `mailto:` con los datos ya escritos cuando no hay PHP. |
 | `DESTINO` | constante | Correo que recibe los mensajes del respaldo `mailto:`. |
+| `abiertoEn` | variable (formulario) | `performance.now()` al abrir el formulario. Al enviar, `performance.now() - abiertoEn` se escribe en el campo oculto `tiempo` (filtro anti-robots de §8). |
 | `PILARES_ULTIMA_ESCENA` | constante | Última escena de Experiencia (4). |
 
 **Eventos registrados:**
@@ -319,6 +320,9 @@ Otros colores que se repiten sin variable: `#a51a2e` (vino al pasar el cursor), 
 | Textos de Operaciones y Ecosistema | Dos veces cada uno: en la tarjeta de escritorio (`.op-card` / `.eco-card`) y en el texto de celular (`.op-cap`) |
 | Textos de Experiencia | Dos veces: `.pilares-mobile-view` y `.pilares-desktop-view` |
 | Versión de CSS / JS | Los dos enlaces de `index.html` |
+| Declaraciones `@font-face` de Space Grotesk | Inicio de `styles.css` y `<style>` de `aviso-de-privacidad.html` (rutas a `fonts/`) |
+| Script en línea de `--vh` | `<head>` de `index.html` y su hash `sha256-…` en la regla `script-src` de `.htaccess` (§14) |
+| Tiempo mínimo del formulario (3 s) | `$TIEMPO_MIN` en `enviar.php` y el comentario de `abrir()` en `script.js` |
 
 ## 9. Imágenes
 
@@ -394,7 +398,7 @@ Ninguno de estos puntos afecta lo que hoy ve el visitante, salvo donde se indica
 - Nombres históricos que se conservan para no romper referencias: `pilares` (hoy Experiencia), `v-a` (estilo de las tarjetas de Desarrollos) y `casos` (escenas 9 y 10 de IA).
 - 34 atributos `style=""` en `index.html` (casi todos, la imagen de fondo de cada escena) y 7 `!important` en `styles.css`.
 
-**Rendimiento:** `h1.jpg` (423 KB), `h3.jpg` (432 KB), `h2.jpg` (300 KB), `p1.jpg` (296 KB), `p2.jpg` (269 KB) y `p4.jpg` (242 KB) pasan del objetivo de 150 KB. Son las primeras imágenes que se cargan.
+**Rendimiento:** `h1.jpg` (419 KB), `h3.jpg` (429 KB), `h2.jpg` (297 KB), `p1.jpg` (293 KB), `p2.jpg` (266 KB) y `p4.jpg` (238 KB) pasan del objetivo de 150 KB. Son las primeras imágenes que se cargan.
 
 **Funcionales:**
 - iPad Air 2 en horizontal: Ecosistema sin tarjetas (§10). Propuesta en estudio: medidas de respaldo antes de cada `cqw`.
