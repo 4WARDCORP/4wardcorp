@@ -1,0 +1,26 @@
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp
+
+# Pruebas y herramientas locales
+node_modules/
+*.log
+/pruebas-locales/
+
+# Configuración privada (contraseñas, SMTP, llaves). El repositorio es público:
+# estos archivos se crean solo en el servidor y NUNCA se suben.
+.env
+.env.*
+config-privada.php
+*.key
+*.pem
+
+# Jekyll (si se prueba GitHub Pages en local)
+_site/
+.jekyll-cache/

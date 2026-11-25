@@ -1,0 +1,10 @@
+# Configuración de GitHub Pages (Jekyll).
+# Solo sirve para que la documentación y los archivos de configuración del repositorio
+# NO se publiquen como páginas del sitio. No afecta a index.html ni a ningún otro archivo del sitio.
+# En Hostinger este archivo no se usa ni se sube.
+exclude:
+  - README.md
+  - DOCUMENTACION.md
+  - CAMBIOS.md
+  - .editorconfig
+  - .gitignore
