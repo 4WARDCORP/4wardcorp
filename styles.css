@@ -529,7 +529,21 @@ html {
     .casos-item .ia-step { padding: calc(var(--vh) * 1.1) 0; }
 }
 @media (min-width: 769px) and (max-height: 700px) {
-    .casos-item .ia-process-title { font-size: clamp(1.6rem, 2.3vw, 2.1rem); }
+    /* Pantallas muy bajas (laptop con escala de Windows al 125–150 %, ej. 1280x580 útiles): el bloque de
+       Proceso tiene alto fijo y esconde lo que sobra, así que textos y espacios se escalan con el alto
+       para que el botón del formulario quepa completo. */
+    .casos-item .ia-process-content { padding-top: calc(var(--vh) * 1.6); padding-bottom: calc(var(--vh) * 1.6); }
+    .casos-item .ia-process-content .ia-kicker { margin-bottom: calc(var(--vh) * 0.8); padding: 4px 12px; font-size: min(0.75rem, calc(var(--vh) * 1.7)); }
+    .casos-item .ia-process-title { font-size: min(clamp(1.6rem, 2.3vw, 2.1rem), calc(var(--vh) * 4.6)); margin-bottom: calc(var(--vh) * 0.6); }
+    .casos-item .ia-process-lead { font-size: min(0.92rem, calc(var(--vh) * 2.3)); line-height: 1.4; margin-bottom: calc(var(--vh) * 0.6); }
+    .casos-item .ia-step { padding: calc(var(--vh) * 0.6) 0; }
+    .casos-item .ia-step-head { margin-bottom: calc(var(--vh) * 0.3); }
+    .casos-item .ia-step-head h4 { font-size: min(1.15rem, calc(var(--vh) * 2.8)); }
+    .casos-item .ia-step-head .ia-num { font-size: min(1rem, calc(var(--vh) * 2.3)); }
+    .casos-item .ia-step p { font-size: min(0.84rem, calc(var(--vh) * 2.1)); line-height: 1.35; }
+    .casos-item .role { font-size: min(0.68rem, calc(var(--vh) * 1.5)); padding: 2px 0; }
+    .proceso-cta { margin-top: calc(var(--vh) * 1.2); }
+    .proceso-cta .cta-btn { padding: calc(var(--vh) * 1.4) 22px; font-size: min(0.92rem, calc(var(--vh) * 2.1)); }
 }
 @media (max-width: 768px) and (max-height: 720px) {
     .proceso-cta { margin-top: calc(var(--vh) * 1.4); }

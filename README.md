@@ -4,7 +4,7 @@ Sitio de una sola página de **4Ward Solutions, S.A. de C.V.** Es HTML, CSS y Ja
 
 | | |
 |---|---|
-| **Versión** | `20261125b` (ver [CAMBIOS.md](CAMBIOS.md)) |
+| **Versión** | `20261125c` (ver [CAMBIOS.md](CAMBIOS.md)) |
 | **Publicación actual** | GitHub Pages, rama `main` → <https://4wardcorp.github.io/4wardcorp/> (temporal) |
 | **Destino final** | Hostinger, con el dominio propio `4wardcorp.com` |
 | **Documentación técnica** | [DOCUMENTACION.md](DOCUMENTACION.md) |
@@ -51,7 +51,7 @@ php -d "sendmail_path=sh -c 'cat > /tmp/correo.txt' sh" -S localhost:8767
 
 | Tipo | Tamaños (ancho × alto) |
 |---|---|
-| Escritorio | 1440×900, 1920×1080, 1536×864, 1366×768, 1280×720, 1462×663 |
+| Escritorio | 1440×900, 1920×1080, 1536×864, 1366×768, 1280×720, 1462×663 y **1280×580** (laptop con la escala de Windows al 150 %: el área útil en CSS es mucho menor que la resolución) |
 | Celular | 375×667, 390×844, 428×926, 430×932 |
 | Tableta | 768×954, 1024×698 |
 | Navegadores reales | Chrome en iPhone y Mac, **Edge en Windows (el más propenso a fallar)**, Firefox en Linux |

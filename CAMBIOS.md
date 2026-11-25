@@ -19,7 +19,12 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). L
 
 _(Nada pendiente.)_
 
-## [20261125b] — 2026-11-25
+## [20261125c] — 2026-11-25
+
+### Corregido
+- IA, escena "Nuestro proceso es simple": en pantallas de escritorio muy bajas (700 px de alto o menos, como una laptop con la escala de Windows al 150 %), el botón del formulario quedaba cortado a la mitad. Ahora, en esas pantallas, los textos y espacios del bloque se ajustan al alto y el botón cabe completo (`@media (min-width: 769px) and (max-height: 700px)` de la sección IA en `styles.css`). Error anterior a la reorganización.
+
+## [20261125b] — 2026-11-25 · commit `8048b1d`
 
 Limpieza y organización del código. **El sitio se ve y se comporta igual**: se comparó contra la versión anterior el estilo computado de cada elemento y una captura en las 36 paradas, en 10 tamaños de pantalla, más los estados del menú y del formulario.
 

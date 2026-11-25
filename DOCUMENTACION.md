@@ -1,6 +1,6 @@
 # Documentación técnica — sitio 4ward Solutions
 
-Referencia para quien mantenga o modifique el sitio. Describe el código tal como está en la versión **`20261125b`** (código reorganizado; ver [CAMBIOS.md](CAMBIOS.md)).
+Referencia para quien mantenga o modifique el sitio. Describe el código tal como está en la versión **`20261125c`** (ver [CAMBIOS.md](CAMBIOS.md)).
 La forma de probar y publicar está en el [README](README.md) y el historial en [CAMBIOS.md](CAMBIOS.md).
 
 **Regla de mantenimiento:** si un cambio contradice algo de este documento, el documento se actualiza en el mismo commit.
@@ -368,7 +368,9 @@ Casos conocidos:
 - Esperar de 1.7 a 2.8 s después de mover el scroll antes de medir, porque las transiciones duran 0.8–0.9 s.
 - Para medir con la tipografía real sin internet, interceptar `fonts.googleapis.com` y servir los `woff2` del paquete npm `@fontsource/space-grotesk`.
 - **iPhone con barras:** abrir en 430×752 y después cambiar a 430×846. `--vh` debe quedarse en 7.52 px, `--extra` pasar a 94 px y los textos no deben moverse.
-- **Barra de Windows:** quitar `--hide-scrollbars` de Chrome y forzar `html { overflow-y: scroll }`. Sirve para revisar anchos y saltos de línea; el conteo de paradas con la barra visible no es confiable.
+- **Windows / Edge:**
+  - La escala de pantalla de Windows (125–150 %) reduce mucho el área en CSS: una laptop de 1920×1080 al 150 % deja unos 1280×580 útiles. Probar siempre ese tamaño.
+  - Barra de desplazamiento: simularla con 15 px menos de ancho de ventana. **No** forzar `html { overflow-y: scroll }`: con `body { overflow-x: hidden }`, el `body` se vuelve el contenedor de scroll y las escenas fijas dejan de funcionar en la simulación.
 - **iPad Air 2:** quitar del CSS las declaraciones con `cqw`, `cqh` y `container-type`.
 - **Comparar con una versión anterior:** `git worktree add ../anterior <commit>` y servirla en otro puerto.
 - **Cambios que no deben verse (limpieza o reorganización):** comparar las dos versiones con el estilo computado de cada elemento (`getComputedStyle`, incluidos `::before` y `::after`) y una captura en cada una de las 36 paradas, en los 10 tamaños del README, más los estados interactivos (menú abierto, formulario abierto y con errores). Para tener resultados estables: congelar transiciones y animaciones y el slider de portada, y comparar los nombres de propiedades ordenados. Si se mueven reglas de CSS, revisar además los pares de reglas que cambiaron de orden y tienen la misma especificidad, porque ahí puede cambiar cuál gana.
