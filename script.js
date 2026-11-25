@@ -46,6 +46,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const sequenceSectionEcosistema = document.getElementById('ecosistema');
     const ecosistemaTrack = document.getElementById('ecosistema-text-track');
 
+    // Alto de una escena = alto real de su punto de anclaje (100vh de CSS).
+    // No usar window.innerHeight: en iPhone, con la barra del navegador a la vista, innerHeight es menor que 100vh
+    // y el error se acumula escena por escena (en IA 03/06 → 04/06 el cambio se sentía inmediato).
+    function sceneStep(section) {
+        const sp = section.querySelector('.snap-point');
+        const h = sp ? sp.getBoundingClientRect().height : 0;
+        return h > 0 ? h : window.innerHeight;
+    }
+
     // ESCENAS CON PUNTOS SOBRE UNA IMAGEN (Operaciones y Ecosistema)
     // Escena 0: título sobre blanco. Escenas 1+: se enciende el punto (y su tarjeta) de esa escena;
     // los anteriores quedan con su nombre.
@@ -117,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
             section.classList.toggle('is-past', rect.bottom < windowHeight - 2);
             // Una escena por pantalla, alineada con los puntos de anclaje (tolerancia de 2px)
             if (rect.top <= 2 && rect.bottom >= windowHeight - 2) {
-                let activeIndex = Math.round(Math.max(0, -rect.top) / windowHeight);
+                let activeIndex = Math.round(Math.max(0, -rect.top) / sceneStep(section));
                 if (activeIndex >= count) activeIndex = count - 1;
                 setScene(activeIndex);
             }
@@ -132,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return function onScroll(windowHeight) {
             const rect = section.getBoundingClientRect();
             if (rect.top <= 2 && rect.bottom >= windowHeight - 2) {
-                let index = Math.round(Math.max(0, -rect.top) / windowHeight);
+                let index = Math.round(Math.max(0, -rect.top) / sceneStep(section));
                 if (index >= count) index = count - 1;
                 if (index === current) return;
                 current = index;
@@ -145,6 +154,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const sequenceSectionCrecimiento = document.getElementById('crecimiento');
     const crecimientoScroll = sequenceSectionCrecimiento
         ? makeSimpleSequence(sequenceSectionCrecimiento, document.getElementById('crecimiento-text-track')) : null;
+    const sequenceSectionCasos = document.getElementById('ia-casos');
+    const casosScroll = sequenceSectionCasos && sequenceSectionCasos.classList.contains('casos-sequence')
+        ? makeSimpleSequence(sequenceSectionCasos, document.getElementById('casos-text-track')) : null;
 
     const operacionesScroll = sequenceSectionOperaciones ? makeSpotSequence(sequenceSectionOperaciones, operacionesTrack) : null;
     const ecosistemaScroll = sequenceSectionEcosistema ? makeSpotSequence(sequenceSectionEcosistema, ecosistemaTrack) : null;
@@ -163,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Misma lógica que las demás secciones: una escena por pantalla, cambio a mitad del movimiento
             // (antes se calculaba por porcentaje y Enfoque → Garantía cambiaba casi al empezar a deslizar)
             if (rect.top <= 2 && rect.bottom >= windowHeight - 2) {
-                let activeIndex = Math.round(Math.max(0, -rect.top) / windowHeight);
+                let activeIndex = Math.round(Math.max(0, -rect.top) / sceneStep(sequenceSectionDilema));
                 if (activeIndex >= dilemaBgs.length) activeIndex = dilemaBgs.length - 1;
                 if (dilemaTrack) dilemaTrack.style.transform = `translateY(-${activeIndex * 100}vh)`;
                 dilemaBgs.forEach((bg, idx) => bg.classList.toggle('active', idx === activeIndex));
@@ -172,13 +184,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (operacionesScroll) operacionesScroll(windowHeight);
         if (crecimientoScroll) crecimientoScroll(windowHeight);
+        if (casosScroll) casosScroll(windowHeight);
 
         if (sequenceSectionIA) {
             const rect = sequenceSectionIA.getBoundingClientRect();
             // Tolerancia de 2px: la sección empieza en una posición con decimales
             if (rect.top <= 2 && rect.bottom >= windowHeight - 2) {
                 // Una escena por pantalla, alineada con los puntos de anclaje del scroll
-                let activeIndex = Math.round(Math.max(0, -rect.top) / windowHeight);
+                let activeIndex = Math.round(Math.max(0, -rect.top) / sceneStep(sequenceSectionIA));
                 if (activeIndex >= iaBgs.length) activeIndex = iaBgs.length - 1;
 
                 if(iaTrack) iaTrack.style.transform = `translateY(-${activeIndex * 100}vh)`;
@@ -194,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Una escena por pantalla (misma lógica que IA, Operaciones y Ecosistema):
             // escena 0 = título; escenas 1–4 = cada sector entra completo con un solo movimiento
             if (rect.top <= 2 && rect.bottom >= windowHeight - 2) {
-                let activeIndex = Math.round(Math.max(0, -rect.top) / windowHeight);
+                let activeIndex = Math.round(Math.max(0, -rect.top) / sceneStep(sequenceSectionPilares));
                 if (activeIndex > 4) activeIndex = 4;
                 if (pilaresTrack) pilaresTrack.style.transform = `translateY(-${activeIndex * 100}vh)`;
                 pilaresBgs.forEach((bg, idx) => bg.classList.toggle('active', idx === activeIndex));
