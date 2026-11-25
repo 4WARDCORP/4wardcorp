@@ -658,3 +658,14 @@ html {
     .casos-item .ia-subtitle { margin-bottom: 1.8vh; }
     .casos-item .ia-cases-grid { gap: 1.1vh; }
 }
+
+/* =========================================
+   "4WARD SOLUTIONS" (portada y pie): tamaño según el ancho disponible, no el de la ventana.
+   En Windows la barra de desplazamiento ocupa ~17 px y con 13vw el título se partía en 2 líneas (Edge).
+   13.83cqw = 13vw cuando no hay barra (el contenedor mide 94 % por su margen de 3 % a cada lado).
+========================================= */
+.hero-bottom-text, .footer-content { container-type: inline-size; }
+.hero-footer-title { font-size: 13.83cqw; }
+@media (max-width: 768px) {
+    .hero-footer-title { font-size: 23.4cqw; }
+}
