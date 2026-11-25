@@ -6,7 +6,26 @@
     <title>4ward Solutions</title>
     <link rel="icon" type="image/png" href="img/favicon.png">
     <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
-    <link rel="stylesheet" href="styles.css?v=20261124b">
+    <script>
+    /* Alto visible real de la pantalla → variable --vh (1 % del alto). Se mide al cargar, al girar el celular
+       y al cambiar el tamaño de la ventana en computadora. En celular NO se vuelve a medir cuando el navegador
+       esconde o muestra sus barras durante el scroll (eso haría brincar las escenas). */
+    (function () {
+        var root = document.documentElement, lastW = 0, lastH = 0;
+        var touch = window.matchMedia('(pointer: coarse)').matches;
+        function medir(forzar) {
+            var w = window.innerWidth, h = window.innerHeight;
+            if (!forzar && touch && w === lastW) return;
+            if (w === lastW && h === lastH) return;
+            lastW = w; lastH = h;
+            root.style.setProperty('--vh', (h / 100) + 'px');
+        }
+        medir(true);
+        window.addEventListener('resize', function () { medir(false); });
+        window.addEventListener('orientationchange', function () { setTimeout(function () { medir(true); }, 300); });
+    })();
+    </script>
+    <link rel="stylesheet" href="styles.css?v=20261124c">
 </head>
 <body>
 
@@ -628,6 +647,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=20261124b"></script>
+    <script src="script.js?v=20261124c"></script>
 </body>
 </html>

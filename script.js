@@ -49,6 +49,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Alto de una escena = alto real de su punto de anclaje (100vh de CSS).
     // No usar window.innerHeight: en iPhone, con la barra del navegador a la vista, innerHeight es menor que 100vh
     // y el error se acumula escena por escena (en IA 03/06 → 04/06 el cambio se sentía inmediato).
+    function screenH() {
+        const sp = document.querySelector('.snap-point');
+        const h = sp ? sp.getBoundingClientRect().height : 0;
+        return h > 0 ? h : window.innerHeight;
+    }
     function sceneStep(section) {
         const sp = section.querySelector('.snap-point');
         const h = sp ? sp.getBoundingClientRect().height : 0;
@@ -101,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (index === current) return;
             current = index;
             section.dataset.scene = index;
-            if (track) track.style.transform = `translateY(-${index * 100}vh)`;
+            if (track) track.style.transform = `translateY(calc(var(--vh) * -${index * 100}))`;
             bgs.forEach((bg, idx) => bg.classList.toggle('active', idx === Math.min(index, 1)));
             let focus = null;
             section.querySelectorAll('.op-spot, .eco-card, .eco-lines line').forEach(el => {
@@ -146,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (index === current) return;
                 current = index;
                 section.dataset.scene = index;
-                if (track) track.style.transform = `translateY(-${index * 100}vh)`;
+                if (track) track.style.transform = `translateY(calc(var(--vh) * -${index * 100}))`;
                 bgs.forEach((bg, idx) => bg.classList.toggle('active', idx === index));
             }
         };
@@ -163,7 +168,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('scroll', () => {
         const currentScrollY = window.scrollY;
-        const windowHeight = window.innerHeight;
+        // Alto de una pantalla del sitio (= una escena). No innerHeight: en iPhone cambia al esconderse la barra.
+        const windowHeight = screenH();
 
         if(heroTitle && currentScrollY < windowHeight) {
             heroTitle.style.transform = `translateY(-${currentScrollY * 0.8}px)`;
@@ -177,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (rect.top <= 2 && rect.bottom >= windowHeight - 2) {
                 let activeIndex = Math.round(Math.max(0, -rect.top) / sceneStep(sequenceSectionDilema));
                 if (activeIndex >= dilemaBgs.length) activeIndex = dilemaBgs.length - 1;
-                if (dilemaTrack) dilemaTrack.style.transform = `translateY(-${activeIndex * 100}vh)`;
+                if (dilemaTrack) dilemaTrack.style.transform = `translateY(calc(var(--vh) * -${activeIndex * 100}))`;
                 dilemaBgs.forEach((bg, idx) => bg.classList.toggle('active', idx === activeIndex));
             }
         }
@@ -194,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 let activeIndex = Math.round(Math.max(0, -rect.top) / sceneStep(sequenceSectionIA));
                 if (activeIndex >= iaBgs.length) activeIndex = iaBgs.length - 1;
 
-                if(iaTrack) iaTrack.style.transform = `translateY(-${activeIndex * 100}vh)`;
+                if(iaTrack) iaTrack.style.transform = `translateY(calc(var(--vh) * -${activeIndex * 100}))`;
                 iaBgs.forEach((bg, idx) => {
                     if (idx === activeIndex) bg.classList.add('active');
                     else bg.classList.remove('active');
@@ -209,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (rect.top <= 2 && rect.bottom >= windowHeight - 2) {
                 let activeIndex = Math.round(Math.max(0, -rect.top) / sceneStep(sequenceSectionPilares));
                 if (activeIndex > 4) activeIndex = 4;
-                if (pilaresTrack) pilaresTrack.style.transform = `translateY(-${activeIndex * 100}vh)`;
+                if (pilaresTrack) pilaresTrack.style.transform = `translateY(calc(var(--vh) * -${activeIndex * 100}))`;
                 pilaresBgs.forEach((bg, idx) => bg.classList.toggle('active', idx === activeIndex));
                 pilaresDesktopCards.forEach((card, index) => card.classList.toggle('is-in', activeIndex >= index + 1));
             }
@@ -226,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isScrollingTimeout;
 
     window.addEventListener('scroll', () => {
-        const heroHeight = window.innerHeight;
+        const heroHeight = screenH();
         const isMobile = window.innerWidth <= 768;
 
         if (window.scrollY > 50) {
