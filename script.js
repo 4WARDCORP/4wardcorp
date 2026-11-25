@@ -160,19 +160,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (sequenceSectionDilema) {
             const rect = sequenceSectionDilema.getBoundingClientRect();
-            if (rect.top <= 0 && rect.bottom >= windowHeight) {
-                const totalScroll = rect.height - windowHeight;
-                const progress = Math.abs(rect.top) / totalScroll;
-                
-                const segment = 1 / dilemaBgs.length; 
-                let activeIndex = Math.floor(progress / segment);
+            // Misma lógica que las demás secciones: una escena por pantalla, cambio a mitad del movimiento
+            // (antes se calculaba por porcentaje y Enfoque → Garantía cambiaba casi al empezar a deslizar)
+            if (rect.top <= 2 && rect.bottom >= windowHeight - 2) {
+                let activeIndex = Math.round(Math.max(0, -rect.top) / windowHeight);
                 if (activeIndex >= dilemaBgs.length) activeIndex = dilemaBgs.length - 1;
-
-                if(dilemaTrack) dilemaTrack.style.transform = `translateY(-${activeIndex * 100}vh)`;
-                dilemaBgs.forEach((bg, idx) => {
-                    if (idx === activeIndex) bg.classList.add('active');
-                    else bg.classList.remove('active');
-                });
+                if (dilemaTrack) dilemaTrack.style.transform = `translateY(-${activeIndex * 100}vh)`;
+                dilemaBgs.forEach((bg, idx) => bg.classList.toggle('active', idx === activeIndex));
             }
         }
 
