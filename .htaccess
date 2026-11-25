@@ -1,0 +1,54 @@
+# ==========================================================================
+# Seguridad del sitio en Hostinger (Apache / LiteSpeed).
+# GitHub Pages ignora este archivo: ahí no se pueden poner encabezados.
+# Detalle y cómo probarlo: DOCUMENTACION.md §14.
+#
+# OJO: la regla "script-src" lleva el hash del script en línea de index.html (el que mide --vh).
+# Si ese script cambia aunque sea un espacio, hay que recalcular el hash (DOCUMENTACION.md §14)
+# o el sitio dejará de medir la pantalla y las escenas se verán mal.
+# ==========================================================================
+
+# Sin listado de carpetas ni firma del servidor
+Options -Indexes
+ServerSignature Off
+
+# 1. Siempre HTTPS (método recomendado por Hostinger)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# 2. Archivos que no son del sitio: documentación, configuración, respaldos y carpetas de control de versiones
+<FilesMatch "(^\.|\.(md|ya?ml|log|bak|old|orig|sql|zip|sh|py|ini)$)">
+    Require all denied
+</FilesMatch>
+RedirectMatch 404 /\.(git|svn|hg)(/|$)
+
+# 3. Encabezados de seguridad
+<IfModule mod_headers.c>
+    # El navegador recuerda por 1 año que el sitio solo se abre con HTTPS
+    Header always set Strict-Transport-Security "max-age=31536000"
+
+    # Qué puede cargar la página: solo archivos del propio sitio (letra, imágenes, CSS, JS)
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'sha256-EKKfKGkUFGsXvjWTEqmnvm03lHA9e6SGeOEKnXNt9yk='; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
+
+    # Nadie puede mostrar el sitio dentro de otra página (evita engaños de clic)
+    Header always set X-Frame-Options "DENY"
+
+    # El navegador no adivina el tipo de archivo
+    Header always set X-Content-Type-Options "nosniff"
+
+    # A otros sitios solo se les dice el dominio de origen, no la página exacta
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # El sitio no usa cámara, micrófono, ubicación ni pagos
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+
+    # Aísla la pestaña de ventanas abiertas por otros sitios
+    Header always set Cross-Origin-Opener-Policy "same-origin"
+
+    # No revelar la versión de PHP
+    Header always unset X-Powered-By
+    Header unset X-Powered-By
+</IfModule>

@@ -20,16 +20,17 @@ La forma de probar y publicar está en el [README](README.md) y el historial en 
 11. [Cómo probar](#11-cómo-probar)
 12. [Deuda técnica y pendientes conocidos](#12-deuda-técnica-y-pendientes-conocidos)
 13. [Lineamientos de diseño y contenido](#13-lineamientos-de-diseño-y-contenido)
+14. [Seguridad: servidor, tipografía y metadatos](#14-seguridad-servidor-tipografía-y-metadatos)
 
 ---
 
 ## 1. Arquitectura y orden de carga
 
 - **Página única** (`index.html`) con desplazamiento vertical. El navegador "frena" en cada pantalla (`html { scroll-snap-type: y mandatory }`).
-- **Sin dependencias:** no hay frameworks, librerías, compilación ni `package.json`. La única carga externa es la tipografía de Google Fonts (`@import` en la línea 1 de `styles.css` y dentro de `aviso-de-privacidad.html`).
+- **Sin dependencias:** no hay frameworks, librerías, compilación ni `package.json`. No hay cargas externas: la tipografía Space Grotesk se sirve desde `fonts/` (§14).
 - **Orden de carga de `index.html`:**
-  1. Script en línea dentro de `<head>`: mide el alto visible y define `--vh` **antes de pintar** (§4).
-  2. `styles.css?v=<versión>`.
+  1. Script en línea dentro de `<head>`: mide el alto visible y define `--vh` **antes de pintar** (§4). **Si se modifica, recalcular su hash en `.htaccess` (§14).**
+  2. Precarga de las dos tipografías latinas (400 y 700) y `styles.css?v=<versión>`.
   3. Contenido: pantalla de carga, menú, botón ↑, `<main>` con las secciones, `<footer>` y la ventana del formulario.
   4. `script.js?v=<versión>` al final del `<body>`. Todo su código corre en `DOMContentLoaded`, excepto el formulario, que es una función autoejecutable independiente.
 - **Pantalla de carga (`#preloader`):** 4 cuadros negros que se abren hacia las esquinas 300 ms después del evento `load` (se agrega la clase `.loaded`).
@@ -256,7 +257,7 @@ Otros colores que se repiten sin variable: `#a51a2e` (vino al pasar el cursor), 
 | `makeSimpleSequence(section, track)` | función | Prepara una sección de fondos con fundido y devuelve su `onScroll(alto)`. |
 | `volverInicio()` | función | Fundido a negro, salto a la portada y fundido de regreso (§5). |
 | `toggleSubir()` | función | Muestra u oculta `.btn-subir`. |
-| `abrir(e)` / `cerrar()` | funciones (formulario) | Abren y cierran la ventana del formulario. Al abrir, escriben la hora en `t0` y recuerdan el foco; al cerrar, lo regresan. En celular no ponen el foco en el primer campo, para no abrir el teclado. |
+| `abrir(e)` / `cerrar()` | funciones (formulario) | Abren y cierran la ventana del formulario. Al abrir, guardan `performance.now()` en `abiertoEn` (al enviar, el tiempo transcurrido se escribe en `tiempo`) y recuerdan el foco; al cerrar, lo regresan. En celular no ponen el foco en el primer campo, para no abrir el teclado. |
 | `validar()` | función (formulario) | Revisa obligatorios, formato del correo y casilla de aceptación; marca `.is-error`. |
 | `respaldoCorreo()` | función (formulario) | Abre `mailto:` con los datos ya escritos cuando no hay PHP. |
 | `DESTINO` | constante | Correo que recibe los mensajes del respaldo `mailto:`. |
@@ -286,7 +287,7 @@ Otros colores que se repiten sin variable: `#a51a2e` (vino al pasar el cursor), 
 | `proceso` | sí | 3000 | |
 | `acepta` | sí | — | Casilla del aviso de privacidad; aparece sin marcar |
 | `sitio_web` | — | — | **Trampa para robots**: está oculto; si llega con texto, se responde "Gracias" y no se envía nada |
-| `t0` | — | — | Hora en que se abrió el formulario (ms). Si se envía en menos de 3 s, se trata como robot. |
+| `tiempo` | — | — | Milisegundos que el formulario estuvo abierto, medidos en el navegador (`performance.now()`). Si falta o es menor a 3000, se responde "Gracias" sin enviar. |
 
 **Flujo de envío:**
 1. `validar()` en el navegador.
@@ -294,16 +295,19 @@ Otros colores que se repiten sin variable: `#a51a2e` (vino al pasar el cursor), 
 3. Si la respuesta es JSON: se muestra `msg`; si `ok` es verdadero, el formulario se limpia.
 4. Si la respuesta no es JSON o falla la red (por ejemplo, GitHub Pages, que no ejecuta PHP), se llama a `respaldoCorreo()`.
 
-**`enviar.php`** (variables `$DESTINO` y `$REMITENTE` al inicio):
-- **Seguridad:**
-  - Acepta solo POST (si no, responde 405).
-  - Envía los encabezados `Content-Type: application/json` y `X-Content-Type-Options: nosniff`.
-  - Quita los saltos de línea de los campos de una línea (`linea()`), lo que evita inyectar encabezados de correo.
-  - Recorta cada campo a su largo máximo.
-  - Revisa `sitio_web` y `t0`.
+**`enviar.php`** (configuración al inicio: `$DESTINO`, `$REMITENTE`, `$LIMITES`, `$MAX_ENLACES`, `$TIEMPO_MIN`):
+- **Seguridad, en este orden:**
+  1. Nunca muestra errores de PHP (`display_errors` en 0) y responde con `Content-Type: application/json`, `nosniff` y `Cache-Control: no-store`.
+  2. Solo POST (si no, 405).
+  3. Si el navegador manda `Origin`, debe ser el mismo dominio (si no, 403).
+  4. Trampa `sitio_web` y `tiempo` mínimo: si fallan, responde "Gracias" sin enviar, para no dar pistas al robot.
+  5. `campo()` solo acepta texto (un arreglo como `nombre[]=…` cuenta como vacío). `linea()` quita saltos y caracteres de control de los campos de una línea (evita inyectar encabezados) y recorta al largo máximo; `proceso` conserva saltos de línea.
+  6. Correo: `FILTER_VALIDATE_EMAIL` **y** un formato común (letras, números, `._%+-`; sin comillas, comas ni espacios).
+  7. Más de `$MAX_ENLACES` (2) enlaces (`http://`, `https://`, `www.`) en el mensaje → 422.
+  8. **Límite por conexión** (`$LIMITES`: 3 cada 10 min y 10 cada 24 h) → 429. Guarda un HMAC-SHA256 de la IP (clave aleatoria creada en el servidor, archivo `clave`) con la hora de cada envío, un archivo JSON por IP, en `../formulario-limites/` (fuera de la carpeta pública; si no se puede escribir ahí, en la carpeta temporal del sistema). Archivos con permisos 0600; se borran solos a las 24 h.
 - **Validación:** obligatorios y correo inválido → 422; falta la aceptación → 422.
-- **Envío:** `mail()` de PHP, en texto plano UTF-8. El asunto va codificado en Base64 (`Contacto web – <empresa>`), `Reply-To` lleva el correo del visitante y `-f` el remitente del dominio, para que no caiga en spam.
-- **Respuestas:** `{"ok": true|false, "msg": "…"}` con código 200, 405, 422 o 500.
+- **Envío:** `mail()` de PHP, en texto plano UTF-8 con *quoted-printable* (ninguna línea pasa de 76 caracteres). Asunto (`Contacto web – <empresa>`), remitente y nombre del visitante van siempre en Base64 por trozos (`encabezado()`), así que comas, comillas o acentos no rompen el encabezado. `Reply-To` lleva el correo del visitante y `-f` el remitente del dominio, para que no caiga en spam.
+- **Respuestas:** `{"ok": true|false, "msg": "…"}` con código 200, 403, 405, 422, 429 o 500. `script.js` muestra `msg` en todos los casos con JSON.
 - **No usa usuario ni contraseña SMTP, a propósito,** porque el repositorio es público. Si `mail()` no entrega en Hostinger, la alternativa prevista es PHPMailer con SMTP y la configuración en un archivo fuera del repositorio.
 
 ### 8.1 Datos repetidos en varios archivos (cambiar en todos)
@@ -319,6 +323,8 @@ Otros colores que se repiten sin variable: `#a51a2e` (vino al pasar el cursor), 
 ## 9. Imágenes
 
 Optimización usada: 1280×800 o 1536×1024 (horizontal), 1024×1536 (vertical), JPG de 150 KB o menos. Ninguna imagen lleva texto, logotipos ni rostros reconocibles.
+
+**Metadatos:** las imágenes se publican sin EXIF, XMP, IPTC ni comentarios (autoría, fechas, programa de edición, ubicación). Al agregar una imagen, quitárselos sin recomprimir (§14).
 
 | Archivo | Dónde | Estilo |
 |---|---|---|
@@ -366,7 +372,9 @@ Casos conocidos:
 **Pruebas automatizadas** (no están en el repositorio; se hacen con Playwright y Chrome):
 - Servir el sitio con `python3 -m http.server` **en el mismo comando** que la prueba.
 - Esperar de 1.7 a 2.8 s después de mover el scroll antes de medir, porque las transiciones duran 0.8–0.9 s.
-- Para medir con la tipografía real sin internet, interceptar `fonts.googleapis.com` y servir los `woff2` del paquete npm `@fontsource/space-grotesk`.
+- La tipografía está en `fonts/`, así que las pruebas sin internet ya usan la letra real. Para comparar con una versión anterior a 20261125d (que usaba Google Fonts), interceptar `fonts.googleapis.com` y servir **solo los pesos 400 y 700** del paquete npm `@fontsource/space-grotesk`, que es lo que entregaba Google.
+- **Formulario con PHP:** ver README §2. Probar al menos: envío normal (esperar más de 3 s), envío en menos de 3 s ("Gracias." sin correo), correo con comillas o comas (422), más de 2 enlaces (422), más de 3 envíos seguidos (429) y `Origin` de otro dominio (403). Borrar `../formulario-limites/` entre pruebas.
+- **`.htaccess`:** probar con Apache y HTTPS (§14).
 - **iPhone con barras:** abrir en 430×752 y después cambiar a 430×846. `--vh` debe quedarse en 7.52 px, `--extra` pasar a 94 px y los textos no deben moverse.
 - **Windows / Edge:**
   - La escala de pantalla de Windows (125–150 %) reduce mucho el área en CSS: una laptop de 1920×1080 al 150 % deja unos 1280×580 útiles. Probar siempre ese tamaño.
@@ -390,12 +398,12 @@ Ninguno de estos puntos afecta lo que hoy ve el visitante, salvo donde se indica
 
 **Funcionales:**
 - iPad Air 2 en horizontal: Ecosistema sin tarjetas (§10). Propuesta en estudio: medidas de respaldo antes de cada `cqw`.
-- `enviar.php`: si no llega `t0`, el filtro de 3 s no se aplica.
 - Aviso de privacidad: falta el código postal del domicilio y la revisión de un abogado.
 - **Migración a Hostinger:**
-  - Alojar Space Grotesk en el propio servidor y quitar la mención de Google Fonts en la sección 9 del aviso.
-  - Probar `mail()` con un correo real.
-- **Revisión de seguridad:** pendiente (encabezados del servidor, límites de envío del formulario y otros).
+  - Probar `mail()` con un correo real y los límites del formulario.
+  - Revisar que Hostinger aplique el `.htaccess`: que lleguen los encabezados de §14 y que `README.md` responda 403.
+  - El encabezado `Server` (versión del servidor) no se puede quitar desde `.htaccess`; depende de Hostinger.
+- **Seguridad pendiente:** la CSP y la `Referrer-Policy` podrían adelantarse en GitHub Pages con `<meta>` (sin aprobar).
 - **Versión en inglés:** planeada como página aparte (`/en/`) después de la migración.
 
 ## 13. Lineamientos de diseño y contenido
@@ -411,3 +419,30 @@ Ninguno de estos puntos afecta lo que hoy ve el visitante, salvo donde se indica
   - Sin texto, logotipos ni rostros reconocibles.
 - **Textos:** español de México, en voz de 4ward (primera persona del plural) y tuteando al visitante.
 - **Datos:** no se publican cifras, clientes ni alianzas sin confirmación de 4ward.
+
+## 14. Seguridad: servidor, tipografía y metadatos
+
+**`.htaccess` (solo Hostinger; GitHub Pages lo ignora y Jekyll no publica archivos que empiezan con punto):**
+
+| Regla | Para qué |
+|---|---|
+| `RewriteCond %{HTTPS} off` → 301 a `https://` | Siempre conexión cifrada |
+| `Strict-Transport-Security: max-age=31536000` | El navegador recuerda un año que solo se usa HTTPS. Sin `includeSubDomains`, para no afectar subdominios de correo |
+| `Content-Security-Policy` | Solo se cargan archivos del propio sitio. `script-src` permite `script.js` y el script en línea de `--vh` por su hash; `style-src` necesita `'unsafe-inline'` por los 34 `style=""` de `index.html` y el `<style>` del aviso; `connect-src 'self'` para el `fetch` a `enviar.php`; `frame-ancestors 'none'` |
+| `X-Frame-Options: DENY` | Lo mismo que `frame-ancestors`, para navegadores viejos |
+| `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy` | Endurecimiento estándar |
+| `Header unset X-Powered-By`, `ServerSignature Off`, `Options -Indexes` | No revelar versiones ni listar carpetas |
+| `FilesMatch` → `Require all denied` | Bloquea `.md`, `.yml`, `.log`, `.bak`, `.zip`, `.sh`, `.py`, `.ini` y archivos que empiezan con punto; `.git` responde 404 |
+
+**Hash del script en línea.** Si cambia el script de `<head>` de `index.html` (aunque sea un espacio), el navegador lo bloquea y `--vh` deja de medirse. Recalcular y reemplazar el valor `sha256-…` de `.htaccess`:
+
+```bash
+python3 -c "import re,hashlib,base64;s=open('index.html').read();print(base64.b64encode(hashlib.sha256(re.search(r'<script>(.*?)</script>',s,re.S).group(1).encode()).digest()).decode())"
+```
+
+**Probar el `.htaccess` localmente:** Apache con `mod_rewrite`, `mod_headers`, `mod_ssl` (certificado de prueba) y `AllowOverride All` sobre la carpeta del repositorio. Revisar con `curl -kI https://localhost/` que lleguen los encabezados, que `README.md` dé 403 y recorrer el sitio en Chrome buscando errores de CSP en la consola. Hostinger usa su propio servidor: verificar de nuevo después de migrar.
+
+**Tipografía:** `fonts/space-grotesk-{latin,latin-ext}-{400,700}-normal.woff2`, del paquete npm `@fontsource/space-grotesk` 5.3.0, con licencia SIL Open Font License en `fonts/OFL.txt` (debe acompañar a los archivos). Se declaran con `@font-face` y `unicode-range` al inicio de `styles.css` y en el `<style>` del aviso. Solo existen los pesos 400 y 700, igual que con Google Fonts: los textos con `font-weight: 500` usan el 400.
+
+**Metadatos de imágenes:** quitarlos sin recomprimir, eliminando de los JPG los segmentos APP1 (EXIF/XMP), APP13 (IPTC/Photoshop) y COM, y de los PNG los bloques `tEXt`, `zTXt`, `iTXt`, `eXIf` y `tIME`. Se conserva el perfil de color (APP2 / `iCCP`). Revisar después que los píxeles sean idénticos y que la imagen no dependa de la orientación EXIF.
+

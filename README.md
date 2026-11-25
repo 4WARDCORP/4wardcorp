@@ -4,7 +4,7 @@ Sitio de una sola página de **4Ward Solutions, S.A. de C.V.** Es HTML, CSS y Ja
 
 | | |
 |---|---|
-| **Versión** | `20261125c` (ver [CAMBIOS.md](CAMBIOS.md)) |
+| **Versión** | `20261125d` (ver [CAMBIOS.md](CAMBIOS.md)) |
 | **Publicación actual** | GitHub Pages, rama `main` → <https://4wardcorp.github.io/4wardcorp/> (temporal) |
 | **Destino final** | Hostinger, con el dominio propio `4wardcorp.com` |
 | **Documentación técnica** | [DOCUMENTACION.md](DOCUMENTACION.md) |
@@ -22,6 +22,8 @@ Sitio de una sola página de **4Ward Solutions, S.A. de C.V.** Es HTML, CSS y Ja
 ├── enviar.php                 Recibe el formulario y lo envía por correo (solo en Hostinger)
 ├── aviso-de-privacidad.html   Aviso de privacidad integral (estilos propios dentro del archivo)
 ├── img/                       Imágenes del sitio (ver DOCUMENTACION.md §9)
+├── fonts/                     Tipografía Space Grotesk y su licencia (DOCUMENTACION.md §14)
+├── .htaccess                  Seguridad del servidor en Hostinger (DOCUMENTACION.md §14)
 ├── _config.yml                Excluye la documentación de GitHub Pages (no afecta al sitio)
 ├── .editorconfig              Formato de los archivos (sangría, codificación, fin de línea)
 ├── .gitignore                 Archivos que nunca se suben (sistema, configuraciones privadas)
@@ -39,13 +41,15 @@ No hay proceso de compilación, gestor de paquetes ni base de datos: lo que est�
 python3 -m http.server 8765
 # Abrir http://localhost:8765
 
-# Formulario con PHP, sin mandar correos (el correo se guarda en /tmp/correo.txt)
-php -d "sendmail_path=sh -c 'cat > /tmp/correo.txt' sh" -S localhost:8767
+# Formulario con PHP, sin mandar correos (cada correo se guarda en /tmp/correos/)
+mkdir -p /tmp/correos && printf '#!/bin/sh\ncat > /tmp/correos/$(date +%%s%%N).eml\n' > /tmp/guardar-correo.sh && chmod +x /tmp/guardar-correo.sh
+php -d "sendmail_path=/tmp/guardar-correo.sh" -S localhost:8767
 # Abrir http://localhost:8767
 ```
 
 - Sin PHP (o en GitHub Pages) el formulario no falla: abre el correo del visitante con el mensaje ya escrito (ver DOCUMENTACION.md §8).
-- La tipografía **Space Grotesk** se descarga de Google Fonts. Sin internet se usa una letra de respaldo y los textos cambian de ancho, así que **no midas el diseño sin conexión**.
+- La tipografía **Space Grotesk** está en `fonts/`: el sitio se ve igual sin internet.
+- El formulario limita los envíos por conexión: para repetir pruebas, borrar la carpeta `formulario-limites/` que se crea junto a la del repositorio.
 
 **Pantallas mínimas que se revisan en cada cambio** (todo cambio aplica a escritorio **y** celular):
 
@@ -69,7 +73,7 @@ Se publica con un push a `main`; GitHub Pages actualiza el sitio en 2 a 5 minuto
 4. **Commit y push** a `main`. El mensaje del commit va en español y dice qué cambió y dónde.
 5. **Verificar** en línea con `?v=<versión>` al final de la dirección, en celular y en escritorio.
 
-Ramas de respaldo existentes: `respaldo-original` (sitio original) y `respaldo-20261124b` (estado anterior a la medida `--vh`).
+Ramas de respaldo existentes: `respaldo-original` (sitio original), `respaldo-20261124b` (estado anterior a la medida `--vh`) , `respaldo-20261125a` (antes de la limpieza del código) y `respaldo-20261125c` (antes de la revisión de seguridad).
 
 ## 4. Reglas que no se deben romper
 
@@ -84,11 +88,12 @@ Ramas de respaldo existentes: `respaldo-original` (sitio original) y `respaldo-2
 
 Todavía no se hace. Cuando se haga:
 
-- Subir solo: `index.html`, `styles.css`, `script.js`, `enviar.php`, `aviso-de-privacidad.html` e `img/`. **No subir** los `.md`, `_config.yml`, `.editorconfig` ni `.gitignore`.
+- Subir solo: `index.html`, `styles.css`, `script.js`, `enviar.php`, `aviso-de-privacidad.html`, `.htaccess`, `img/` y `fonts/`. **No subir** los `.md`, `_config.yml`, `.editorconfig` ni `.gitignore`.
 - Probar `enviar.php` con un correo real y revisar que no llegue a spam.
+- Revisar que el `.htaccess` funcione: encabezados de seguridad presentes y `README.md` con 403 (DOCUMENTACION.md §14).
 - Las tareas abiertas de la migración están en DOCUMENTACION.md §12.
 
 ## 6. Propiedad
 
-© 2026 4Ward Solutions, S.A. de C.V. Todos los derechos reservados. El repositorio no tiene licencia de uso: que sea público no autoriza copiar ni reutilizar el código, los textos o las imágenes.
+© 2026 4Ward Solutions, S.A. de C.V. Todos los derechos reservados. El repositorio no tiene licencia de uso: que sea público no autoriza copiar ni reutilizar el código, los textos o las imágenes. Excepción: la tipografía de `fonts/` es de sus autores y se distribuye con su propia licencia (`fonts/OFL.txt`).
 Contacto técnico y comercial: rvertti@4wardcorp.com.

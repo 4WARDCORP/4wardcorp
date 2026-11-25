@@ -365,14 +365,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const boton = form.querySelector('.cf-enviar');
     const DESTINO = 'rvertti@4wardcorp.com';
     let ultimoFoco = null;
+    let abiertoEn = 0;   // performance.now() al abrir: mide el tiempo con el formulario abierto sin depender del reloj del equipo
 
-    // Abre la ventana, guarda la hora (filtro anti-robots de 3 s en enviar.php) y recuerda el foco
+    // Abre la ventana, empieza a medir el tiempo (filtro anti-robots de 3 s en enviar.php) y recuerda el foco
     function abrir(e) {
         if (e) e.preventDefault();
         ultimoFoco = document.activeElement;
         modal.hidden = false;
         document.documentElement.classList.add('contacto-abierto');
-        form.elements.t0.value = Date.now();
+        abiertoEn = performance.now();
         requestAnimationFrame(() => modal.classList.add('is-open'));
         // En celular no se enfoca el primer campo para no abrir el teclado de golpe
         if (window.innerWidth > 768) setTimeout(() => form.elements.nombre.focus({ preventScroll: true }), 250);
@@ -423,6 +424,7 @@ document.addEventListener('DOMContentLoaded', () => {
         boton.disabled = true;
         estado.className = 'cf-estado';
         estado.textContent = 'Enviando…';
+        form.elements.tiempo.value = Math.round(performance.now() - abiertoEn);
         try {
             const r = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } });
             const tipo = r.headers.get('content-type') || '';

@@ -19,7 +19,30 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). L
 
 _(Nada pendiente.)_
 
-## [20261125c] — 2026-11-25
+## [20261125d] — 2026-11-25
+
+Revisión de seguridad (diagnóstico del 25-nov-2026). Lo visible del sitio no cambia: se comparó contra 20261125c el estilo computado de cada elemento y una captura en las 36 paradas (1440×900, 1280×720, 1462×663, 390×844 y 375×667) y los estados del menú y del formulario.
+
+### Agregado
+- `.htaccess` para Hostinger: siempre HTTPS, HSTS, política de contenido (CSP: solo archivos del propio sitio), protección contra mostrar el sitio dentro de otra página, `Referrer-Policy`, `Permissions-Policy`, sin `X-Powered-By`, sin listado de carpetas y bloqueo de `.md`, `.yml`, archivos ocultos y `.git`. GitHub Pages lo ignora (DOCUMENTACION.md §14).
+- Tipografía Space Grotesk alojada en el sitio (`fonts/`, pesos 400 y 700, latino y latino extendido, licencia en `fonts/OFL.txt`), con precarga en `index.html`.
+- Formulario: límite de envíos por conexión (3 cada 10 min y 10 cada 24 h). Solo se guarda un código irreversible de la IP, fuera de la carpeta pública, y se borra a las 24 h.
+- Formulario: se rechazan envíos que vengan de otro sitio (`Origin`) y mensajes con más de 2 enlaces.
+
+### Cambiado
+- Formulario: el filtro anti-robots mide en el navegador cuánto tiempo estuvo abierto el formulario (campo `tiempo`, antes `t0` con la hora del equipo). Ya no depende del reloj del visitante y el servidor lo exige.
+- `enviar.php`: nombre, asunto y remitente van siempre codificados; el correo del visitante debe tener un formato común (sin comillas ni comas); el mensaje se envía en *quoted-printable* (líneas cortas); solo se aceptan campos de texto; nunca se muestran errores de PHP.
+- Aviso de privacidad (sección 9 y fecha): el sitio ya no carga archivos de terceros.
+
+### Corregido
+- Un visitante con el reloj de su equipo adelantado veía "Gracias." pero su mensaje se descartaba.
+- Un nombre con comas podía agregar direcciones a "Responder a" del correo recibido.
+
+### Eliminado
+- Carga de Google Fonts en `styles.css` y `aviso-de-privacidad.html`.
+- Metadatos (autoría, fechas y programa de edición) de `d2`, `h1`–`h3`, `p1`, `p2`, `p4`, `logo.png`, `logoc.png` e `icon.png`. Sin recomprimir: los píxeles y el perfil de color son idénticos.
+
+## [20261125c] — 2026-11-25 · commit `b8a073e`
 
 ### Corregido
 - IA, escena "Nuestro proceso es simple": en pantallas de escritorio muy bajas (700 px de alto o menos, como una laptop con la escala de Windows al 150 %), el botón del formulario quedaba cortado a la mitad. Ahora, en esas pantallas, los textos y espacios del bloque se ajustan al alto y el botón cabe completo (`@media (min-width: 769px) and (max-height: 700px)` de la sección IA en `styles.css`). Error anterior a la reorganización.

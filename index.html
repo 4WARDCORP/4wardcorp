@@ -25,7 +25,9 @@
         window.addEventListener('orientationchange', function () { setTimeout(function () { medir(true); }, 300); });
     })();
     </script>
-    <link rel="stylesheet" href="styles.css?v=20261125c">
+    <link rel="preload" href="fonts/space-grotesk-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="styles.css?v=20261125d">
 </head>
 <body>
 
@@ -636,7 +638,7 @@
                 </label>
                 <label>¿Qué proceso quieres mejorar?<textarea name="proceso" rows="4" maxlength="3000" required></textarea></label>
                 <label class="cf-trampa" aria-hidden="true">Sitio web<input type="text" name="sitio_web" tabindex="-1" autocomplete="off"></label>
-                <input type="hidden" name="t0" value="">
+                <input type="hidden" name="tiempo" value="">
                 <p class="cf-aviso">4Ward Solutions, S.A. de C.V., con domicilio en Río San Joaquín 38, Col. Anáhuac, Ciudad de México, usará tus datos (nombre, empresa, correo y, si los das, teléfono, sector y mensaje) solo para responder tu solicitud y darle seguimiento. No los vendemos ni los usamos para publicidad. Puedes limitar su uso o ejercer tus derechos ARCO en rvertti@4wardcorp.com. Consulta el <a href="aviso-de-privacidad.html" target="_blank" rel="noopener">aviso de privacidad integral</a>.</p>
                 <label class="cf-acepta"><input type="checkbox" name="acepta" value="1" required> He leído el aviso de privacidad y acepto que 4Ward Solutions trate mis datos para atender mi solicitud.</label>
                 <p class="cf-estado" role="status" aria-live="polite"></p>
@@ -645,6 +647,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=20261125c"></script>
+    <script src="script.js?v=20261125d"></script>
 </body>
 </html>
