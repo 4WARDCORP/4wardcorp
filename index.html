@@ -6,7 +6,7 @@
     <title>4ward Solutions</title>
     <link rel="icon" type="image/png" href="img/favicon.png">
     <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
-    <link rel="stylesheet" href="styles.css?v=20261124a">
+    <link rel="stylesheet" href="styles.css?v=20261124b">
 </head>
 <body>
 
@@ -393,6 +393,9 @@
                                         <p><span class="role role-4w">4ward</span>Lo integramos a tus sistemas, damos soporte y lo afinamos con el uso.</p>
                                     </li>
                                 </ol>
+                                <div class="proceso-cta">
+                                    <button type="button" class="cta-btn js-abrir-contacto">Platiquemos de tu proceso</button>
+                                </div>
                             </div>
                         </div>
                         </div>
@@ -574,16 +577,57 @@
 
             <div class="footer-info footer-contact">
                 <p><strong>Roberto P. Vertti</strong> &mdash; Dirección Comercial</p>
-                <p><a href="mailto:rpvertti@4wardcorp.com">rpvertti@4wardcorp.com</a></p>
+                <p><a href="mailto:rvertti@4wardcorp.com">rvertti@4wardcorp.com</a></p>
                 <p>Ciudad de México, CDMX.</p>
+                <button type="button" class="cta-btn js-abrir-contacto footer-cta">Platiquemos de tu proceso</button>
             </div>
             <div class="footer-info footer-legal" style="margin-top: 30px;">
                 <p>Copyright © 2026 4ward corp. All rights reserved.</p>
                 <p>WebDesign: <a href="https://crisswizart-links.carrd.co">CrissWizArt</a></p>
+                <p><a href="aviso-de-privacidad.html">Aviso de privacidad</a></p>
             </div>
         </div>
     </footer>
 
-    <script src="script.js?v=20261124a"></script>
+    <!-- FORMULARIO DE CONTACTO (ventana) -->
+    <div class="contacto-modal" id="contacto-modal" role="dialog" aria-modal="true" aria-labelledby="contacto-titulo" hidden>
+        <div class="contacto-fondo" data-cerrar></div>
+        <div class="contacto-caja">
+            <button type="button" class="contacto-cerrar" data-cerrar aria-label="Cerrar">&times;</button>
+            <p class="ia-kicker">Contacto</p>
+            <h3 id="contacto-titulo" class="contacto-titulo">Platiquemos de tu proceso</h3>
+            <p class="contacto-lead">Cuéntanos qué te quita más tiempo. Te respondemos personalmente.</p>
+            <form id="contacto-form" class="contacto-form" action="enviar.php" method="post" novalidate>
+                <div class="cf-fila">
+                    <label>Nombre completo<input type="text" name="nombre" autocomplete="name" maxlength="120" required></label>
+                    <label>Empresa<input type="text" name="empresa" autocomplete="organization" maxlength="160" required></label>
+                </div>
+                <div class="cf-fila">
+                    <label>Correo de trabajo<input type="email" name="correo" autocomplete="email" maxlength="160" required></label>
+                    <label><span>Teléfono <span class="cf-opc">(opcional)</span></span><input type="tel" name="telefono" autocomplete="tel" maxlength="40"></label>
+                </div>
+                <label><span>Sector <span class="cf-opc">(opcional)</span></span>
+                    <select name="sector">
+                        <option value="">Selecciona…</option>
+                        <option>Movilidad y autopistas</option>
+                        <option>Puertos y aduanas</option>
+                        <option>Trenes</option>
+                        <option>Construcción</option>
+                        <option>Telecomunicaciones</option>
+                        <option>Otro</option>
+                    </select>
+                </label>
+                <label>¿Qué proceso quieres mejorar?<textarea name="proceso" rows="4" maxlength="3000" required></textarea></label>
+                <label class="cf-trampa" aria-hidden="true">Sitio web<input type="text" name="sitio_web" tabindex="-1" autocomplete="off"></label>
+                <input type="hidden" name="t0" value="">
+                <p class="cf-aviso">4Ward Solutions, S.A. de C.V., con domicilio en Río San Joaquín 38, Col. Anáhuac, Ciudad de México, usará tus datos (nombre, empresa, correo y, si los das, teléfono, sector y mensaje) solo para responder tu solicitud y darle seguimiento. No los vendemos ni los usamos para publicidad. Puedes limitar su uso o ejercer tus derechos ARCO en rvertti@4wardcorp.com. Consulta el <a href="aviso-de-privacidad.html" target="_blank" rel="noopener">aviso de privacidad integral</a>.</p>
+                <label class="cf-acepta"><input type="checkbox" name="acepta" value="1" required> He leído el aviso de privacidad y acepto que 4Ward Solutions trate mis datos para atender mi solicitud.</label>
+                <p class="cf-estado" role="status" aria-live="polite"></p>
+                <button type="submit" class="cta-btn cf-enviar">Enviar</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js?v=20261124b"></script>
 </body>
 </html>

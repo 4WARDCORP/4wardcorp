@@ -321,3 +321,91 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     onScrollParallax();
 });
+/* ==================================================
+   CONTACTO: ventana con el formulario "Platiquemos de tu proceso"
+   En Hostinger envía a enviar.php (correo). En GitHub Pages no hay PHP:
+   si el envío falla por eso, abre el correo del visitante con los datos ya escritos.
+================================================== */
+(function () {
+    const modal = document.getElementById('contacto-modal');
+    const form = document.getElementById('contacto-form');
+    if (!modal || !form) return;
+    const estado = form.querySelector('.cf-estado');
+    const boton = form.querySelector('.cf-enviar');
+    const DESTINO = 'rvertti@4wardcorp.com';
+    let ultimoFoco = null;
+
+    function abrir(e) {
+        if (e) e.preventDefault();
+        ultimoFoco = document.activeElement;
+        modal.hidden = false;
+        document.documentElement.classList.add('contacto-abierto');
+        form.elements.t0.value = Date.now();
+        requestAnimationFrame(() => modal.classList.add('is-open'));
+        // En celular no se enfoca el primer campo para no abrir el teclado de golpe
+        if (window.innerWidth > 768) setTimeout(() => form.elements.nombre.focus({ preventScroll: true }), 250);
+    }
+    function cerrar() {
+        modal.classList.remove('is-open');
+        document.documentElement.classList.remove('contacto-abierto');
+        setTimeout(() => { modal.hidden = true; }, 300);
+        if (ultimoFoco) ultimoFoco.focus({ preventScroll: true });
+    }
+
+    document.querySelectorAll('.js-abrir-contacto').forEach(b => b.addEventListener('click', abrir));
+    modal.querySelectorAll('[data-cerrar]').forEach(b => b.addEventListener('click', cerrar));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modal.hidden) cerrar(); });
+
+    function validar() {
+        let ok = true;
+        ['nombre', 'empresa', 'correo', 'proceso'].forEach(n => {
+            const el = form.elements[n];
+            const malo = !el.value.trim() || (n === 'correo' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim()));
+            el.classList.toggle('is-error', malo);
+            if (malo) ok = false;
+        });
+        if (!ok) { estado.className = 'cf-estado'; estado.textContent = 'Revisa los campos marcados.'; return false; }
+        if (!form.elements.acepta.checked) { estado.className = 'cf-estado'; estado.textContent = 'Para enviar, acepta el aviso de privacidad.'; return false; }
+        return true;
+    }
+
+    function respaldoCorreo() {
+        const f = form.elements;
+        const cuerpo = 'Nombre: ' + f.nombre.value + '\nEmpresa: ' + f.empresa.value + '\nCorreo: ' + f.correo.value +
+            '\nTeléfono: ' + (f.telefono.value || '—') + '\nSector: ' + (f.sector.value || '—') +
+            '\n\n¿Qué proceso quiero mejorar?\n' + f.proceso.value;
+        window.location.href = 'mailto:' + DESTINO + '?subject=' + encodeURIComponent('Contacto web – ' + f.empresa.value) + '&body=' + encodeURIComponent(cuerpo);
+        estado.className = 'cf-estado is-ok';
+        estado.textContent = 'Se abrió tu correo con el mensaje listo; solo envíalo.';
+    }
+
+    form.addEventListener('input', e => {
+        e.target.classList.remove('is-error');
+        if (!estado.classList.contains('is-ok')) estado.textContent = '';
+    });
+
+    form.addEventListener('submit', async e => {
+        e.preventDefault();
+        if (!validar()) return;
+        boton.disabled = true;
+        estado.className = 'cf-estado';
+        estado.textContent = 'Enviando…';
+        try {
+            const r = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } });
+            const tipo = r.headers.get('content-type') || '';
+            if (!tipo.includes('application/json')) throw new Error('sin PHP');
+            const datos = await r.json();
+            if (datos.ok) {
+                form.reset();
+                estado.className = 'cf-estado is-ok';
+                estado.textContent = datos.msg;
+            } else {
+                estado.textContent = datos.msg;
+            }
+        } catch (err) {
+            respaldoCorreo();
+        } finally {
+            boton.disabled = false;
+        }
+    });
+})();
