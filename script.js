@@ -253,12 +253,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // REGRESAR AL INICIO: fundido a negro, salto directo a la portada y fundido de regreso
+    const fundido = document.querySelector('.fundido-inicio');
+    function volverInicio() {
+        morphNav.classList.remove('mobile-menu-open');
+        if (!fundido) { window.scrollTo({ top: 0, behavior: 'instant' }); return; }
+        fundido.classList.add('is-on');
+        setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            setTimeout(() => fundido.classList.remove('is-on'), 80);
+        }, 380);
+    }
+
+    // Botón flotante: aparece al salir de la portada
+    const btnSubir = document.querySelector('.btn-subir');
+    if (btnSubir) {
+        btnSubir.addEventListener('click', volverInicio);
+        const toggleSubir = () => btnSubir.classList.toggle('is-visible', window.scrollY > screenH() * 0.6);
+        window.addEventListener('scroll', toggleSubir, { passive: true });
+        toggleSubir();
+    }
+
     if (brandLogoWrapper) {
         brandLogoWrapper.addEventListener('click', () => {
             const isMobile = window.innerWidth <= 768;
-            if (isMobile && morphNav.classList.contains('is-scrolled')) {
-                morphNav.classList.toggle('mobile-menu-open');
-            }
+            if (!morphNav.classList.contains('is-scrolled')) return;
+            // Celular: el logo abre y cierra el menú (ahí está "Inicio"). Escritorio: el logo regresa a la portada
+            if (isMobile) morphNav.classList.toggle('mobile-menu-open');
+            else volverInicio();
         });
     }
 
@@ -267,6 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             const targetId = this.getAttribute('href').substring(1);
+            if (targetId === 'inicio') { volverInicio(); return; }
             const targetSection = document.getElementById(targetId);
             
             if (targetSection) {

@@ -25,7 +25,7 @@
         window.addEventListener('orientationchange', function () { setTimeout(function () { medir(true); }, 300); });
     })();
     </script>
-    <link rel="stylesheet" href="styles.css?v=20261124e">
+    <link rel="stylesheet" href="styles.css?v=20261125a">
 </head>
 <body>
 
@@ -48,7 +48,7 @@
         </nav>
         
         <!-- CONTENEDOR MULTI-LOGO -->
-        <div class="brand-logo-wrapper">
+        <div class="brand-logo-wrapper" title="Inicio">
             <!-- LOGO A COLOR (Se ve al inicio en el hero) -->
             <img src="img/logo.png" alt="4ward Logo Color" class="logo-img logo-color">
             <!-- LOGO BLANCO (Se ve al scrollear en la píldora) -->
@@ -62,6 +62,7 @@
         </nav>
 
         <nav class="mobile-menu-content">
+            <a href="#inicio" class="menu-inicio">Inicio</a>
             <a href="#dilema">Dilema</a>
             <a href="#operaciones">Operaciones</a>
             <a href="#crecimiento">Crecimiento</a>
@@ -70,6 +71,12 @@
             <a href="#ecosistema">Ecosistema</a>
         </nav>
     </div>
+
+    <!-- REGRESAR AL INICIO: botón flotante (variante B) y fundido negro del salto -->
+    <button type="button" class="btn-subir" aria-label="Regresar al inicio" title="Inicio">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+    </button>
+    <div class="fundido-inicio" aria-hidden="true"></div>
 
     <main class="content-wrapper">
         
@@ -638,6 +645,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=20261124e"></script>
+    <script src="script.js?v=20261125a"></script>
 </body>
 </html>

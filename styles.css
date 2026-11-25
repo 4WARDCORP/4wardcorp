@@ -792,3 +792,23 @@ html.contacto-abierto, html.contacto-abierto body { overflow: hidden; }
 }
 /* Los textos de las escenas no reciben clics (.text-slider-mask); el botón sí debe recibirlos */
 .text-slider-mask .cta-btn { pointer-events: auto; }
+
+/* =========================================
+   REGRESAR AL INICIO
+   Logo del menú (escritorio) e "Inicio" en el menú del celular, más el botón flotante abajo a la derecha.
+   Los dos usan el mismo salto: fundido a negro, salto a la portada y fundido de regreso
+   (no se recorre todo el sitio con scroll).
+========================================= */
+.fundido-inicio { position: fixed; inset: 0; background: #000; opacity: 0; pointer-events: none; z-index: 9998; transition: opacity 0.35s ease; }
+.fundido-inicio.is-on { opacity: 1; pointer-events: auto; }
+.menu-inicio { color: #e3a3ad !important; }
+.btn-subir { position: fixed; right: 28px; bottom: 28px; z-index: 9000; width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; padding: 0; cursor: pointer; background: rgba(12,12,12,0.78); border: 1px solid rgba(255,255,255,0.28); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); opacity: 0; transform: translateY(12px); pointer-events: none; transition: opacity 0.4s ease, transform 0.4s ease, background 0.3s ease, border-color 0.3s ease; }
+.btn-subir svg { width: 22px; height: 22px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.btn-subir.is-visible { opacity: 1; transform: none; pointer-events: auto; }
+.btn-subir:hover, .btn-subir:focus-visible { background: var(--brand); border-color: var(--brand); outline: none; }
+@media (max-width: 768px) {
+    .btn-subir { right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); width: 46px; height: 46px; }
+    .btn-subir svg { width: 20px; height: 20px; }
+}
+/* El menú encogido (sus enlaces ya están ocultos) no debe tapar toques: en celular su columna derecha cubría la esquina del botón */
+.is-shrunk .nav-links { pointer-events: none; }
