@@ -374,7 +374,7 @@ html {
 }
 
 /* IA — escenas fijas */
-.ia-sequence { height: calc(var(--vh) * 900 + var(--extra)); }
+.ia-sequence { height: calc(var(--vh) * 1100 + var(--extra)); }
 .ia-overlay { background: rgba(0,0,0,0.6); }
 .ia-kicker-dark { color: #111; border-color: rgba(0,0,0,0.2); margin-bottom: 34px; }
 .ia-intro { color: #e6e6e6; font-size: clamp(1.25rem, 2.2vw, 1.9rem); line-height: 1.5; max-width: 1050px; margin-top: 0; }
@@ -607,7 +607,6 @@ html {
 /* =========================================
    IA · DESARROLLOS 4WARD y NUESTRO PROCESO — 2 escenas fijas (antes scroll libre: en escritorio se veían juntas)
 ========================================= */
-.casos-sequence { height: calc(var(--vh) * 200 + var(--extra)); }
 .casos-bg { background: #000; }
 .casos-item { padding: 90px 5% 40px; color: #fff; }
 .casos-item .ia-cases { margin-top: 0; }

@@ -25,7 +25,7 @@
         window.addEventListener('orientationchange', function () { setTimeout(function () { medir(true); }, 300); });
     })();
     </script>
-    <link rel="stylesheet" href="styles.css?v=20261124d">
+    <link rel="stylesheet" href="styles.css?v=20261124e">
 </head>
 <body>
 
@@ -239,8 +239,11 @@
         </section>
 
         <!-- 4. IA APLICADA (escenas fijas) -->
+        <!-- IA: 11 escenas (0 título · 1 intro · 2 diagrama · 3–8 frentes 01–06 · 9 Desarrollos 4ward · 10 Proceso) -->
         <section id="ia" class="sticky-sequence ia-sequence">
             <div class="snap-grid">
+                <div class="snap-point"></div>
+                <div class="snap-point"></div>
                 <div class="snap-point"></div>
                 <div class="snap-point"></div>
                 <div class="snap-point"></div>
@@ -261,6 +264,9 @@
                 <div class="seq-bg" style="background-image: url('img/ia-04.jpg');"><div class="seq-overlay ia-overlay"></div></div>
                 <div class="seq-bg" style="background-image: url('img/ia-05.jpg');"><div class="seq-overlay ia-overlay"></div></div>
                 <div class="seq-bg" style="background-image: url('img/ia-06.jpg');"><div class="seq-overlay ia-overlay"></div></div>
+                <!-- Escenas 9 y 10: Desarrollos 4ward y Nuestro proceso es simple (antes sección aparte #ia-casos) -->
+                <div class="seq-bg casos-bg"></div>
+                <div class="seq-bg casos-bg casos-bg-2"></div>
 
                 <div class="text-slider-mask">
                     <div class="text-slider-track" id="ia-text-track">
@@ -349,22 +355,6 @@
                                 <li>Resumen diario de lo que requiere tu atención</li>
                             </ul>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 4b. IA: DESARROLLOS Y PROCESO (escenas fijas: 0 = Desarrollos 4ward, 1 = Nuestro proceso es simple) -->
-        <section id="ia-casos" class="sticky-sequence casos-sequence" data-scene="0">
-            <div class="snap-grid">
-                <div class="snap-point"></div><div class="snap-point"></div>
-            </div>
-            <div class="sticky-container" id="sticky-casos">
-                <div class="seq-bg active casos-bg"></div>
-                <div class="seq-bg casos-bg casos-bg-2"></div>
-
-                <div class="text-slider-mask">
-                    <div class="text-slider-track" id="casos-text-track">
                         <div class="text-slider-item casos-item">
                         <div class="ia-cases v-a">
                             <h3 class="ia-subtitle">Desarrollos 4ward</h3>
@@ -422,6 +412,7 @@
                 </div>
             </div>
         </section>
+
 
         <!-- 5. EXPERIENCIA -->
         <section id="experiencia" class="sticky-sequence">
@@ -647,6 +638,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=20261124d"></script>
+    <script src="script.js?v=20261124e"></script>
 </body>
 </html>

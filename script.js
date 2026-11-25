@@ -159,9 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const sequenceSectionCrecimiento = document.getElementById('crecimiento');
     const crecimientoScroll = sequenceSectionCrecimiento
         ? makeSimpleSequence(sequenceSectionCrecimiento, document.getElementById('crecimiento-text-track')) : null;
-    const sequenceSectionCasos = document.getElementById('ia-casos');
-    const casosScroll = sequenceSectionCasos && sequenceSectionCasos.classList.contains('casos-sequence')
-        ? makeSimpleSequence(sequenceSectionCasos, document.getElementById('casos-text-track')) : null;
 
     const operacionesScroll = sequenceSectionOperaciones ? makeSpotSequence(sequenceSectionOperaciones, operacionesTrack) : null;
     const ecosistemaScroll = sequenceSectionEcosistema ? makeSpotSequence(sequenceSectionEcosistema, ecosistemaTrack) : null;
@@ -190,7 +187,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (operacionesScroll) operacionesScroll(windowHeight);
         if (crecimientoScroll) crecimientoScroll(windowHeight);
-        if (casosScroll) casosScroll(windowHeight);
 
         if (sequenceSectionIA) {
             const rect = sequenceSectionIA.getBoundingClientRect();
