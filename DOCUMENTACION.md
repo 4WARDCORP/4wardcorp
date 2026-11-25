@@ -1,6 +1,6 @@
 # Documentación técnica — sitio 4ward Solutions
 
-Referencia para quien mantenga o modifique el sitio. Describe el código tal como está en la versión **`20261125a`** (commit `67a239b`).
+Referencia para quien mantenga o modifique el sitio. Describe el código tal como está en la versión **`20261125b`** (código reorganizado; ver [CAMBIOS.md](CAMBIOS.md)).
 La forma de probar y publicar está en el [README](README.md) y el historial en [CAMBIOS.md](CAMBIOS.md).
 
 **Regla de mantenimiento:** si un cambio contradice algo de este documento, el documento se actualiza en el mismo commit.
@@ -102,7 +102,7 @@ Todas las alturas de sección son `calc(var(--vh) * N + var(--extra))`. **Parada
 
 | Motor | Secciones | Particularidades |
 |---|---|---|
-| En línea dentro del `scroll` | Dilema, IA, Experiencia | El número de escenas sale de la cantidad de `.seq-bg`. **Experiencia tiene el máximo fijo en el código (`> 4`)** y además activa los cuadros de escritorio (`.is-in` cuando `escena ≥ cuadro + 1`). |
+| En línea dentro del `scroll` | Dilema, IA, Experiencia | El número de escenas sale de la cantidad de `.seq-bg`. **Experiencia tiene el máximo en la constante `PILARES_ULTIMA_ESCENA` (4)** y además activa los cuadros de escritorio (`.is-in` cuando `escena ≥ cuadro + 1`). |
 | `makeSimpleSequence(section, track)` | Crecimiento | Fondos y texto por escena; escribe `data-scene`. |
 | `makeSpotSequence(section, track)` | Operaciones, Ecosistema | Puntos sobre una imagen (ver abajo). Solo hay 2 fondos: el blanco (escena 0) y la imagen (escenas 1 en adelante). |
 
@@ -129,7 +129,7 @@ Todas las alturas de sección son `calc(var(--vh) * N + var(--extra))`. **Parada
 3. Agregar o quitar su `.text-slider-item`, en la misma posición.
 4. Ajustar el alto de la sección en CSS: `calc(var(--vh) * <N×100> + var(--extra))`. Si la sección usa el valor base de `.sticky-sequence` (500), crear una clase propia, como `.ia-sequence`.
 5. Según la sección:
-   - **Experiencia:** cambiar también el `4` fijo en `script.js` y los cuadros de escritorio.
+   - **Experiencia:** cambiar también `PILARES_ULTIMA_ESCENA` en `script.js` y los cuadros de escritorio.
    - **Spot:** agregar el `.op-spot` con su `data-scene` y sus 4 coordenadas.
    - **Ecosistema:** además, su `.eco-card` y su `<line>`.
 6. Actualizar los comentarios con el mapa de escenas en `index.html` y la tabla del §2 de este documento.
@@ -194,6 +194,8 @@ Se usa en tres lugares:
 
 ## 6. Diccionario CSS
 
+**Organización de `styles.css`:** un índice al inicio y 15 secciones en el orden de la página (base, elementos comunes, carga, menú, portada, sistema de escenas, una sección por cada parte del sitio, pie, formulario y regreso al inicio). Cada sección tiene primero sus reglas generales y al final sus `@media`, en el orden del §6.4. `script.js` también abre con un índice y está dividido en los mismos bloques del §7.
+
 ### 6.1 Variables globales (`:root`)
 
 | Variable | Valor | Uso |
@@ -254,14 +256,14 @@ Otros colores que se repiten sin variable: `#a51a2e` (vino al pasar el cursor), 
 | `makeSimpleSequence(section, track)` | función | Prepara una sección de fondos con fundido y devuelve su `onScroll(alto)`. |
 | `volverInicio()` | función | Fundido a negro, salto a la portada y fundido de regreso (§5). |
 | `toggleSubir()` | función | Muestra u oculta `.btn-subir`. |
-| `onScrollParallax()` | función | Mueve las imágenes `.parallax-img` (hoy no hay ninguna: §12). |
 | `abrir(e)` / `cerrar()` | funciones (formulario) | Abren y cierran la ventana del formulario. Al abrir, escriben la hora en `t0` y recuerdan el foco; al cerrar, lo regresan. En celular no ponen el foco en el primer campo, para no abrir el teclado. |
 | `validar()` | función (formulario) | Revisa obligatorios, formato del correo y casilla de aceptación; marca `.is-error`. |
 | `respaldoCorreo()` | función (formulario) | Abre `mailto:` con los datos ya escritos cuando no hay PHP. |
 | `DESTINO` | constante | Correo que recibe los mensajes del respaldo `mailto:`. |
+| `PILARES_ULTIMA_ESCENA` | constante | Última escena de Experiencia (4). |
 
 **Eventos registrados:**
-- `scroll`, tres veces: escenas, estado del menú y parallax. El último usa `requestAnimationFrame`.
+- `scroll`, dos veces: escenas y estado del menú.
 - `scroll` pasivo: botón ↑.
 - `resize`: reacomoda los puntos y las líneas de cada sección con puntos.
 - `load`: quita la pantalla de carga y dibuja las líneas.
@@ -369,23 +371,18 @@ Casos conocidos:
 - **Barra de Windows:** quitar `--hide-scrollbars` de Chrome y forzar `html { overflow-y: scroll }`. Sirve para revisar anchos y saltos de línea; el conteo de paradas con la barra visible no es confiable.
 - **iPad Air 2:** quitar del CSS las declaraciones con `cqw`, `cqh` y `container-type`.
 - **Comparar con una versión anterior:** `git worktree add ../anterior <commit>` y servirla en otro puerto.
+- **Cambios que no deben verse (limpieza o reorganización):** comparar las dos versiones con el estilo computado de cada elemento (`getComputedStyle`, incluidos `::before` y `::after`) y una captura en cada una de las 36 paradas, en los 10 tamaños del README, más los estados interactivos (menú abierto, formulario abierto y con errores). Para tener resultados estables: congelar transiciones y animaciones y el slider de portada, y comparar los nombres de propiedades ordenados. Si se mueven reglas de CSS, revisar además los pares de reglas que cambiaron de orden y tienen la misma especificidad, porque ahí puede cambiar cuál gana.
 
 ## 12. Deuda técnica y pendientes conocidos
 
 Ninguno de estos puntos afecta lo que hoy ve el visitante, salvo donde se indica.
 
-**Código sin uso** (se puede quitar con una prueba de regresión):
-- Clases CSS sin elementos en el HTML: `.section-white`, `.parallax-blocks`, `.parallax-card`, `.parallax-image-wrapper`, `.parallax-img`, `.card-text`, `.ecosystem-extended-text`, `.footer-links`, `.ia-section`, `.over-sticky`, `.push-up`, `.responsive-seq-img`, `.op-side-b`, `.op-side-bl`, `.brand-logo` y `.reveal-up`.
-- JS sin efecto: el parallax (`onScrollParallax`) y el `IntersectionObserver` de `.reveal-up`, porque no hay elementos con esas clases.
-- `@keyframes scroll` no se usa. El `<div class="mouse">` de la portada no tiene estilos, así que no se ve.
-- `img/icon.png` no se usa.
+**Código sin uso:** el código muerto se quitó en la versión `20261125b` (ver CAMBIOS.md). Solo queda `img/icon.png`, que no se usa; no se ha borrado porque las imágenes no se eliminan sin confirmación del responsable del sitio.
 
 **Organización:**
-- `styles.css` creció por capas: algunas secciones tienen reglas en varios bloques (el pie de página en unos 6; IA en 3), y el mismo `@media (min-width: 769px) and (max-height: 820px)` aparece 4 veces. Reordenarlo por sección es posible, pero en CSS el orden cambia el resultado: hacerlo en una rama de respaldo y con la revisión completa del §11.
-- La lógica de escenas está en 3 motores (§3.3). Dilema, IA y Experiencia podrían usar `makeSimpleSequence()`.
-- Nombres históricos: `pilares` (hoy Experiencia), `v-a` (variante A de diseño), `casos` (antigua sección `#ia-casos`).
-- 34 atributos `style=""` en `index.html`, casi todos imágenes de fondo, y 7 `!important` en `styles.css`.
-- Varios comentarios del código cuentan la historia del cambio ("antes…", "variante B elegida…"). La historia va en `CAMBIOS.md`; los comentarios deberían explicar el porqué actual.
+- La lógica de escenas está en 3 motores (§3.3). Dilema, IA y Experiencia podrían usar `makeSimpleSequence()`, pero unificarlos cambia el código que corre en cada scroll: hacerlo solo con la revisión completa del §11.
+- Nombres históricos que se conservan para no romper referencias: `pilares` (hoy Experiencia), `v-a` (estilo de las tarjetas de Desarrollos) y `casos` (escenas 9 y 10 de IA).
+- 34 atributos `style=""` en `index.html` (casi todos, la imagen de fondo de cada escena) y 7 `!important` en `styles.css`.
 
 **Rendimiento:** `h1.jpg` (423 KB), `h3.jpg` (432 KB), `h2.jpg` (300 KB), `p1.jpg` (296 KB), `p2.jpg` (269 KB) y `p4.jpg` (242 KB) pasan del objetivo de 150 KB. Son las primeras imágenes que se cargan.
 

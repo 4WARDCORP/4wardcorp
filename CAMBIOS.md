@@ -19,6 +19,27 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). L
 
 _(Nada pendiente.)_
 
+## [20261125b] — 2026-11-25
+
+Limpieza y organización del código. **El sitio se ve y se comporta igual**: se comparó contra la versión anterior el estilo computado de cada elemento y una captura en las 36 paradas, en 10 tamaños de pantalla, más los estados del menú y del formulario.
+
+### Cambiado
+- `styles.css` reordenado por sección, en el orden de la página:
+  - índice al inicio;
+  - cada sección con sus `@media` al final, siempre en el mismo orden;
+  - IA dividida por escenas.
+- `script.js` dividido en bloques numerados, con índice al inicio. La última escena de Experiencia es ahora la constante `PILARES_ULTIMA_ESCENA`.
+- Los comentarios que contaban la historia del cambio ("antes…", "variante B elegida…") ahora explican para qué sirve cada parte.
+- `.footer-contact a` pasa a `.footer-info.footer-contact a` para conservar el mismo resultado con el nuevo orden.
+
+### Eliminado
+- **CSS sin uso:**
+  - Clases sin elementos en la página: `.section-white`, `.parallax-*`, `.card-text`, `.ecosystem-extended-text`, `.footer-links`, `.reveal-up`, `.ia-section`, `.over-sticky`, `.push-up`, `.responsive-seq-img`, `.op-side-b`, `.op-side-bl` y `.brand-logo`.
+  - La regla `.is-scrolled .morph-container`, que no podía aplicarse a ningún elemento.
+  - `@keyframes scroll`.
+- **JS sin efecto:** el parallax y el `IntersectionObserver` de `.reveal-up`.
+- **HTML:** el `<div class="mouse">` vacío de la portada.
+
 ## Documentación — 2026-11-25 (el sitio no cambia; la versión sigue en `20261125a`)
 
 ### Agregado

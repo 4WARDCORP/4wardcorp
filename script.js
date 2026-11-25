@@ -1,54 +1,61 @@
+/* ==========================================================================
+   4ward Solutions — script.js
+   Comportamiento del sitio. Sin dependencias. Referencia completa: DOCUMENTACION.md (§3, §5, §7, §8).
+
+   ÍNDICE
+   1. Pantalla de carga
+   2. Portada: slider de fotos y título que se desvanece
+   3. Medidas de pantalla (screenH / sceneStep)
+   4. Motores de escenas fijas
+      4.1 makeSpotSequence  — puntos sobre imagen (Operaciones, Ecosistema)
+      4.2 makeSimpleSequence — fondos con fundido (Crecimiento)
+      4.3 Escenas de Dilema, IA y Experiencia (en el scroll)
+   5. Menú: estados al hacer scroll
+   6. Regresar al inicio (logo, "Inicio" del menú y botón ↑)
+   7. Enlaces del menú
+   8. Formulario de contacto (función independiente, al final del archivo)
+
+   REGLAS
+   - El alto de una pantalla se mide con screenH() / sceneStep(), nunca con window.innerHeight.
+   - Las animaciones usan translateY(calc(var(--vh) * -N00)) para coincidir con el CSS.
+   - "Celular" = window.innerWidth <= 768 (mismo umbral que el CSS).
+   ========================================================================== */
+
 document.addEventListener('DOMContentLoaded', () => {
 
-    /* ==================================================
-       1. PANTALLA DE CARGA 
-    ================================================== */
+    /* ----------------------------------------------------------------------
+       1. PANTALLA DE CARGA
+       Los 4 cuadros negros se abren 300 ms después de que carga todo (clase .loaded).
+       ---------------------------------------------------------------------- */
     window.addEventListener('load', () => {
         setTimeout(() => {
             document.getElementById('preloader').classList.add('loaded');
         }, 300);
     });
 
-    /* ==================================================
-       2. HERO SLIDER AUTOMÁTICO
-    ================================================== */
+    /* ----------------------------------------------------------------------
+       2. PORTADA
+       Slider: cambia la foto activa cada 4.5 s (fundido en CSS: .slide.active).
+       El título #hero-title sube y se desvanece en el scroll (ver sección 4.3).
+       ---------------------------------------------------------------------- */
     const slides = document.querySelectorAll('.slide');
-    if(slides.length > 0) {
+    if (slides.length > 0) {
         let currentSlide = 0;
         setInterval(() => {
             slides[currentSlide].classList.remove('active');
             currentSlide = (currentSlide + 1) % slides.length;
             slides[currentSlide].classList.add('active');
-        }, 4500); 
+        }, 4500);
     }
 
     const heroTitle = document.getElementById('hero-title');
 
-    /* ==================================================
-       3. LÓGICA MAESTRA DE SCROLL DE SECUENCIAS
-    ================================================== */
-    const sequenceSectionDilema = document.getElementById('dilema');
-    const dilemaTrack = document.getElementById('dilema-text-track');
-    const dilemaBgs = sequenceSectionDilema ? sequenceSectionDilema.querySelectorAll('.seq-bg') : [];
-
-    const sequenceSectionOperaciones = document.getElementById('operaciones');
-    const operacionesTrack = document.getElementById('operaciones-text-track');
-
-    const sequenceSectionPilares = document.getElementById('experiencia');
-    const pilaresTrack = document.getElementById('pilares-text-track');
-    const pilaresBgs = sequenceSectionPilares ? sequenceSectionPilares.querySelectorAll('.pilares-mobile-view .seq-bg') : [];
-    const pilaresDesktopCards = document.querySelectorAll('.pilares-desktop-view .quadrant-card');
-
-    const sequenceSectionIA = document.getElementById('ia');
-    const iaTrack = document.getElementById('ia-text-track');
-    const iaBgs = sequenceSectionIA ? sequenceSectionIA.querySelectorAll('.seq-bg') : [];
-
-    const sequenceSectionEcosistema = document.getElementById('ecosistema');
-    const ecosistemaTrack = document.getElementById('ecosistema-text-track');
-
-    // Alto de una escena = alto real de su punto de anclaje (100vh de CSS).
-    // No usar window.innerHeight: en iPhone, con la barra del navegador a la vista, innerHeight es menor que 100vh
-    // y el error se acumula escena por escena (en IA 03/06 → 04/06 el cambio se sentía inmediato).
+    /* ----------------------------------------------------------------------
+       3. MEDIDAS DE PANTALLA
+       Alto de una escena = alto real de un .snap-point (calc(var(--vh) * 100) en el CSS).
+       No usar window.innerHeight: en iPhone, con la barra del navegador a la vista, es menor
+       que el alto de una escena y el error se acumula escena por escena.
+       ---------------------------------------------------------------------- */
     function screenH() {
         const sp = document.querySelector('.snap-point');
         const h = sp ? sp.getBoundingClientRect().height : 0;
@@ -60,9 +67,14 @@ document.addEventListener('DOMContentLoaded', () => {
         return h > 0 ? h : window.innerHeight;
     }
 
-    // ESCENAS CON PUNTOS SOBRE UNA IMAGEN (Operaciones y Ecosistema)
-    // Escena 0: título sobre blanco. Escenas 1+: se enciende el punto (y su tarjeta) de esa escena;
-    // los anteriores quedan con su nombre.
+    /* ----------------------------------------------------------------------
+       4.1 ESCENAS CON PUNTOS SOBRE UNA IMAGEN (Operaciones y Ecosistema)
+       Escena 0: título sobre blanco. Escenas 1+: se enciende el punto de esa escena (.is-on),
+       su tarjeta y su línea; los anteriores quedan visibles con su nombre (.is-seen).
+       Atributos del HTML: data-scene (escena), data-x/data-y (escritorio), data-xv/data-yv (celular),
+       data-for (tarjeta ↔ puntos) y data-from (línea → #spot-<id>).
+       Devuelve onScroll(alto) para llamarla desde el scroll.
+       ---------------------------------------------------------------------- */
     function makeSpotSequence(section, track) {
         const stage = section.querySelector('.op-stage');
         const bgs = section.querySelectorAll(':scope > .sticky-container > .seq-bg');
@@ -73,6 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const count = section.querySelectorAll('.snap-point').length;
         let current = -1;
 
+        // Une cada tarjeta con su punto: la línea sale del borde de la tarjeta más cercano al punto
         function drawLines() {
             if (!svg || !stage) return;
             const sr = stage.getBoundingClientRect();
@@ -84,7 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const px = parseFloat(spot.style.left) / 100 * sr.width;
                 const py = parseFloat(spot.style.top) / 100 * sr.height;
                 const cl = card.offsetLeft, ct = card.offsetTop, cw = card.offsetWidth, ch = card.offsetHeight;
-                // Punto del borde de la tarjeta más cercano al punto de la maqueta
                 const cx = Math.min(Math.max(px, cl), cl + cw);
                 const cy = Math.min(Math.max(py, ct), ct + ch);
                 line.setAttribute('x1', cx); line.setAttribute('y1', cy);
@@ -92,6 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+        // Coloca los puntos según la imagen visible (horizontal en escritorio, vertical en celular)
         function place() {
             const vertical = window.innerWidth <= 768;
             spots.forEach(spot => {
@@ -107,6 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
             current = index;
             section.dataset.scene = index;
             if (track) track.style.transform = `translateY(calc(var(--vh) * -${index * 100}))`;
+            // Solo 2 fondos: 0 = blanco (título), 1 = imagen (todas las demás escenas)
             bgs.forEach((bg, idx) => bg.classList.toggle('active', idx === Math.min(index, 1)));
             let focus = null;
             section.querySelectorAll('.op-spot, .eco-card, .eco-lines line').forEach(el => {
@@ -115,6 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 el.classList.toggle('is-seen', n < index);
                 if (n === index && !focus && el.classList.contains('op-spot')) focus = el;
             });
+            // El foco de luz (.op-shade) se centra en el punto activo
             if (stage && focus) {
                 stage.style.setProperty('--fx', focus.style.left);
                 stage.style.setProperty('--fy', focus.style.top);
@@ -127,9 +142,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return function onScroll(windowHeight) {
             const rect = section.getBoundingClientRect();
-            // Al pasar el final de la sección (pie de página), el texto se desvanece
+            // Al pasar el final de la sección (sube el pie de página), los textos se desvanecen
             section.classList.toggle('is-past', rect.bottom < windowHeight - 2);
-            // Una escena por pantalla, alineada con los puntos de anclaje (tolerancia de 2px)
+            // Una escena por pantalla, alineada con los .snap-point (tolerancia de 2 px por decimales)
             if (rect.top <= 2 && rect.bottom >= windowHeight - 2) {
                 let activeIndex = Math.round(Math.max(0, -rect.top) / sceneStep(section));
                 if (activeIndex >= count) activeIndex = count - 1;
@@ -138,7 +153,11 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // ESCENAS SIMPLES (fondo con fundido + contenido que sube una pantalla por escena): Crecimiento
+    /* ----------------------------------------------------------------------
+       4.2 ESCENAS SIMPLES (Crecimiento)
+       Un fondo por escena con fundido y contenido que sube una pantalla por escena.
+       Escribe data-scene en la sección (el CSS lo usa para la entrada de las tarjetas).
+       ---------------------------------------------------------------------- */
     function makeSimpleSequence(section, track) {
         const bgs = section.querySelectorAll(':scope > .sticky-container > .seq-bg');
         const count = section.querySelectorAll('.snap-point').length;
@@ -156,27 +175,52 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
     }
+
+    /* ----------------------------------------------------------------------
+       4.3 ESCENAS EN EL SCROLL
+       Orden de cálculo = orden de la página. Dilema, IA y Experiencia usan la lógica en línea:
+       escena = Math.round(-rect.top / alto de escena), limitada a la última.
+       ---------------------------------------------------------------------- */
+    const sequenceSectionDilema = document.getElementById('dilema');
+    const dilemaTrack = document.getElementById('dilema-text-track');
+    const dilemaBgs = sequenceSectionDilema ? sequenceSectionDilema.querySelectorAll('.seq-bg') : [];
+
+    const sequenceSectionOperaciones = document.getElementById('operaciones');
+    const operacionesTrack = document.getElementById('operaciones-text-track');
+
     const sequenceSectionCrecimiento = document.getElementById('crecimiento');
+
+    const sequenceSectionIA = document.getElementById('ia');
+    const iaTrack = document.getElementById('ia-text-track');
+    const iaBgs = sequenceSectionIA ? sequenceSectionIA.querySelectorAll('.seq-bg') : [];
+
+    // Experiencia (el id del track conserva el nombre anterior de la sección: "pilares")
+    const sequenceSectionPilares = document.getElementById('experiencia');
+    const pilaresTrack = document.getElementById('pilares-text-track');
+    const pilaresBgs = sequenceSectionPilares ? sequenceSectionPilares.querySelectorAll('.pilares-mobile-view .seq-bg') : [];
+    const pilaresDesktopCards = document.querySelectorAll('.pilares-desktop-view .quadrant-card');
+    const PILARES_ULTIMA_ESCENA = 4; // escena 0 = título; 1–4 = un sector cada una
+
+    const sequenceSectionEcosistema = document.getElementById('ecosistema');
+    const ecosistemaTrack = document.getElementById('ecosistema-text-track');
+
     const crecimientoScroll = sequenceSectionCrecimiento
         ? makeSimpleSequence(sequenceSectionCrecimiento, document.getElementById('crecimiento-text-track')) : null;
-
     const operacionesScroll = sequenceSectionOperaciones ? makeSpotSequence(sequenceSectionOperaciones, operacionesTrack) : null;
     const ecosistemaScroll = sequenceSectionEcosistema ? makeSpotSequence(sequenceSectionEcosistema, ecosistemaTrack) : null;
 
     window.addEventListener('scroll', () => {
         const currentScrollY = window.scrollY;
-        // Alto de una pantalla del sitio (= una escena). No innerHeight: en iPhone cambia al esconderse la barra.
         const windowHeight = screenH();
 
-        if(heroTitle && currentScrollY < windowHeight) {
+        // Portada: el título sube más rápido que el scroll y se desvanece a media pantalla
+        if (heroTitle && currentScrollY < windowHeight) {
             heroTitle.style.transform = `translateY(-${currentScrollY * 0.8}px)`;
             heroTitle.style.opacity = 1 - (currentScrollY / (windowHeight * 0.5));
         }
 
         if (sequenceSectionDilema) {
             const rect = sequenceSectionDilema.getBoundingClientRect();
-            // Misma lógica que las demás secciones: una escena por pantalla, cambio a mitad del movimiento
-            // (antes se calculaba por porcentaje y Enfoque → Garantía cambiaba casi al empezar a deslizar)
             if (rect.top <= 2 && rect.bottom >= windowHeight - 2) {
                 let activeIndex = Math.round(Math.max(0, -rect.top) / sceneStep(sequenceSectionDilema));
                 if (activeIndex >= dilemaBgs.length) activeIndex = dilemaBgs.length - 1;
@@ -190,28 +234,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (sequenceSectionIA) {
             const rect = sequenceSectionIA.getBoundingClientRect();
-            // Tolerancia de 2px: la sección empieza en una posición con decimales
             if (rect.top <= 2 && rect.bottom >= windowHeight - 2) {
-                // Una escena por pantalla, alineada con los puntos de anclaje del scroll
                 let activeIndex = Math.round(Math.max(0, -rect.top) / sceneStep(sequenceSectionIA));
                 if (activeIndex >= iaBgs.length) activeIndex = iaBgs.length - 1;
-
-                if(iaTrack) iaTrack.style.transform = `translateY(calc(var(--vh) * -${activeIndex * 100}))`;
-                iaBgs.forEach((bg, idx) => {
-                    if (idx === activeIndex) bg.classList.add('active');
-                    else bg.classList.remove('active');
-                });
+                if (iaTrack) iaTrack.style.transform = `translateY(calc(var(--vh) * -${activeIndex * 100}))`;
+                iaBgs.forEach((bg, idx) => bg.classList.toggle('active', idx === activeIndex));
             }
         }
 
         if (sequenceSectionPilares) {
             const rect = sequenceSectionPilares.getBoundingClientRect();
-            // Una escena por pantalla (misma lógica que IA, Operaciones y Ecosistema):
-            // escena 0 = título; escenas 1–4 = cada sector entra completo con un solo movimiento
             if (rect.top <= 2 && rect.bottom >= windowHeight - 2) {
                 let activeIndex = Math.round(Math.max(0, -rect.top) / sceneStep(sequenceSectionPilares));
-                if (activeIndex > 4) activeIndex = 4;
+                if (activeIndex > PILARES_ULTIMA_ESCENA) activeIndex = PILARES_ULTIMA_ESCENA;
                 if (pilaresTrack) pilaresTrack.style.transform = `translateY(calc(var(--vh) * -${activeIndex * 100}))`;
+                // Celular: un fondo por escena. Escritorio: los cuadros entran uno por escena y se quedan.
                 pilaresBgs.forEach((bg, idx) => bg.classList.toggle('active', idx === activeIndex));
                 pilaresDesktopCards.forEach((card, index) => card.classList.toggle('is-in', activeIndex >= index + 1));
             }
@@ -220,9 +257,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (ecosistemaScroll) ecosistemaScroll(windowHeight);
     });
 
-    /* ==================================================
-       4. SCROLL MORPHING (MENÚ)
-    ================================================== */
+    /* ----------------------------------------------------------------------
+       5. MENÚ: ESTADOS AL HACER SCROLL (#morph-nav)
+       .is-scrolled  → píldora arriba (scrollY > 50).
+       .is-shrunk    → píldora mínima. Celular: siempre fuera de la portada.
+                       Escritorio: solo mientras se desplaza después de la portada (se quita 400 ms después).
+       ---------------------------------------------------------------------- */
     const morphNav = document.getElementById('morph-nav');
     const brandLogoWrapper = document.querySelector('.brand-logo-wrapper');
     let isScrollingTimeout;
@@ -253,7 +293,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // REGRESAR AL INICIO: fundido a negro, salto directo a la portada y fundido de regreso
+    /* ----------------------------------------------------------------------
+       6. REGRESAR AL INICIO
+       Fundido a negro (.fundido-inicio, 0.35 s), salto directo a la portada y fundido de regreso.
+       Se usa desde: logo (escritorio), "Inicio" del menú (celular) y botón flotante ↑.
+       ---------------------------------------------------------------------- */
     const fundido = document.querySelector('.fundido-inicio');
     function volverInicio() {
         morphNav.classList.remove('mobile-menu-open');
@@ -265,7 +309,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 380);
     }
 
-    // Botón flotante: aparece al salir de la portada
+    // Botón flotante ↑: visible después del 60 % de la portada
     const btnSubir = document.querySelector('.btn-subir');
     if (btnSubir) {
         btnSubir.addEventListener('click', volverInicio);
@@ -274,83 +318,45 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleSubir();
     }
 
+    // Logo (solo con el menú ya encogido): celular abre/cierra el menú; escritorio regresa a la portada
     if (brandLogoWrapper) {
         brandLogoWrapper.addEventListener('click', () => {
             const isMobile = window.innerWidth <= 768;
             if (!morphNav.classList.contains('is-scrolled')) return;
-            // Celular: el logo abre y cierra el menú (ahí está "Inicio"). Escritorio: el logo regresa a la portada
             if (isMobile) morphNav.classList.toggle('mobile-menu-open');
             else volverInicio();
         });
     }
 
+    /* ----------------------------------------------------------------------
+       7. ENLACES DEL MENÚ
+       Desplazamiento suave al inicio EXACTO de la sección (sin margen: con margen se asomaba
+       la sección vecina en celular). #inicio usa volverInicio().
+       ---------------------------------------------------------------------- */
     const menuLinks = document.querySelectorAll('.nav-links a, .mobile-menu-content a');
     menuLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
+        link.addEventListener('click', function (e) {
             e.preventDefault();
             const targetId = this.getAttribute('href').substring(1);
             if (targetId === 'inicio') { volverInicio(); return; }
             const targetSection = document.getElementById(targetId);
-            
             if (targetSection) {
                 morphNav.classList.remove('mobile-menu-open');
-                // Llevar al inicio exacto de la sección (antes se detenía 100 px antes y en celular
-                // se asomaba la sección anterior o la siguiente)
-                const offset = 0;
-                const sectionPosition = targetSection.getBoundingClientRect().top;
-                const offsetPosition = sectionPosition + window.pageYOffset - offset;
+                const offsetPosition = targetSection.getBoundingClientRect().top + window.pageYOffset;
                 window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
             }
         });
     });
-
-    /* ==================================================
-       5. EFECTO PARALLAX INTERNO Y FADE-UP
-    ================================================== */
-    const parallaxImages = document.querySelectorAll('.parallax-img');
-    const onScrollParallax = () => {
-        parallaxImages.forEach(img => {
-            const wrapper = img.parentElement;
-            const rect = wrapper.getBoundingClientRect();
-            const windowHeight = window.innerHeight;
-            if (rect.top < windowHeight && rect.bottom > 0) {
-                const scrollProgress = (windowHeight - rect.top) / (windowHeight + rect.height);
-                const yPos = (scrollProgress * 40) - 20; 
-                img.style.transform = `translate3d(0, ${yPos}%, 0)`;
-            }
-        });
-    };
-
-    const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
-    const observer = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('is-visible');
-                observer.unobserve(entry.target); 
-            }
-        });
-    }, observerOptions);
-
-    const revealElements = document.querySelectorAll('.reveal-up');
-    revealElements.forEach(el => observer.observe(el));
-
-    let ticking = false;
-    window.addEventListener('scroll', () => {
-        if (!ticking) {
-            window.requestAnimationFrame(() => {
-                onScrollParallax();
-                ticking = false;
-            });
-            ticking = true;
-        }
-    });
-    onScrollParallax();
 });
-/* ==================================================
-   CONTACTO: ventana con el formulario "Platiquemos de tu proceso"
-   En Hostinger envía a enviar.php (correo). En GitHub Pages no hay PHP:
-   si el envío falla por eso, abre el correo del visitante con los datos ya escritos.
-================================================== */
+
+/* ==========================================================================
+   8. FORMULARIO DE CONTACTO ("Platiquemos de tu proceso")
+   Se abre con cualquier elemento .js-abrir-contacto.
+   Envío: POST a enviar.php (solo funciona en un servidor con PHP, como Hostinger).
+   Respaldo: si la respuesta no es JSON o falla la red (GitHub Pages no ejecuta PHP),
+   abre el correo del visitante con los datos ya escritos (mailto:).
+   DESTINO también aparece en enviar.php, index.html y el aviso de privacidad (DOCUMENTACION.md §8.1).
+   ========================================================================== */
 (function () {
     const modal = document.getElementById('contacto-modal');
     const form = document.getElementById('contacto-form');
@@ -360,6 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const DESTINO = 'rvertti@4wardcorp.com';
     let ultimoFoco = null;
 
+    // Abre la ventana, guarda la hora (filtro anti-robots de 3 s en enviar.php) y recuerda el foco
     function abrir(e) {
         if (e) e.preventDefault();
         ultimoFoco = document.activeElement;
@@ -381,6 +388,7 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.querySelectorAll('[data-cerrar]').forEach(b => b.addEventListener('click', cerrar));
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modal.hidden) cerrar(); });
 
+    // Obligatorios: nombre, empresa, correo (con formato) y proceso; además la casilla del aviso
     function validar() {
         let ok = true;
         ['nombre', 'empresa', 'correo', 'proceso'].forEach(n => {

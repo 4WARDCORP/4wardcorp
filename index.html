@@ -25,7 +25,7 @@
         window.addEventListener('orientationchange', function () { setTimeout(function () { medir(true); }, 300); });
     })();
     </script>
-    <link rel="stylesheet" href="styles.css?v=20261125a">
+    <link rel="stylesheet" href="styles.css?v=20261125b">
 </head>
 <body>
 
@@ -72,7 +72,7 @@
         </nav>
     </div>
 
-    <!-- REGRESAR AL INICIO: botón flotante (variante B) y fundido negro del salto -->
+    <!-- REGRESAR AL INICIO: botón flotante ↑ y fundido negro del salto (script.js §6) -->
     <button type="button" class="btn-subir" aria-label="Regresar al inicio" title="Inicio">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
     </button>
@@ -80,7 +80,7 @@
 
     <main class="content-wrapper">
         
-        <!-- HERO SECTION -->
+        <!-- PORTADA (#inicio): slider de 3 fotos, título y "Haz scroll para continuar" -->
         <section id="inicio" class="hero-section">
             <div class="hero-slider">
                 <div class="slide active" style="background-image: url('img/h1.jpg');"></div>
@@ -95,11 +95,10 @@
 
             <div class="scroll-indicator">
                 <p>Haz scroll para continuar</p>
-                <div class="mouse"></div>
             </div>
         </section>
 
-        <!-- 1. DILEMA -->
+        <!-- 1. DILEMA (escenas fijas: título y 4 retos, fotos d1–d4) -->
         <section id="dilema" class="sticky-sequence">
             <div class="snap-grid">
                 <div class="snap-point"></div><div class="snap-point"></div>
@@ -271,7 +270,7 @@
                 <div class="seq-bg" style="background-image: url('img/ia-04.jpg');"><div class="seq-overlay ia-overlay"></div></div>
                 <div class="seq-bg" style="background-image: url('img/ia-05.jpg');"><div class="seq-overlay ia-overlay"></div></div>
                 <div class="seq-bg" style="background-image: url('img/ia-06.jpg');"><div class="seq-overlay ia-overlay"></div></div>
-                <!-- Escenas 9 y 10: Desarrollos 4ward y Nuestro proceso es simple (antes sección aparte #ia-casos) -->
+                <!-- Escenas 9 y 10: Desarrollos 4ward y Nuestro proceso es simple -->
                 <div class="seq-bg casos-bg"></div>
                 <div class="seq-bg casos-bg casos-bg-2"></div>
 
@@ -421,7 +420,8 @@
         </section>
 
 
-        <!-- 5. EXPERIENCIA -->
+        <!-- 5. EXPERIENCIA (escenas fijas: título y 4 sectores; vista de celular y vista de escritorio.
+             Los ids y clases "pilares" conservan el nombre anterior de la sección) -->
         <section id="experiencia" class="sticky-sequence">
             <div class="snap-grid">
                 <div class="snap-point"></div><div class="snap-point"></div>
@@ -587,7 +587,7 @@
         
     </main>
 
-    <!-- FOOTER -->
+    <!-- PIE DE PÁGINA: fijo detrás del contenido; se descubre al final del recorrido -->
     <footer class="footer-reveal">
         <div class="footer-content">
             <h2 class="hero-footer-title text-light" style="margin-bottom: 30px;">4ward solutions</h2>
@@ -645,6 +645,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=20261125a"></script>
+    <script src="script.js?v=20261125b"></script>
 </body>
 </html>
