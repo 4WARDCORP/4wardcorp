@@ -27,7 +27,7 @@
     </script>
     <link rel="preload" href="fonts/space-grotesk-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="stylesheet" href="styles.css?v=20261125i">
+    <link rel="stylesheet" href="styles.css?v=20261126a">
 </head>
 <body>
 
@@ -235,8 +235,7 @@
             </div>
         </section>
 
-        <!-- 4. IA APLICADA (escenas fijas) -->
-        <!-- IA: 11 escenas (0 título · 1 intro · 2 diagrama · 3–8 frentes 01–06 · 9 Desarrollos 4ward · 10 Proceso) -->
+        <!-- 4. IA APLICADA (6 escenas fijas: 0 título · 1 intro · 2 diagrama · 3 seis frentes · 4 Desarrollos 4ward · 5 Proceso) -->
         <section id="ia" class="sticky-sequence ia-sequence">
             <div class="snap-grid">
                 <div class="snap-point"></div>
@@ -245,23 +244,15 @@
                 <div class="snap-point"></div>
                 <div class="snap-point"></div>
                 <div class="snap-point"></div>
-                <div class="snap-point"></div>
-                <div class="snap-point"></div>
-                <div class="snap-point"></div>
-                <div class="snap-point"></div>
-                <div class="snap-point"></div>
+
             </div>
             <div class="sticky-container" id="sticky-ia">
                 <div class="seq-bg active" style="background-color: var(--bg-white);"></div>
                 <div class="seq-bg" style="background-image: url('img/ia-hero.jpg');"><div class="seq-overlay ia-overlay"></div></div>
                 <div class="seq-bg ia-diag-bg"></div>
-                <div class="seq-bg" style="background-image: url('img/ia-01.jpg');"><div class="seq-overlay ia-overlay"></div></div>
-                <div class="seq-bg" style="background-image: url('img/ia-02.jpg');"><div class="seq-overlay ia-overlay"></div></div>
-                <div class="seq-bg" style="background-image: url('img/ia-03.jpg');"><div class="seq-overlay ia-overlay"></div></div>
-                <div class="seq-bg" style="background-image: url('img/ia-04.jpg');"><div class="seq-overlay ia-overlay"></div></div>
-                <div class="seq-bg" style="background-image: url('img/ia-05.jpg');"><div class="seq-overlay ia-overlay"></div></div>
-                <div class="seq-bg" style="background-image: url('img/ia-06.jpg');"><div class="seq-overlay ia-overlay"></div></div>
-                <!-- Escenas 9 y 10: Desarrollos 4ward y Nuestro proceso es simple -->
+                <!-- Escena 3: los seis frentes (cada tarjeta lleva su propia imagen) -->
+                <div class="seq-bg ia-frentes-bg"></div>
+                <!-- Escenas 4 y 5: Desarrollos 4ward y Nuestro proceso es simple -->
                 <div class="seq-bg casos-bg"></div>
                 <div class="seq-bg casos-bg casos-bg-2"></div>
 
@@ -288,69 +279,66 @@
                             </div>
                             <p class="ia-diag-msg">La IA se encarga de lo repetitivo. <span>Tu equipo, de decidir.</span></p>
                         </div>
-                        <div class="text-slider-item">
-                            <span class="ia-num ia-scene-num">01 / 06</span>
-                            <h3 class="edge-title text-light ia-scene-title">Automatización de procesos</h3>
-                            <ul class="ia-scene-list">
-                                <li>Captura y validación de facturas, órdenes de compra y remisiones</li>
-                                <li>Flujos de aprobación y seguimiento sin correos perdidos</li>
-                                <li>Búsqueda de proveedores y comparativos de cotizaciones</li>
-                                <li>Reportes operativos y ejecutivos que se generan solos</li>
-                                <li>Carga de datos entre ERP, hojas de cálculo y portales</li>
-                            </ul>
-                        </div>
-                        <div class="text-slider-item">
-                            <span class="ia-num ia-scene-num">02 / 06</span>
-                            <h3 class="edge-title text-light ia-scene-title">Detección anticipada</h3>
-                            <ul class="ia-scene-list">
-                                <li>Anomalías en aforos, recaudo y operación de peaje</li>
-                                <li>Mantenimiento predictivo a partir de datos de equipos</li>
-                                <li>Alertas de desviación en costo, calendario o inventario</li>
-                                <li>Analítica de video CCTV para eventos e incidentes</li>
-                                <li>Señales de riesgo en contratos y proveedores</li>
-                            </ul>
-                        </div>
-                        <div class="text-slider-item">
-                            <span class="ia-num ia-scene-num">03 / 06</span>
-                            <h3 class="edge-title text-light ia-scene-title">Conciliaciones</h3>
-                            <ul class="ia-scene-list">
-                                <li>Aforo vs. recaudo vs. depósitos bancarios</li>
-                                <li>Factura vs. orden de compra vs. entrada a almacén</li>
-                                <li>Inventario físico vs. sistema contable</li>
-                                <li>Estados de cuenta vs. contabilidad</li>
-                                <li>Hallazgos en frases cortas, cada uno con su acción</li>
-                            </ul>
-                        </div>
-                        <div class="text-slider-item">
-                            <span class="ia-num ia-scene-num">04 / 06</span>
-                            <h3 class="edge-title text-light ia-scene-title">Licitaciones e inteligencia comercial</h3>
-                            <ul class="ia-scene-list">
-                                <li>Monitoreo diario de ComprasMX y portales de compras</li>
-                                <li>Filtrado de oportunidades según tu catálogo y criterios</li>
-                                <li>Lectura de bases y anexos con matriz de cumplimiento</li>
-                                <li>Recomendación Go / No-Go por procedimiento</li>
-                                <li>Alertas con fechas clave y documentos requeridos</li>
-                            </ul>
-                        </div>
-                        <div class="text-slider-item">
-                            <span class="ia-num ia-scene-num">05 / 06</span>
-                            <h3 class="edge-title text-light ia-scene-title">Documentos y contratos</h3>
-                            <ul class="ia-scene-list">
-                                <li>Extracción de obligaciones, penalizaciones y fechas</li>
-                                <li>Comparación de versiones de contratos y anexos</li>
-                                <li>Borradores de propuestas técnicas y económicas</li>
-                                <li>Búsqueda inmediata en grandes archivos documentales</li>
-                            </ul>
-                        </div>
-                        <div class="text-slider-item">
-                            <span class="ia-num ia-scene-num">06 / 06</span>
-                            <h3 class="edge-title text-light ia-scene-title">Asistentes operativos</h3>
-                            <ul class="ia-scene-list">
-                                <li>Agentes que consultan ERP, bases de datos y hojas de cálculo</li>
-                                <li>Respuestas en lenguaje natural para dirección y operación</li>
-                                <li>Mesa de ayuda interna con el conocimiento de tu empresa</li>
-                                <li>Resumen diario de lo que requiere tu atención</li>
-                            </ul>
+                        <!-- Escena 3: los seis frentes en una pantalla; las tarjetas se encienden una tras otra (ola de luz vino).
+                             Cada una lleva un ícono de línea, sin número (no hay orden). Celular: título y primera viñeta. -->
+                        <div class="text-slider-item ia-frentes">
+                            <p class="ia-kicker">Seis frentes donde la IA trabaja para tu operación</p>
+                            <div class="ia-frentes-grid">
+                                <article class="ia-frente" style="--img: url('img/ia-01.jpg');">
+                                    <span class="ia-frente-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg></span>
+                                    <h3>Automatización de procesos</h3>
+                                    <ul>
+                                        <li>Captura y validación de facturas, órdenes de compra y remisiones</li>
+                                        <li>Reportes operativos y ejecutivos que se generan solos</li>
+                                        <li>Carga de datos entre ERP, hojas de cálculo y portales</li>
+                                    </ul>
+                                </article>
+                                <article class="ia-frente" style="--img: url('img/ia-02.jpg');">
+                                    <span class="ia-frente-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M5 12h3l2-4 3 8 2-4h4"/></svg></span>
+                                    <h3>Detección anticipada</h3>
+                                    <ul>
+                                        <li>Anomalías en aforos, recaudo y operación de peaje</li>
+                                        <li>Mantenimiento predictivo a partir de datos de equipos</li>
+                                        <li>Analítica de video CCTV para eventos e incidentes</li>
+                                    </ul>
+                                </article>
+                                <article class="ia-frente" style="--img: url('img/ia-03.jpg');">
+                                    <span class="ia-frente-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4v16M8 20h8M5 7h14"/><path d="M5 7l-3 6a3 3 0 006 0zM19 7l-3 6a3 3 0 006 0z"/></svg></span>
+                                    <h3>Conciliaciones</h3>
+                                    <ul>
+                                        <li>Aforo vs. recaudo vs. depósitos bancarios</li>
+                                        <li>Factura vs. orden de compra vs. entrada a almacén</li>
+                                        <li>Inventario físico vs. sistema contable</li>
+                                    </ul>
+                                </article>
+                                <article class="ia-frente" style="--img: url('img/ia-04.jpg');">
+                                    <span class="ia-frente-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M13 3H5v18h7"/><path d="M13 3l4 4v4"/><path d="M8 8h5M8 12h3"/><circle cx="16" cy="16" r="3.5"/><path d="M18.5 18.5L21 21"/></svg></span>
+                                    <h3>Licitaciones e inteligencia comercial</h3>
+                                    <ul>
+                                        <li>Monitoreo diario de ComprasMX y portales de compras</li>
+                                        <li>Lectura de bases y anexos con matriz de cumplimiento</li>
+                                        <li>Recomendación Go / No-Go por procedimiento</li>
+                                    </ul>
+                                </article>
+                                <article class="ia-frente" style="--img: url('img/ia-05.jpg');">
+                                    <span class="ia-frente-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h4"/></svg></span>
+                                    <h3>Documentos y contratos</h3>
+                                    <ul>
+                                        <li>Extracción de obligaciones, penalizaciones y fechas</li>
+                                        <li>Comparación de versiones de contratos y anexos</li>
+                                        <li>Borradores de propuestas técnicas y económicas</li>
+                                    </ul>
+                                </article>
+                                <article class="ia-frente" style="--img: url('img/ia-06.jpg');">
+                                    <span class="ia-frente-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h16v10H9l-5 4z"/><path d="M8.5 10h.01M12 10h.01M15.5 10h.01"/></svg></span>
+                                    <h3>Asistentes operativos</h3>
+                                    <ul>
+                                        <li>Agentes que consultan ERP, bases de datos y hojas de cálculo</li>
+                                        <li>Respuestas en lenguaje natural para dirección y operación</li>
+                                        <li>Resumen diario de lo que requiere tu atención</li>
+                                    </ul>
+                                </article>
+                            </div>
                         </div>
                         <div class="text-slider-item casos-item">
                         <div class="ia-cases v-a">
@@ -619,6 +607,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=20261125i"></script>
+    <script src="script.js?v=20261126a"></script>
 </body>
 </html>

@@ -386,25 +386,75 @@ html {
 
 /* ======================================================================
    10. IA APLICADA (#ia)
-   11 escenas: 0 título · 1 introducción · 2 diagrama · 3–8 frentes 01/06–06/06 ·
-   9 Desarrollos 4ward · 10 Nuestro proceso es simple.
+   6 escenas: 0 título · 1 introducción · 2 diagrama · 3 seis frentes (tarjetas que se encienden) ·
+   4 Desarrollos 4ward · 5 Nuestro proceso es simple.
    ====================================================================== */
 /* --- Piezas comunes (también las usan Crecimiento y el formulario): etiqueta .ia-kicker y número .ia-num --- */
 .ia-kicker { display: inline-block; font-size: 0.85rem; letter-spacing: 4px; text-transform: uppercase; color: #fff; border: 1px solid rgba(255,255,255,0.18); border-radius: 40px; padding: 8px 18px; margin-bottom: 30px; }
 .ia-kicker::before { content: ''; display: inline-block; width: 7px; height: 7px; background: var(--brand); margin-right: 10px; vertical-align: middle; border-radius: 1px; }
 .ia-num { display: block; font-size: 0.9rem; font-weight: 700; color: var(--brand); letter-spacing: 2px; margin-bottom: 18px; }
 /* --- Escenas 0–8: título, introducción y frentes 01–06 --- */
-.ia-sequence { height: calc(var(--vh) * 1100 + var(--extra)); }
+.ia-sequence { height: calc(var(--vh) * 600 + var(--extra)); }
+
+/* --- Escena 3: los seis frentes en una pantalla (.ia-frentes) ---
+   6 tarjetas (3 × 2) con su imagen oscurecida. Empiezan apagadas y se encienden una tras otra cuando la sección
+   llega a la escena 3 (script.js escribe data-scene en #ia): cada encendido dura 2 s y la siguiente tarjeta
+   empieza 0.5 s después (--i, 0–5), así que se ve como una ola; todo queda encendido en ~4.7 s.
+   Ícono de línea (.ia-frente-ico) del mismo estilo que el diagrama; sin número. Celular: título y primera viñeta. */
+.ia-frentes-bg { background: radial-gradient(ellipse 70% 60% at 50% 55%, #1a0508 0%, #000 70%); }
+.ia-frentes { padding: calc(var(--vh) * 12) 5% calc(var(--vh) * 4); }
+.ia-frentes .ia-kicker { color: #fff; opacity: 0.85; margin-bottom: calc(var(--vh) * 2.6); }
+.ia-frentes-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: calc(var(--vh) * 2) 20px; width: 100%; max-width: 1240px; text-align: left; }
+.ia-frente { --t: calc(0.2s + var(--i, 0) * 0.5s); position: relative; overflow: hidden; border-radius: 18px; padding: calc(var(--vh) * 2.4) 24px calc(var(--vh) * 2.2); border: 1px solid rgba(255,255,255,0.12);
+    background: linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.88)), var(--img) center / cover; color: #fff;
+    opacity: 0.35; filter: brightness(0.35) saturate(0.6);
+    transition: filter 1.2s ease var(--t), opacity 1.2s ease var(--t), border-color 1.2s ease var(--t); }
+.ia-frente:nth-child(1) { --i: 0; } .ia-frente:nth-child(2) { --i: 1; } .ia-frente:nth-child(3) { --i: 2; }
+.ia-frente:nth-child(4) { --i: 3; } .ia-frente:nth-child(5) { --i: 4; } .ia-frente:nth-child(6) { --i: 5; }
+.ia-frente-ico { display: block; width: 40px; height: 40px; padding: 8px; margin-bottom: calc(var(--vh) * 1.2); border-radius: 11px; border: 1px solid rgba(255,255,255,0.18); color: #fff;
+    transition: background-color 1.2s ease var(--t), border-color 1.2s ease var(--t), box-shadow 1.2s ease var(--t); }
+.ia-frente-ico svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.ia-frente h3 { font-size: clamp(1.15rem, 1.6vw, 1.55rem); line-height: 1.05; text-transform: uppercase; letter-spacing: -0.02em; margin-bottom: calc(var(--vh) * 1.4); }
+.ia-frente ul { list-style: none; }
+.ia-frente li { position: relative; padding: calc(var(--vh) * 0.55) 0 calc(var(--vh) * 0.55) 16px; color: #d6d6d6; font-size: min(0.92rem, calc(var(--vh) * 2.1)); line-height: 1.35; }
+.ia-frente li::before { content: ''; position: absolute; left: 0; top: calc(var(--vh) * 0.55 + 0.55em); width: 6px; height: 6px; background: var(--brand); border-radius: 1px; }
+/* Encendido: la tarjeta recupera su brillo, el borde y el ícono se vuelven vino y un pulso de luz la rodea (2 s) */
+.ia-sequence[data-scene="3"] .ia-frente { opacity: 1; filter: none; border-color: rgba(137,20,37,0.85); animation: iaEncendido 2s ease-out var(--t) both; }
+.ia-sequence[data-scene="3"] .ia-frente-ico { background: var(--brand); border-color: var(--brand); box-shadow: 0 0 16px rgba(196,33,58,0.7); }
+@keyframes iaEncendido { 0% { box-shadow: 0 0 0 0 rgba(196,33,58,0); } 35% { box-shadow: 0 0 34px 4px rgba(196,33,58,0.75), inset 0 0 22px rgba(196,33,58,0.35); } 100% { box-shadow: 0 0 14px 0 rgba(196,33,58,0.35); } }
+
+@media (min-width: 769px) and (max-height: 720px) {
+    /* Laptops con pantalla baja (p. ej. Windows al 150 %): ícono al lado del título para que el bloque quepa bajo el menú */
+    .ia-frentes { padding-top: calc(var(--vh) * 13); }
+    .ia-frentes .ia-kicker { margin-bottom: calc(var(--vh) * 1.8); }
+    .ia-frente { padding: calc(var(--vh) * 2) 20px calc(var(--vh) * 1.8); }
+    .ia-frente-ico { display: inline-block; vertical-align: middle; width: 30px; height: 30px; padding: 6px; margin: 0 10px 0 0; border-radius: 8px; }
+    .ia-frente h3 { display: inline; vertical-align: middle; }
+    .ia-frente ul { margin-top: calc(var(--vh) * 1.2); }
+}
+@media (max-width: 768px) {
+    .ia-frentes { padding: calc(var(--vh) * 10) 5% calc(var(--vh) * 3); }
+    .ia-frentes .ia-kicker { font-size: min(0.72rem, calc(var(--vh) * 1.7)); margin-bottom: calc(var(--vh) * 1.6); }
+    .ia-frentes-grid { grid-template-columns: 1fr; gap: calc(var(--vh) * 1); }
+    .ia-frente { padding: calc(var(--vh) * 1.3) 16px; border-radius: 14px; }
+    .ia-frente-ico { display: inline-block; vertical-align: middle; width: min(26px, calc(var(--vh) * 3.6)); height: min(26px, calc(var(--vh) * 3.6)); padding: 4px; margin: 0 8px 0 0; border-radius: 7px; }
+    .ia-frente h3 { display: inline; vertical-align: middle; font-size: min(0.95rem, calc(var(--vh) * 2.2)); }
+    .ia-frente ul { margin-top: calc(var(--vh) * 0.5); }
+    .ia-frente li { padding: 0 0 0 14px; font-size: min(0.85rem, calc(var(--vh) * 1.95)); }
+    .ia-frente li::before { top: 0.5em; }
+    .ia-frente li + li { display: none; }
+}
+@media (max-width: 768px) and (max-height: 720px) {
+    /* Celular bajo (tipo iPhone SE): tarjetas más compactas para que el subtítulo no quede bajo el menú */
+    .ia-frentes { padding-top: calc(var(--vh) * 12.5); padding-bottom: calc(var(--vh) * 1.5); }
+    .ia-frentes-grid { gap: calc(var(--vh) * 0.7); }
+    .ia-frente { padding: calc(var(--vh) * 0.9) 14px; }
+}
 .ia-overlay { background: rgba(0,0,0,0.6); }
 .ia-kicker-dark { color: #111; border-color: rgba(0,0,0,0.2); margin-bottom: 34px; }
 .ia-intro { color: #e6e6e6; font-size: clamp(1.25rem, 2.2vw, 1.9rem); line-height: 1.5; max-width: 1050px; margin-top: 0; }
 .ia-intro-sub { text-align: center; margin-top: 40px; font-size: 0.85rem; letter-spacing: 4px; text-transform: uppercase; color: #fff; }
 .ia-intro-sub::before { content: ''; display: inline-block; width: 7px; height: 7px; background: var(--brand); margin-right: 12px; vertical-align: middle; }
-.ia-scene-num { font-size: 0.95rem; margin-bottom: 22px; color: #fff; letter-spacing: 4px; padding-bottom: 10px; border-bottom: 2px solid var(--brand); }
-.ia-scene-title { font-size: clamp(2.6rem, 5.2vw, 6vw); max-width: 1200px; }
-.ia-scene-list { list-style: none; margin-top: 44px; display: grid; grid-template-columns: repeat(2, minmax(0, 420px)); gap: 6px 48px; justify-content: center; text-align: left; }
-.ia-scene-list li { color: #e0e0e0; font-size: clamp(1rem, 1.25vw, 1.15rem); line-height: 1.45; padding: 12px 0 12px 22px; border-top: 1px solid rgba(255,255,255,0.14); position: relative; }
-.ia-scene-list li::before { content: ''; position: absolute; left: 0; top: 20px; width: 7px; height: 7px; background: var(--brand); border-radius: 1px; }
 /* --- Escena 2: diagrama "Cómo trabaja la IA en tu día a día" --- */
 .ia-diag-bg { background: radial-gradient(ellipse at 50% 45%, #1c0a0e 0%, #080808 55%, #000 100%); }
 .ia-diag { padding: 90px 5% 40px; }
@@ -425,7 +475,7 @@ html {
 .flow-conn i:nth-child(2) { animation-delay: 0.9s; }
 @keyframes flowX { 0% { left: 0; opacity: 0; } 15%, 85% { opacity: 1; } 100% { left: calc(100% - 14px); opacity: 0; } }
 @keyframes flowY { 0% { top: 0; opacity: 0; } 15%, 85% { opacity: 1; } 100% { top: calc(100% - 14px); opacity: 0; } }
-/* --- Escena 9: Desarrollos 4ward (tarjetas) --- */
+/* --- Escena 4: Desarrollos 4ward (tarjetas) --- */
 .ia-cases { width: 100%; max-width: 1400px; margin-top: 0; position: relative; z-index: 1; }
 .ia-subtitle { font-size: clamp(2rem, 4vw, 3.6rem); text-transform: uppercase; letter-spacing: -0.03em; text-align: center; margin-bottom: 50px; }
 .ia-cases-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
@@ -440,7 +490,7 @@ html {
 .v-a .ia-case-num { font-size: 0.9rem; margin-bottom: 18px; }
 .v-a .ia-case h4 { font-size: 1.35rem; margin-bottom: 14px; }
 .casos-bg { background: #000; }
-/* --- Escena 10: Nuestro proceso es simple (foto + pasos + botón del formulario) --- */
+/* --- Escena 5: Nuestro proceso es simple (foto + pasos + botón del formulario) --- */
 .ia-process-block { width: 100%; max-width: 1400px; margin-top: 110px; display: grid; grid-template-columns: 1.2fr 0.85fr; background: #000; border: 1px solid rgba(255,255,255,0.08); border-radius: 32px; overflow: hidden; position: relative; z-index: 1; }
 .ia-process-img { position: relative; min-height: 720px; background: url('img/ia-proceso.jpg') 4% center / cover no-repeat; }
 .ia-process-img::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,0) 75%, #000 100%); }
@@ -460,7 +510,7 @@ html {
 /* Botón del formulario al final de Proceso. En escritorio el bloque usa siempre la versión compacta
    (ver los @media de min-height: 821px y max-height: 820px): con la versión amplia el paso 03 se cortaba. */
 .proceso-cta { margin-top: calc(var(--vh) * 2.6); }
-/* --- Escenas 9 y 10 dentro de la sección (.casos-item): tamaños para que quepan en una pantalla --- */
+/* --- Escenas 4 y 5 dentro de la sección (.casos-item): tamaños para que quepan en una pantalla --- */
 .casos-item { padding: 90px 5% 40px; color: #fff; }
 .casos-item .ia-cases { margin-top: 0; }
 .casos-item .ia-subtitle { margin-bottom: calc(var(--vh) * 5); }
@@ -489,10 +539,6 @@ html {
     .ia-kicker-dark { margin-bottom: 22px; }
     .ia-intro { font-size: 1.1rem; }
     .ia-intro-sub { font-size: 0.72rem; letter-spacing: 2px; margin-top: 28px; }
-    .ia-scene-title { font-size: 9vw; }
-    .ia-scene-list { grid-template-columns: 1fr; margin-top: 26px; gap: 0; width: 100%; }
-    .ia-scene-list li { font-size: 0.92rem; padding: 9px 0 9px 20px; }
-    .ia-scene-list li::before { top: 16px; }
     .ia-diag { padding: 74px 6% 20px; justify-content: center; }
     .ia-diag-title { font-size: min(7vw, calc(var(--vh) * 3.6)); margin-bottom: calc(var(--vh) * 2.6); }
     .ia-diag-msg { margin-top: calc(var(--vh) * 2.6); font-size: min(0.95rem, calc(var(--vh) * 2.2)); }

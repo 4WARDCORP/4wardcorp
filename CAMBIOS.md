@@ -15,11 +15,17 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). L
 
 ---
 
-## [Sin publicar]
+## [20261126a] — 2026-11-26
 
-_(Nada pendiente.)_
+### Cambiado
+- **IA** pasa de 11 escenas a 6. Los seis frentes, que ocupaban una pantalla cada uno, ahora están juntos en una sola: 6 tarjetas (3 × 2) con su imagen, un ícono de línea y 3 viñetas cada una (antes 4 o 5). El recorrido completo del sitio baja de 29 a 24 paradas.
+  - Las tarjetas empiezan apagadas y se encienden una tras otra con un pulso de luz vino (2 s cada una; la siguiente empieza 0.5 s después).
+  - Ya no llevan "01 / 06": el orden no importa.
+  - Celular: una columna con el título y la primera viñeta de cada frente.
+  - Viñetas que se quitan: flujos de aprobación, búsqueda de proveedores, alertas de desviación, señales de riesgo en contratos, estados de cuenta, hallazgos en frases cortas, filtrado por catálogo, alertas con fechas, búsqueda en archivos documentales y mesa de ayuda interna.
+  - Código: clases nuevas `.ia-frentes`, `.ia-frentes-bg`, `.ia-frentes-grid`, `.ia-frente`, `.ia-frente-ico`; `script.js` escribe `data-scene` en `#ia`; se quitan `.ia-scene-num`, `.ia-scene-title` y `.ia-scene-list` del HTML. Las demás escenas y secciones no cambian (comparadas contra 20261125i).
 
-## [20261125i] — 2026-11-25
+## [20261125i] — 2026-11-25 · commit `02a47b1`
 
 ### Corregido
 - **Celular, Ecosistema:** en pantallas donde la maqueta se reduce para caber (por ejemplo iPhone en Chrome), las rutas de luz no llegaban a sus puntos y parecían apuntar todas hacia SICE (desvío de 35 a 107 px). `drawRoutes()` y `drawLines()` medían el lienzo ya reducido y la reducción se aplicaba dos veces; ahora usan su tamaño de diseño. Verificado: cada ruta termina en su punto (error ≤ 2 px) en 7 tamaños de escritorio y celular, en Operaciones y Ecosistema.

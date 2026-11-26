@@ -299,6 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (activeIndex >= iaBgs.length) activeIndex = iaBgs.length - 1;
                 if (iaTrack) iaTrack.style.transform = `translateY(calc(var(--vh) * -${activeIndex * 100}))`;
                 iaBgs.forEach((bg, idx) => bg.classList.toggle('active', idx === activeIndex));
+                sequenceSectionIA.dataset.scene = activeIndex;   // el CSS enciende las tarjetas de los frentes en la escena 3
             }
         }
 

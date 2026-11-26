@@ -1,6 +1,6 @@
 # Documentación técnica — sitio 4ward Solutions
 
-Referencia para quien mantenga o modifique el sitio. Describe el código tal como está en la versión **`20261125i`** (ver [CAMBIOS.md](CAMBIOS.md)).
+Referencia para quien mantenga o modifique el sitio. Describe el código tal como está en la versión **`20261126a`** (ver [CAMBIOS.md](CAMBIOS.md)).
 La forma de probar y publicar está en el [README](README.md) y el historial en [CAMBIOS.md](CAMBIOS.md).
 
 **Regla de mantenimiento:** si un cambio contradice algo de este documento, el documento se actualiza en el mismo commit.
@@ -46,13 +46,13 @@ Orden en la página (igual al del menú). **"Escena" = una pantalla completa con
 | 1 | `dilema` | Dilema | 5 | `500` (valor base de `.sticky-sequence`) | en línea, en el `scroll` |
 | 2 | `operaciones` | Operaciones | 2 | `200` (`.operaciones-sequence`) | `makeSpotSequence()` |
 | 3 | `crecimiento` | Crecimiento | 2 | `200` (`.crecimiento-sequence`) | `makeSimpleSequence()` |
-| 4 | `ia` | IA | 11 | `1100` (`.ia-sequence`) | en línea, en el `scroll` |
+| 4 | `ia` | IA | 6 | `600` (`.ia-sequence`) | en línea, en el `scroll` |
 | 5 | `experiencia` | Experiencia | 5 | `500` (valor base) | en línea, en el `scroll` |
 | 6 | `ecosistema` | Ecosistema | 2 | `200` (`.ecosistema-sequence`) | `makeSpotSequence()` |
 | — | (pie) | — | 1 | `calc(var(--vh) * 70)` | — |
 
 \* "Inicio" solo aparece en el menú del celular; en escritorio se regresa con el logo (§5).
-Todas las alturas de sección son `calc(var(--vh) * N + var(--extra))`. **Paradas totales al recorrer con Av Pág: 29** (1 + 27 escenas + pie).
+Todas las alturas de sección son `calc(var(--vh) * N + var(--extra))`. **Paradas totales al recorrer con Av Pág: 24** (1 + 22 escenas + pie).
 
 **Contenido por escena** (la escena 0 es siempre el título sobre fondo blanco, salvo en Experiencia, que usa fondo negro):
 
@@ -61,7 +61,7 @@ Todas las alturas de sección son `calc(var(--vh) * N + var(--extra))`. **Parada
 | Dilema | 1 Perfil del Equipo (d1) · 2 Retención de Conocimiento (d2) · 3 Enfoque de Ejecución (d3) · 4 Garantía de Red (d4) |
 | Operaciones | 1 Mapa `dominio.jpg` con las 4 regiones a la vista (Norte, Bajío, Centro y Sur), rutas desde Centro y 4 tarjetas |
 | Crecimiento | 1 Tres tarjetas: Representación Comercial (c1), Integración de Soluciones (c2), Comercialización Tech (c3) |
-| IA | 1 Introducción (ia-hero) · 2 Diagrama "Cómo trabaja la IA en tu día a día" · 3–8 Frentes 01/06 a 06/06 (ia-01…ia-06) · 9 Desarrollos 4ward · 10 Nuestro proceso es simple (con el botón del formulario) |
+| IA | 1 Introducción (ia-hero) · 2 Diagrama "Cómo trabaja la IA en tu día a día" · 3 Seis frentes en una pantalla (6 tarjetas con ícono, imagen ia-01…ia-06 y 3 viñetas) · 4 Desarrollos 4ward · 5 Nuestro proceso es simple (con el botón del formulario) |
 | Experiencia | 1 Movilidad · SICE (p1) · 2 Suministro · Vista Alegre (p2) · 3 Seguridad · NUCTECH (p3) · 4 Conectividad · ENTELAR (p4) |
 | Ecosistema | 1 Maqueta `ecosistema.jpg` con todo a la vista: Capa de IA (cubo central, origen de las rutas), SICE, Vista Alegre, NUCTECH (2 puntos: puerto y tren) y ENTELAR, con sus 4 tarjetas |
 
@@ -97,7 +97,7 @@ Todas las alturas de sección son `calc(var(--vh) * N + var(--extra))`. **Parada
 4. Con la escena activa:
    - `.text-slider-track` recibe `translateY(calc(var(--vh) * -<escena>00))` y sube con una transición de 0.8 s.
    - El `.seq-bg` con el mismo índice recibe `.active` y aparece con un fundido de 0.8 s; los demás lo pierden.
-   - En Operaciones, Crecimiento y Ecosistema se escribe además `data-scene="<escena>"` en la `<section>`, que el CSS usa (por ejemplo, la entrada escalonada de las tarjetas de Crecimiento).
+   - En Operaciones, Crecimiento, Ecosistema e IA se escribe además `data-scene="<escena>"` en la `<section>`, que el CSS usa (por ejemplo, la entrada escalonada de las tarjetas de Crecimiento o el encendido de los frentes de IA).
 
 ### 3.3 Los tres motores de escenas
 
@@ -126,6 +126,7 @@ Todas las alturas de sección son `calc(var(--vh) * N + var(--extra))`. **Parada
   - El cubo central (`#spot-ia`, `.op-hub`) es el origen de las rutas hacia los 5 puntos (`drawRoutes()`), que coinciden con las líneas vino propias de la imagen. Lleva la etiqueta destacada `.eco-ia-label` ("Capa de IA" y su frase; en celular solo el nombre), siempre visible y con brillo que late (`iaGlow`).
   - Aparición escalonada con `--delay`: etiqueta de IA, SICE (0.6 s), Vista Alegre (0.9 s), NUCTECH (1.2 s) y ENTELAR (1.5 s); cada tarjeta y su línea usan el mismo retraso.
   - **Celular:** nombres al lado de su punto, hacia afuera de la maqueta para que no se junten alrededor del cubo (SICE y ENTELAR a la izquierda, Vista Alegre a la derecha, NUCTECH abajo, Capa de IA arriba del cubo), y lista `.op-list` con textos cortos (versión resumida de las tarjetas). Maqueta y lista se acomodan con `fitMobile()`; en pantallas de 720 px de alto o menos la lista además usa letra más chica.
+- **IA, escena 3 (seis frentes):** las 6 tarjetas `.ia-frente` (3 × 2 en escritorio, 1 columna en celular) empiezan apagadas (opacidad y brillo bajos) y se encienden en ola cuando `#ia` tiene `data-scene="3"`: cada encendido dura 2 s (pulso de luz vino `iaEncendido`, borde y ícono vino) y la siguiente tarjeta empieza 0.5 s después (`--t` = 0.2 s + `--i` × 0.5 s). Sin número: el orden no importa. Ícono de línea `.ia-frente-ico` (SVG en el HTML, mismo trazo que el diagrama). En laptops bajas (alto ≤ 720 px) el ícono va al lado del título; en celular solo se ven el título y la primera viñeta.
 - **Acomodo en celular (`fitMobile()`, Operaciones y Ecosistema):** la imagen vertical tiene fondo negro arriba y abajo; el atributo `data-contenido="arriba abajo"` del lienzo indica qué parte del alto tiene contenido (Operaciones `0.28 0.68`, Ecosistema `0.22 0.76`). Con eso, el alto de pantalla (`screenH()`) y el alto real de la lista, el JS centra imagen + lista entre el menú (84 px) y el borde inferior (24 px), con 18 px de separación. Escribe en la `<section>` `--map-shift` (desplazamiento del lienzo), `--map-scale` (reducción, solo si no cabe; mínimo 0.6, desde el borde superior; por eso `drawRoutes()` y `drawLines()` miden el lienzo con `offsetWidth/offsetHeight`, su tamaño de diseño, y no con `getBoundingClientRect()`, que ya incluye la reducción) y `--cap-pad` (espacio bajo la lista). El CSS de celular tiene valores fijos de respaldo por si el JS no corre. Se recalcula al cambiar el tamaño, al cargar y cuando termina de cargar la letra. En escritorio no hace nada.
 - Las tarjetas (`.eco-card`) están en las esquinas (`.c-tl`, `.c-tr`, `.c-bl`, `.c-br`) y una línea SVG las une a su punto:
   - `<line data-from="X">` se conecta con `#spot-X` y con la tarjeta cuyo `data-for` contiene `X`.
@@ -144,7 +145,7 @@ Todas las alturas de sección son `calc(var(--vh) * N + var(--extra))`. **Parada
    - **Spot:** agregar el `.op-spot` con su `data-scene` y sus 4 coordenadas.
    - **Ecosistema:** además, su `.eco-card` y su `<line>`.
 6. Actualizar los comentarios con el mapa de escenas en `index.html` y la tabla del §2 de este documento.
-7. Probar el recorrido completo con Av Pág: el número de paradas debe cambiar exactamente en las escenas agregadas o quitadas (hoy son 29).
+7. Probar el recorrido completo con Av Pág: el número de paradas debe cambiar exactamente en las escenas agregadas o quitadas (hoy son 24).
 
 ### 3.5 Botones dentro de una escena
 
@@ -233,7 +234,7 @@ Otros colores que se repiten sin variable: `#a51a2e` (vino al pasar el cursor), 
 | Dilema | Solo clases comunes |
 | Operaciones / Ecosistema | `.op-stage`, `.eco-stage`, `.eco-img`, `.op-shade`, `.op-spots`, `.op-spot`, `.eco-dot`, `.op-name`, `.op-card`, `.op-num`, `.op-side-r/-l/-b`, `.op-cap`, `.op-hub` (Centro, origen de las rutas), `.op-routes`, `.op-route`, `.op-list` (lista del celular), `.eco-ia-label` (etiqueta "Capa de IA"), `.eco-lines`, `.eco-card`, `.eco-card-ia`, `.c-tl/-tr/-bl/-br`, `.spot-extra` (punto sin nombre), `.spot-core` (cubo de IA) |
 | Crecimiento | `.crec-scene`, `.crec-b-grid`, `.crec-b-card` |
-| IA | `.ia-kicker`(`-dark`), `.ia-num`, `.ia-intro`, `.ia-intro-sub`, `.ia-overlay`, `.ia-scene-num`, `.ia-scene-title`, `.ia-scene-list`; diagrama: `.ia-diag`, `.ia-diag-bg`, `.diag-flow`, `.flow-step`(`.is-core`), `.flow-conn`, `.flow-ico`, `.flow-num`, `.ia-diag-msg`; escenas 9–10: `.casos-item`, `.casos-bg`, `.casos-bg-2`, `.ia-cases`, `.v-a`, `.ia-case`, `.ia-process-block`, `.ia-process-img`, `.ia-process-content`, `.ia-steps`, `.ia-step`, `.role`, `.role-client`, `.role-4w`, `.proceso-cta` |
+| IA | `.ia-kicker`(`-dark`), `.ia-num`, `.ia-intro`, `.ia-intro-sub`, `.ia-overlay`, seis frentes: `.ia-frentes`, `.ia-frentes-bg`, `.ia-frentes-grid`, `.ia-frente`, `.ia-frente-ico`; diagrama: `.ia-diag`, `.ia-diag-bg`, `.diag-flow`, `.flow-step`(`.is-core`), `.flow-conn`, `.flow-ico`, `.flow-num`, `.ia-diag-msg`; escenas 4–5: `.casos-item`, `.casos-bg`, `.casos-bg-2`, `.ia-cases`, `.v-a`, `.ia-case`, `.ia-process-block`, `.ia-process-img`, `.ia-process-content`, `.ia-steps`, `.ia-step`, `.role`, `.role-client`, `.role-4w`, `.proceso-cta` |
 | Experiencia | `.pilares-mobile-view`, `.pilares-desktop-view`, `.quadrant-card`(`.is-in`), `.q-top-left/-right`, `.q-bottom-left/-right`, `.quadrant-content`, `.ally-tag`, `.sector-title`, `.sector-title-m`, `.z-background` |
 | Pie | `.footer-reveal`, `.footer-content`, `.footer-info`, `.footer-contact`, `.footer-legal`, `.footer-cta` |
 | Botón general | `.cta-btn` (vino con flecha →) |
@@ -347,8 +348,8 @@ Optimización usada: 1280×800 o 1536×1024 (horizontal), 1024×1536 (vertical),
 | `dominio.jpg` / `dominiov.jpg` | Operaciones (escritorio / celular) | Render oscuro de cristal con acento vino |
 | `c1`–`c3.jpg` | Crecimiento, fondo de las tarjetas (oscurecido) | Foto real |
 | `ia-hero.jpg` | IA, escena 1 | — |
-| `ia-01`–`ia-06.jpg` | IA, frentes 01–06 (capa 60 %) | — |
-| `ia-proceso.jpg` | IA, escena 10 (en `styles.css`) | — |
+| `ia-01`–`ia-06.jpg` | IA, fondo oscurecido de cada tarjeta de los seis frentes (variable `--img` en el HTML) | — |
+| `ia-proceso.jpg` | IA, escena 5 (en `styles.css`) | — |
 | `p1`–`p4.jpg` | Experiencia, sectores 1–4 | Foto real |
 | `ecosistema.jpg` / `ecosistemav.jpg` | Ecosistema (escritorio / celular) | Render oscuro de cristal con acento vino |
 | `logo.png` / `logoc.png` | Menú (a color / blanco) | — |
@@ -377,7 +378,7 @@ Casos conocidos:
 ## 11. Cómo probar
 
 **Revisión manual mínima de cada cambio:**
-1. Recorrer el sitio completo con Av Pág en escritorio. Deben ser 29 paradas; ningún texto debe quedar cortado ni debajo del menú, y cada escena debe cambiar con su transición.
+1. Recorrer el sitio completo con Av Pág en escritorio. Deben ser 24 paradas; ningún texto debe quedar cortado ni debajo del menú, y cada escena debe cambiar con su transición.
 2. Lo mismo en un celular, o en el emulador del navegador con los tamaños del README.
 3. Menú: cada enlace lleva al inicio exacto de su sección. Probar también el logo, "Inicio" y el botón ↑.
 4. Formulario: abrir, validar vacío, cerrar con Esc y con la ×; en celular no debe hacer zoom al escribir.
@@ -406,7 +407,7 @@ Ninguno de estos puntos afecta lo que hoy ve el visitante, salvo donde se indica
 
 **Organización:**
 - La lógica de escenas está en 3 motores (§3.3). Dilema, IA y Experiencia podrían usar `makeSimpleSequence()`, pero unificarlos cambia el código que corre en cada scroll: hacerlo solo con la revisión completa del §11.
-- Nombres históricos que se conservan para no romper referencias: `pilares` (hoy Experiencia), `v-a` (estilo de las tarjetas de Desarrollos) y `casos` (escenas 9 y 10 de IA).
+- Nombres históricos que se conservan para no romper referencias: `pilares` (hoy Experiencia), `v-a` (estilo de las tarjetas de Desarrollos) y `casos` (escenas 4 y 5 de IA).
 - 34 atributos `style=""` en `index.html` (casi todos, la imagen de fondo de cada escena) y 7 `!important` en `styles.css`.
 
 **Rendimiento:** `h1.jpg` (419 KB), `h3.jpg` (429 KB), `h2.jpg` (297 KB), `p1.jpg` (293 KB), `p2.jpg` (266 KB) y `p4.jpg` (238 KB) pasan del objetivo de 150 KB. Son las primeras imágenes que se cargan.
