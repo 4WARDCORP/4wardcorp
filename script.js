@@ -131,6 +131,34 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+        // Celular: acomoda la imagen y la lista (.op-list) como un solo bloque centrado bajo el menú.
+        // data-contenido="arriba abajo" del lienzo dice qué parte de la imagen vertical tiene contenido
+        // (fracciones del alto); el resto es fondo negro. Escribe --map-shift (cuánto se mueve el lienzo),
+        // --map-scale (reducción si no cabe) y --cap-pad (espacio bajo la lista), que solo usa el CSS de celular.
+        const list = section.querySelector('.op-list');
+        function fitMobile() {
+            if (!stage || !list || !stage.dataset.contenido) return;
+            if (window.innerWidth > 768) {
+                ['--map-shift', '--map-scale', '--cap-pad'].forEach(v => section.style.removeProperty(v));
+                return;
+            }
+            const [fTop, fBottom] = stage.dataset.contenido.split(' ').map(Number);
+            const h = screenH();
+            const stageH = stage.offsetHeight;
+            const stageTop = (h - stageH) / 2;              // el lienzo está centrado en la pantalla
+            const menu = 84, margen = 24, espacio = 18;     // alto del menú, margen inferior y separación imagen–lista
+            // Si no cabe todo, la imagen se reduce (--map-scale, desde su borde superior) lo justo para que quepa
+            const disponible = h - menu - margen - espacio - list.offsetHeight;
+            const escala = Math.max(0.6, Math.min(1, disponible / ((fBottom - fTop) * stageH)));
+            const contenido = (fBottom - fTop) * stageH * escala;
+            const bloque = contenido + espacio + list.offsetHeight;
+            const libre = h - menu - margen - bloque;
+            const inicio = menu + Math.max(0, libre / 2);
+            section.style.setProperty('--map-scale', escala.toFixed(3));
+            section.style.setProperty('--map-shift', (inicio - (stageTop + fTop * stageH * escala)) + 'px');
+            section.style.setProperty('--cap-pad', Math.max(margen, h - (inicio + bloque)) + 'px');
+        }
+
         // Coloca los puntos según la imagen visible (horizontal en escritorio, vertical en celular)
         function place() {
             const vertical = window.innerWidth <= 768;
@@ -140,6 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             drawLines();
             drawRoutes();
+            fitMobile();
             if (current >= 0) { const c = current; current = -1; setScene(c); }
         }
 
@@ -166,7 +195,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         place();
         window.addEventListener('resize', place);
-        window.addEventListener('load', () => { drawLines(); drawRoutes(); });
+        window.addEventListener('load', () => { drawLines(); drawRoutes(); fitMobile(); });
+        if (document.fonts) document.fonts.ready.then(fitMobile);   // la lista cambia de alto cuando carga la letra
 
         return function onScroll(windowHeight) {
             const rect = section.getBoundingClientRect();

@@ -342,10 +342,11 @@ html {
     .op-cap .seq-desc { margin-top: 14px; font-size: 1rem; }
     .op-cap .op-num { margin-bottom: 12px; }
     /* Mapa más arriba para dejar lugar a la lista; nombres hacia lados distintos para que no choquen */
-    .operaciones-sequence .eco-stage { transform: translateY(calc(var(--vh) * -15)); }
+    /* --map-shift y --cap-pad los calcula script.js (fitMobile) para centrar mapa + lista; los valores fijos son respaldo */
+    .operaciones-sequence .eco-stage { transform-origin: 50% 0; transform: translateY(var(--map-shift, calc(var(--vh) * -15))) scale(var(--map-scale, 1)); }
     .operaciones-sequence .op-side-l .op-name { left: auto; right: 12px; bottom: auto; top: 0; transform: translateY(-50%); }
     .operaciones-sequence .op-side-b .op-name { bottom: auto; top: 16px; }
-    .operaciones-sequence .op-cap { padding-bottom: calc(var(--vh) * 7); }
+    .operaciones-sequence .op-cap { padding-bottom: var(--cap-pad, calc(var(--vh) * 7)); }
     .op-list { width: 100%; max-width: 420px; text-align: left; }
     .op-list li { color: #d0d0d0; font-size: min(0.95rem, calc(var(--vh) * 2.2)); line-height: 1.35; padding: calc(var(--vh) * 0.9) 0; border-top: 1px solid rgba(255,255,255,0.14); }
     .op-list b { display: block; color: #fff; font-size: min(0.8rem, calc(var(--vh) * 1.9)); letter-spacing: 3px; text-transform: uppercase; }
@@ -696,13 +697,13 @@ html {
     .ecosistema-sequence .op-hub .eco-dot { width: 19px; height: 19px; left: -9.5px; top: -9.5px; }
     .ecosistema-sequence .op-shade { background: radial-gradient(ellipse 60% 40% at 50% 47%, rgba(0,0,0,0) 0, rgba(0,0,0,0) 60%, rgba(0,0,0,0.55) 100%); }
     /* Maqueta más arriba para dejar lugar a la lista */
-    .ecosistema-sequence .eco-stage { transform: translateY(calc(var(--vh) * -19)); }
-    .ecosistema-sequence .op-cap { padding-bottom: calc(var(--vh) * 4); }
+    .ecosistema-sequence .eco-stage { transform-origin: 50% 0; transform: translateY(var(--map-shift, calc(var(--vh) * -19))) scale(var(--map-scale, 1)); }
+    .ecosistema-sequence .op-cap { padding-bottom: var(--cap-pad, calc(var(--vh) * 4)); }
     .ecosistema-sequence .eco-img { -webkit-mask-image: none; mask-image: none; }
 }
 @media (max-width: 768px) and (max-height: 720px) {
     /* Pantallas bajas (tipo iPhone SE): maqueta más chica y lista más compacta para que no se encimen */
-    .ecosistema-sequence .eco-stage { width: min(100vw, calc(var(--vh) * 54)); transform: translateY(calc(var(--vh) * -22)); }
+    .ecosistema-sequence .eco-stage { width: min(100vw, calc(var(--vh) * 54)); transform: translateY(var(--map-shift, calc(var(--vh) * -22))) scale(var(--map-scale, 1)); }
     .ecosistema-sequence .op-list li { font-size: calc(var(--vh) * 2); padding: calc(var(--vh) * 0.6) 0; }
     .ecosistema-sequence .op-list b { font-size: calc(var(--vh) * 1.7); }
 }

@@ -1,6 +1,6 @@
 # Documentación técnica — sitio 4ward Solutions
 
-Referencia para quien mantenga o modifique el sitio. Describe el código tal como está en la versión **`20261125f`** (ver [CAMBIOS.md](CAMBIOS.md)).
+Referencia para quien mantenga o modifique el sitio. Describe el código tal como está en la versión **`20261125g`** (ver [CAMBIOS.md](CAMBIOS.md)).
 La forma de probar y publicar está en el [README](README.md) y el historial en [CAMBIOS.md](CAMBIOS.md).
 
 **Regla de mantenimiento:** si un cambio contradice algo de este documento, el documento se actualiza en el mismo commit.
@@ -121,11 +121,12 @@ Todas las alturas de sección son `calc(var(--vh) * N + var(--extra))`. **Parada
   - **Rutas:** el punto con `.op-hub` (Centro) es el origen. `drawRoutes()` crea dentro de `.op-routes` una `.op-route` por cada otro punto: una barra girada del largo exacto, con 2 puntos de luz `<i>` que la recorren con la animación `flowX` del diagrama de IA. La duración (`--dur`) es proporcional al largo (170 px por segundo, mínimo 1.6 s). Se recalculan con `place()` al cambiar el tamaño.
   - **Foco general:** en Operaciones, `.op-shade` es una elipse fija que deja a la vista la zona de las 4 regiones (no usa `--fx` / `--fy`).
   - La imagen del mapa ya trae sus propias líneas vino (son parte del render); las rutas rectas se suman a ellas a propósito.
-  - **Celular:** sin tarjetas; los nombres van sobre el mapa (Bajío a la izquierda y Centro abajo, para que no choquen) y las 4 frases en la lista `.op-list` debajo. El mapa se sube 15 `--vh` para dejarle lugar.
+  - **Celular:** sin tarjetas; los nombres van sobre el mapa (Bajío a la izquierda y Centro abajo, para que no choquen) y las 4 frases en la lista `.op-list` debajo. Mapa y lista se acomodan como un solo bloque centrado con `fitMobile()` (ver abajo).
 - **Ecosistema:** una sola escena de maqueta, con el mismo esquema de Operaciones:
   - El cubo central (`#spot-ia`, `.op-hub`) es el origen de las rutas hacia los 5 puntos (`drawRoutes()`), que coinciden con las líneas vino propias de la imagen. Lleva la etiqueta destacada `.eco-ia-label` ("Capa de IA" y su frase; en celular solo el nombre), siempre visible y con brillo que late (`iaGlow`).
   - Aparición escalonada con `--delay`: etiqueta de IA, SICE (0.6 s), Vista Alegre (0.9 s), NUCTECH (1.2 s) y ENTELAR (1.5 s); cada tarjeta y su línea usan el mismo retraso.
-  - **Celular:** nombres sobre la maqueta y lista `.op-list` con textos cortos (versión resumida de las tarjetas). La maqueta sube 19 `--vh`; en pantallas de 720 px de alto o menos se achica y la lista se compacta.
+  - **Celular:** nombres sobre la maqueta y lista `.op-list` con textos cortos (versión resumida de las tarjetas). Maqueta y lista se acomodan con `fitMobile()`; en pantallas de 720 px de alto o menos la lista además usa letra más chica.
+- **Acomodo en celular (`fitMobile()`, Operaciones y Ecosistema):** la imagen vertical tiene fondo negro arriba y abajo; el atributo `data-contenido="arriba abajo"` del lienzo indica qué parte del alto tiene contenido (Operaciones `0.28 0.68`, Ecosistema `0.22 0.76`). Con eso, el alto de pantalla (`screenH()`) y el alto real de la lista, el JS centra imagen + lista entre el menú (84 px) y el borde inferior (24 px), con 18 px de separación. Escribe en la `<section>` `--map-shift` (desplazamiento del lienzo), `--map-scale` (reducción, solo si no cabe; mínimo 0.6, desde el borde superior) y `--cap-pad` (espacio bajo la lista). El CSS de celular tiene valores fijos de respaldo por si el JS no corre. Se recalcula al cambiar el tamaño, al cargar y cuando termina de cargar la letra. En escritorio no hace nada.
 - Las tarjetas (`.eco-card`) están en las esquinas (`.c-tl`, `.c-tr`, `.c-bl`, `.c-br`) y una línea SVG las une a su punto:
   - `<line data-from="X">` se conecta con `#spot-X` y con la tarjeta cuyo `data-for` contiene `X`.
   - `drawLines()` recalcula las líneas al cambiar el tamaño de la ventana.
@@ -262,7 +263,7 @@ Otros colores que se repiten sin variable: `#a51a2e` (vino al pasar el cursor), 
 |---|---|---|
 | `screenH()` | función | Alto de una pantalla del sitio: alto del primer `.snap-point`. Si no existe, usa `innerHeight`. |
 | `sceneStep(section)` | función | Lo mismo, medido dentro de la sección indicada. |
-| `makeSpotSequence(section, track)` | función | Prepara una sección de puntos sobre imagen y devuelve su `onScroll(alto)`. Internas: `place()` (coloca puntos según escritorio o celular), `drawLines()` (líneas SVG de Ecosistema), `drawRoutes()` (rutas con puntos de luz de Operaciones) y `setScene(i)`. |
+| `makeSpotSequence(section, track)` | función | Prepara una sección de puntos sobre imagen y devuelve su `onScroll(alto)`. Internas: `place()` (coloca puntos según escritorio o celular), `drawLines()` (líneas SVG de Ecosistema), `drawRoutes()` (rutas con puntos de luz desde `.op-hub`), `fitMobile()` (centra imagen + lista en celular) y `setScene(i)`. |
 | `makeSimpleSequence(section, track)` | función | Prepara una sección de fondos con fundido y devuelve su `onScroll(alto)`. |
 | `volverInicio()` | función | Fundido a negro, salto a la portada y fundido de regreso (§5). |
 | `toggleSubir()` | función | Muestra u oculta `.btn-subir`. |
@@ -357,7 +358,7 @@ Optimización usada: 1280×800 o 1536×1024 (horizontal), 1024×1536 (vertical),
 **Recortes en celular:**
 - Las fotos de fondo (`background-size: cover`) se recortan en vertical por el centro, así que el sujeto debe ir centrado.
 - Operaciones y Ecosistema no se recortan: tienen su propia versión vertical (`…v.jpg`).
-- **Si se cambia la imagen de Operaciones o de Ecosistema,** hay que volver a medir las coordenadas `data-x/y/xv/yv` de cada punto.
+- **Si se cambia la imagen de Operaciones o de Ecosistema,** hay que volver a medir las coordenadas `data-x/y/xv/yv` de cada punto y, en la versión vertical, el `data-contenido` del lienzo (filas de la imagen con contenido, como fracción del alto).
 
 ## 10. Compatibilidad con navegadores
 
