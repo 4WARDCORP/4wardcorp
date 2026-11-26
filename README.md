@@ -6,7 +6,7 @@ Sitio de una sola página de **4Ward Solutions, S.A. de C.V.**, en español y en
 
 | | |
 |---|---|
-| **Versión** | `20261126c` (ver [CAMBIOS.md](CAMBIOS.md)) |
+| **Versión** | `20261126d` (ver [CAMBIOS.md](CAMBIOS.md)) |
 | **Sitio publicado** | Hostinger → <https://4wardcorp.com> (desde `20261126c`; `www.` redirige a la dirección sin `www`) |
 | **Repositorio** | Código fuente, historial y documentación. `main` = lo publicado en Hostinger. GitHub Pages (<https://4wardcorp.github.io/4wardcorp/>) fue la publicación temporal y se apaga cuando el dominio está verificado |
 | **Documentación técnica** | [DOCUMENTACION.md](DOCUMENTACION.md) |
