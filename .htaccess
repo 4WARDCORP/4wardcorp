@@ -12,9 +12,13 @@
 Options -Indexes
 ServerSignature Off
 
-# 1. Siempre HTTPS (método recomendado por Hostinger)
+# 1. Una sola dirección oficial: https://4wardcorp.com (sin www) — en un solo salto
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    # www.4wardcorp.com → https://4wardcorp.com (conserva la ruta, por ejemplo /en/)
+    RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+    RewriteRule ^(.*)$ https://%1%{REQUEST_URI} [L,R=301]
+    # Siempre HTTPS (método recomendado por Hostinger)
     RewriteCond %{HTTPS} off
     RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 </IfModule>

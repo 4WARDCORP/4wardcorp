@@ -370,6 +370,8 @@ html {
     .op-list { width: 100%; max-width: 420px; text-align: left; }
     .op-list li { color: #d0d0d0; font-size: min(0.95rem, calc(var(--vh) * 2.2)); line-height: 1.35; padding: calc(var(--vh) * 0.9) 0; border-top: 1px solid rgba(255,255,255,0.14); }
     .op-list b { display: block; color: #fff; font-size: min(0.8rem, calc(var(--vh) * 1.9)); letter-spacing: 3px; text-transform: uppercase; }
+    /* El último renglón queda a la altura del botón ↑ (esquina inferior derecha): se deja libre esa esquina */
+    .op-list li:last-child { padding-right: 52px; }
 }
 
 /* ======================================================================
@@ -578,7 +580,7 @@ html {
     .ia-intro-sub { font-size: 0.72rem; letter-spacing: 2px; margin-top: 28px; }
     .ia-diag { padding: 74px 6% 20px; justify-content: center; }
     .ia-diag-title { font-size: min(7vw, calc(var(--vh) * 3.6)); margin-bottom: calc(var(--vh) * 2.6); }
-    .ia-diag-msg { margin-top: calc(var(--vh) * 2.6); font-size: min(0.95rem, calc(var(--vh) * 2.2)); }
+    .ia-diag-msg { margin-top: calc(var(--vh) * 2.6); font-size: min(0.95rem, calc(var(--vh) * 2.2)); padding: 0 54px; }   /* margen lateral: no pasa bajo el botón ↑ */
     .ia-diag h4 { font-size: min(0.98rem, calc(var(--vh) * 2.3)); margin-bottom: calc(var(--vh) * 0.4); }
     .ia-diag p { font-size: min(0.84rem, calc(var(--vh) * 1.95)); line-height: 1.4; }
     .flow-num { font-size: min(0.68rem, calc(var(--vh) * 1.6)); margin-bottom: calc(var(--vh) * 0.3); }
@@ -598,7 +600,7 @@ html {
     .ia-process-content { padding: 26px 22px 34px; }
     .ia-step p { grid-template-columns: 62px 1fr; font-size: 0.92rem; }
     .proceso-cta { margin-top: calc(var(--vh) * 1.8); }
-    .proceso-cta .cta-btn { width: 100%; padding: min(14px, calc(var(--vh) * 1.9)) 20px; font-size: min(0.95rem, calc(var(--vh) * 2.2)); }
+    .proceso-cta .cta-btn { width: calc(100% - 58px); padding: min(14px, calc(var(--vh) * 1.9)) 20px; font-size: min(0.95rem, calc(var(--vh) * 2.2)); }
     .casos-item { padding: 74px 5% 18px; }
     .casos-item .ia-subtitle { font-size: min(8vw, calc(var(--vh) * 4.2)); margin-bottom: calc(var(--vh) * 2.4); }
     .casos-item .ia-cases-grid { gap: calc(var(--vh) * 1.4); }
@@ -608,6 +610,7 @@ html {
     .casos-item .v-a .ia-case h4 { display: inline; vertical-align: middle; font-size: min(1.05rem, calc(var(--vh) * 2.5)); }
     .casos-item .ia-case p { margin-top: calc(var(--vh) * 0.8); }
     .casos-item .ia-case p { font-size: min(0.86rem, calc(var(--vh) * 2.05)); line-height: 1.42; }
+    .casos-item .v-a .ia-case:last-child p { padding-right: 32px; }   /* la última tarjeta llega a la altura del botón ↑ */
     /* Proceso en celular: la foto pasa a ser el fondo oscurecido de la escena */
     .casos-bg-2 { background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.92)), url('img/ia-proceso.jpg') 15% center / cover no-repeat; }
     .casos-item .ia-process-block { height: auto; border: none; background: transparent; border-radius: 0; }
@@ -794,6 +797,7 @@ html {
     /* Pantallas bajas (tipo iPhone SE): maqueta más chica y lista más compacta para que no se encimen */
     .ecosistema-sequence .eco-stage { width: min(100vw, calc(var(--vh) * 54)); transform: translateY(var(--map-shift, calc(var(--vh) * -22))) scale(var(--map-scale, 1)); }
     .ecosistema-sequence .op-list li { font-size: calc(var(--vh) * 2); padding: calc(var(--vh) * 0.6) 0; }
+    .ecosistema-sequence .op-list li:last-child { padding-right: 52px; }   /* esquina del botón ↑ libre (ver §8) */
     .ecosistema-sequence .op-list b { font-size: calc(var(--vh) * 1.7); }
 }
 

@@ -24,6 +24,8 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). L
 - **Aviso de idioma:** si el navegador del visitante está en el otro idioma y todavía no ha elegido, aparece en la portada "View this site in English?" (o "¿Ver este sitio en español?" en la versión en inglés). No cambia de página por su cuenta; si el visitante baja sin contestar, el aviso se quita.
 - **Preferencia de idioma:** la elección se guarda en el navegador (`localStorage`); en las siguientes visitas el sitio abre en ese idioma.
 - **Descripción para buscadores** (`meta description`) en las dos páginas.
+- **Publicación en Hostinger** con el dominio `4wardcorp.com`. `www.4wardcorp.com` redirige a `https://4wardcorp.com` (`.htaccess`).
+- **Etiquetas para buscadores:** `canonical` y `hreflang` (español, inglés y predeterminada) en las dos páginas.
 - **Formulario en inglés:** etiquetas, mensajes del navegador y de `enviar.php` en inglés. Campo oculto `idioma`. El correo para 4ward sigue en español: el asunto dice "Contacto web (EN) – Empresa" y el cuerpo agrega "Idioma del sitio".
 
 ### Cambiado
@@ -33,6 +35,9 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). L
 - **Aviso de privacidad:** la sección 9 dice que el sitio guarda en el navegador el idioma elegido (no se envía a nadie). Fecha de actualización: 26 de noviembre de 2026. Enlace al resumen en inglés.
 - **Menú del celular:** la píldora abierta crece de 440 a 484 px para el renglón ES / EN.
 - Código: `script.js` lee el idioma de `<html lang>` (constante `LANG`) y la sección 7 solo intercepta enlaces a `#…`; nueva sección 9 (idioma). `styles.css`: `.lang-switch`, `.lang-switch-m` (§4) y sección 16 `.lang-aviso`. `enviar.php`: `$EN` y `t()`.
+
+### Corregido
+- **Celular, botón ↑:** ya no tapa texto. Se deja libre su esquina en el último renglón de la lista de Ecosistema y de Operaciones, la frase final del diagrama de IA ("La IA se encarga de lo repetitivo…"), el texto de la última tarjeta de Desarrollos y el botón "Platiquemos de tu proceso" de Proceso.
 
 ## [20261126b] — 2026-11-26 · commit `8f22c0c`
 

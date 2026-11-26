@@ -2,13 +2,13 @@
 
 Sitio de una sola página de **4Ward Solutions, S.A. de C.V.**, en español y en inglés. Es HTML, CSS y JavaScript sin dependencias, más un script PHP para el formulario de contacto.
 
-> **Formulario:** solo envía correos desde Hostinger (PHP). En GitHub Pages no hay PHP: abre el correo del visitante con el mensaje ya escrito.
+> **Formulario:** solo envía correos desde Hostinger (PHP). Sin PHP (en local con `http.server` o en GitHub Pages) abre el correo del visitante con el mensaje ya escrito.
 
 | | |
 |---|---|
 | **Versión** | `20261126c` (ver [CAMBIOS.md](CAMBIOS.md)) |
-| **Publicación actual** | GitHub Pages, rama `main` → <https://4wardcorp.github.io/4wardcorp/> (temporal) |
-| **Destino final** | Hostinger, con el dominio propio `4wardcorp.com` |
+| **Sitio publicado** | Hostinger → <https://4wardcorp.com> (desde `20261126c`; `www.` redirige a la dirección sin `www`) |
+| **Repositorio** | Código fuente, historial y documentación. `main` = lo publicado en Hostinger. GitHub Pages (<https://4wardcorp.github.io/4wardcorp/>) fue la publicación temporal y se apaga cuando el dominio está verificado |
 | **Documentación técnica** | [DOCUMENTACION.md](DOCUMENTACION.md) |
 | **Idiomas** | Español de México (`index.html`) e inglés de EE. UU. (`en/index.html`), con selector ES / EN (DOCUMENTACION.md §15) |
 
@@ -69,7 +69,7 @@ El detalle de cómo probar está en DOCUMENTACION.md §11.
 
 ## 3. Publicar un cambio
 
-Se publica con un push a `main`; GitHub Pages actualiza el sitio en 2 a 5 minutos.
+**Los cambios se hacen solo en este repositorio, nunca editando archivos directamente en Hostinger:** si se edita allá, la siguiente subida borra ese cambio. Se publica subiendo a Hostinger los archivos del sitio desde `main` (§5).
 
 1. **Respaldo.** Antes de un cambio grande o riesgoso, crear una rama `respaldo-AAAAMMDD<letra>` desde `main`.
 2. **Versión.** Si cambió `styles.css` o `script.js`, subir la versión en **los dos** enlaces de `index.html` **y** de `en/index.html`:
@@ -77,7 +77,8 @@ Se publica con un push a `main`; GitHub Pages actualiza el sitio en 2 a 5 minuto
 3. **Las dos páginas.** Todo cambio de estructura o de diseño en `index.html` se repite en `en/index.html`, y todo texto nuevo lleva su versión en inglés (DOCUMENTACION.md §15).
 4. **Documentación.** Registrar el cambio en `CAMBIOS.md` y actualizar `DOCUMENTACION.md` si cambió algo que ahí se describe. Va **en el mismo commit** que el cambio.
 5. **Commit y push** a `main`. El mensaje del commit va en español y dice qué cambió y dónde.
-6. **Verificar** en línea con `?v=<versión>` al final de la dirección, en celular y en escritorio, en español y en inglés.
+6. **Subir a Hostinger** (§5) y **borrar la caché** del CDN en hPanel.
+7. **Verificar** en línea con `?v=<versión>` al final de la dirección, en celular y en escritorio, en español y en inglés.
 
 Ramas de respaldo existentes: `respaldo-original` (sitio original), `respaldo-20261124b` (estado anterior a la medida `--vh`), `respaldo-20261125a` (antes de la limpieza del código) y `respaldo-20261125c` (antes de la revisión de seguridad) y una por publicación desde entonces (la más reciente, `respaldo-20261126b`, antes de la versión en inglés).
 
@@ -90,14 +91,20 @@ Ramas de respaldo existentes: `respaldo-original` (sitio original), `respaldo-20
 5. **El repositorio es público: nunca subir contraseñas, tokens ni datos privados.** Si un día se necesita SMTP, la configuración va en un archivo fuera del repo (ya está previsto en `.gitignore`).
 6. **No borrar imágenes de `img/`** sin confirmación del responsable del sitio.
 
-## 5. Despliegue en Hostinger (pendiente)
+## 5. Despliegue en Hostinger
 
-Todavía no se hace. Cuando se haga:
+Plan de hosting compartido (Apache/LiteSpeed con PHP), sitio de tipo PHP/HTML. Todo va dentro de la carpeta **`public_html`** del sitio; el archivo `DO_NOT_UPLOAD_HERE` que Hostinger pone un nivel arriba no se toca. El SSL y el CDN se activan desde hPanel.
 
-- Subir solo: `index.html`, `styles.css`, `script.js`, `enviar.php`, `aviso-de-privacidad.html`, `.htaccess`, `en/`, `img/` y `fonts/`. **No subir** los `.md`, `_config.yml`, `.editorconfig` ni `.gitignore`.
-- Probar `enviar.php` con un correo real y revisar que no llegue a spam.
-- Revisar que el `.htaccess` funcione: encabezados de seguridad presentes y `README.md` con 403 (DOCUMENTACION.md §14).
-- Agregar las etiquetas `hreflang` con el dominio final (DOCUMENTACION.md §15).
+1. **Armar el paquete** desde `main`, solo con los archivos del sitio:
+   ```bash
+   zip -r sitio-<versión>.zip index.html styles.css script.js enviar.php aviso-de-privacidad.html .htaccess en img fonts
+   ```
+   **No subir** los `.md`, `_config.yml`, `.editorconfig` ni `.gitignore`.
+2. **Subir** en hPanel → sitio → **Administrador de archivos** → `public_html` → **Subir** el ZIP → **Extraer** ahí mismo (reemplazando los archivos existentes) → borrar el ZIP del servidor.
+3. **Borrar caché** en el panel del sitio (el CDN puede servir la versión anterior unos minutos).
+4. **Revisar:** las dos versiones de idioma, el formulario con un correo real (que no llegue a spam), los encabezados de seguridad, `README.md` con 403 y la redirección de `www` (DOCUMENTACION.md §14).
+
+La primera subida (`20261126c`) reemplaza la página provisional "Próximamente" de Hostinger.
 - Las tareas abiertas de la migración están en DOCUMENTACION.md §12.
 
 ## 6. Propiedad

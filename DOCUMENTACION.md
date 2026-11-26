@@ -342,6 +342,7 @@ Otros colores que se repiten sin variable: `#a51a2e` (vino al pasar el cursor), 
 | Dato | Dónde aparece |
 |---|---|
 | **Todo texto y toda estructura de la página** | `index.html` y `en/index.html` (§15) |
+| Dominio `4wardcorp.com` | `canonical` y `hreflang` de `index.html` y `en/index.html` (§15) |
 | Correo `rvertti@4wardcorp.com` | `index.html` y `en/index.html` (pie y aviso del formulario), `script.js` (`DESTINO`), `enviar.php` (`$DESTINO`, `$REMITENTE`), `aviso-de-privacidad.html`, `en/privacy-notice.html` |
 | Razón social y domicilio | `index.html` y `en/index.html` (`.cf-aviso`), `aviso-de-privacidad.html`, `en/privacy-notice.html` |
 | Contenido del aviso de privacidad | `aviso-de-privacidad.html` (válido) y su resumen `en/privacy-notice.html`: si cambia el aviso, revisar el resumen |
@@ -440,7 +441,6 @@ Ninguno de estos puntos afecta lo que hoy ve el visitante, salvo donde se indica
   - Revisar que Hostinger aplique el `.htaccess`: que lleguen los encabezados de §14 y que `README.md` responda 403.
   - El encabezado `Server` (versión del servidor) no se puede quitar desde `.htaccess`; depende de Hostinger.
 - **Seguridad pendiente:** la CSP y la `Referrer-Policy` podrían adelantarse en GitHub Pages con `<meta>` (sin aprobar).
-- **Etiquetas `hreflang`:** pendientes hasta la migración, porque necesitan la dirección completa del dominio final (§15).
 - **Dos páginas que mantener:** cada cambio de estructura se hace en `index.html` y en `en/index.html` (decisión del responsable del sitio). Si el sitio sigue cambiando mucho, se puede generar `en/index.html` con un script a partir de `index.html` y un archivo de textos.
 
 ## 13. Lineamientos de diseño y contenido
@@ -464,6 +464,7 @@ Ninguno de estos puntos afecta lo que hoy ve el visitante, salvo donde se indica
 
 | Regla | Para qué |
 |---|---|
+| `RewriteCond %{HTTP_HOST} ^www\.` → 301 a `https://` sin `www` | Una sola dirección oficial (`4wardcorp.com`); conserva la ruta, por ejemplo `/en/`. Va antes de la regla de HTTPS para que todo llegue en un solo salto |
 | `RewriteCond %{HTTPS} off` → 301 a `https://` | Siempre conexión cifrada |
 | `Strict-Transport-Security: max-age=31536000` | El navegador recuerda un año que solo se usa HTTPS. Sin `includeSubDomains`, para no afectar subdominios de correo |
 | `Content-Security-Policy` | Solo se cargan archivos del propio sitio. `script-src` permite `script.js` y el script en línea de `--vh` por su hash; `style-src` necesita `'unsafe-inline'` por los 34 `style=""` de `index.html` y el `<style>` del aviso; `connect-src 'self'` para el `fetch` a `enviar.php`; `frame-ancestors 'none'` |
@@ -512,10 +513,12 @@ python3 -c "import re,hashlib,base64;s=open('index.html').read();print(base64.b6
 - Si no ha elegido y el primer idioma de su navegador es el de la otra versión, aparece en la portada un aviso para cambiar; no se cambia de página por su cuenta (Google no recomienda redirigir por idioma o ubicación). El aviso aparece una vez por visita y se quita si el visitante baja sin contestar.
 - El aviso de privacidad (sección 9) menciona que se guarda el idioma elegido.
 
-**Pendiente al migrar a Hostinger:** agregar en el `<head>` de las dos páginas las etiquetas para buscadores, con la dirección completa del dominio:
+**Etiquetas para buscadores** (en el `<head>` de las dos páginas, con la dirección oficial sin `www`): `canonical` apunta a la propia página (`https://4wardcorp.com/` o `https://4wardcorp.com/en/`) y las tres `alternate` son iguales en ambas:
 
 ```html
-<link rel="alternate" hreflang="es" href="https://<dominio>/">
-<link rel="alternate" hreflang="en" href="https://<dominio>/en/">
-<link rel="alternate" hreflang="x-default" href="https://<dominio>/">
+<link rel="alternate" hreflang="es" href="https://4wardcorp.com/">
+<link rel="alternate" hreflang="en" href="https://4wardcorp.com/en/">
+<link rel="alternate" hreflang="x-default" href="https://4wardcorp.com/">
 ```
+
+Si cambia el dominio, cambiar estas etiquetas en las dos páginas y la regla de `www` de `.htaccess` (§14).
