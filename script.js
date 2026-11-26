@@ -155,7 +155,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const menu = 84, margen = 24, espacio = 18;     // alto del menú, margen inferior y separación imagen–lista
             // Si no cabe todo, la imagen se reduce (--map-scale, desde su borde superior) lo justo para que quepa
             const disponible = h - menu - margen - espacio - list.offsetHeight;
-            const escala = Math.max(0.6, Math.min(1, disponible / ((fBottom - fTop) * stageH)));
+            // Ecosistema: tope de 0.93 para que las etiquetas de las orillas (Vista Alegre, Entelar) no se salgan
+            // de la pantalla cuando la lista es corta (en inglés, a 360 px, la maqueta crecía al 100 %)
+            const tope = section.id === 'ecosistema' ? 0.93 : 1;
+            const escala = Math.max(0.6, Math.min(tope, disponible / ((fBottom - fTop) * stageH)));
             const contenido = (fBottom - fTop) * stageH * escala;
             const bloque = contenido + espacio + list.offsetHeight;
             const libre = h - menu - margen - bloque;

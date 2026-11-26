@@ -38,6 +38,7 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). L
 
 ### Corregido
 - **Celular, botón ↑:** ya no tapa texto. Se deja libre su esquina en el último renglón de la lista de Ecosistema y de Operaciones, la frase final del diagrama de IA ("La IA se encarga de lo repetitivo…"), el texto de la última tarjeta de Desarrollos y el botón "Platiquemos de tu proceso" de Proceso.
+- **Celular, Ecosistema:** la maqueta se limita al 93 % de su tamaño para que las etiquetas de las orillas no se salgan de la pantalla (en inglés, a 360 px, "VISTA ALEGRE" se cortaba 5 px).
 
 ## [20261126b] — 2026-11-26 · commit `8f22c0c`
 
