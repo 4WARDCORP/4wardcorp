@@ -11,6 +11,8 @@
 # Sin listado de carpetas ni firma del servidor
 Options -Indexes
 ServerSignature Off
+# Página de inicio: index.html primero (Hostinger deja un default.php de "Próximamente" en public_html)
+DirectoryIndex index.html index.php
 
 # 1. Una sola dirección oficial: https://4wardcorp.com (sin www) — en un solo salto
 <IfModule mod_rewrite.c>

@@ -471,6 +471,7 @@ Ninguno de estos puntos afecta lo que hoy ve el visitante, salvo donde se indica
 | `X-Frame-Options: DENY` | Lo mismo que `frame-ancestors`, para navegadores viejos |
 | `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy` | Endurecimiento estándar |
 | `Header unset X-Powered-By`, `ServerSignature Off`, `Options -Indexes` | No revelar versiones ni listar carpetas |
+| `DirectoryIndex index.html index.php` | La página de inicio es `index.html` aunque en `public_html` quede el `default.php` ("Próximamente") que pone Hostinger al crear el sitio |
 | `FilesMatch` → `Require all denied` | Bloquea `.md`, `.yml`, `.log`, `.bak`, `.zip`, `.sh`, `.py`, `.ini` y archivos que empiezan con punto; `.git` responde 404 |
 
 **Hash del script en línea.** Si cambia el script de `<head>` de `index.html` (aunque sea un espacio), el navegador lo bloquea y `--vh` deja de medirse. Recalcular y reemplazar el valor `sha256-…` de `.htaccess`:
