@@ -692,6 +692,11 @@ html {
     .ecosistema-sequence .op-name { font-size: 0.72rem; letter-spacing: 2px; padding: 6px 11px; bottom: 16px; }
     .ecosistema-sequence .eco-dot { width: 15px; height: 15px; left: -7.5px; top: -7.5px; }
     .ecosistema-sequence .eco-ia-label { bottom: 20px; padding: 0.55em 1.1em; }
+    /* Etiquetas al lado de su punto, hacia afuera de la maqueta, para que no se junten alrededor del cubo:
+       SICE y ENTELAR a la izquierda, Vista Alegre a la derecha, NUCTECH abajo (a la derecha se saldría de la pantalla) */
+    #spot-sice .op-name, #spot-ent .op-name { left: auto; right: 14px; bottom: auto; top: 0; transform: translateY(-50%); }
+    #spot-va .op-name { left: 14px; bottom: auto; top: 0; transform: translateY(-50%); }
+    #spot-nuc .op-name { bottom: auto; top: 14px; }
     .eco-ia-label b { font-size: 0.8rem; letter-spacing: 2px; }
     .eco-ia-label small { display: none; }
     .ecosistema-sequence .op-hub .eco-dot { width: 19px; height: 19px; left: -9.5px; top: -9.5px; }

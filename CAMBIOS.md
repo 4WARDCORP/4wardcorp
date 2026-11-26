@@ -19,7 +19,12 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). L
 
 _(Nada pendiente.)_
 
-## [20261125g] — 2026-11-25
+## [20261125h] — 2026-11-25
+
+### Cambiado
+- **Celular, Ecosistema:** los nombres de SICE, Vista Alegre, NUCTECH y ENTELAR van al lado de su punto, hacia afuera de la maqueta (antes todos iban arriba del punto y se juntaban alrededor del cubo de IA). Solo CSS de celular; en escritorio esos nombres no se muestran porque están las tarjetas.
+
+## [20261125g] — 2026-11-25 · commit `a9eb1cc`
 
 ### Corregido
 - **Celular, Operaciones y Ecosistema:** el mapa (o la maqueta) y la lista se acomodan como un solo bloque centrado en la pantalla. En pantallas altas ya no queda una franja negra vacía entre la imagen y la lista, y en Ecosistema la lista ya no se encima con el fondo de la maqueta; si no cabe todo, la maqueta se reduce lo justo. Nueva función `fitMobile()` en `script.js` y atributo `data-contenido` en cada lienzo. En escritorio no cambia nada (comparado escena por escena contra 20261125f).
