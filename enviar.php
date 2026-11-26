@@ -30,6 +30,14 @@ function responder($ok, $msg, $code = 200) {
     exit;
 }
 
+// Idioma de la página que envió (campo oculto "idioma" de en/index.html): los mensajes al visitante van en ese idioma.
+// El correo para 4ward siempre va en español; si vino de la versión en inglés, el asunto lo indica con "(EN)".
+$EN = (($_POST['idioma'] ?? '') === 'en');
+function t($es, $en) {
+    global $EN;
+    return $EN ? $en : $es;
+}
+
 // Lee un campo del POST solo si es texto (un arreglo como nombre[]=… se trata como vacío).
 function campo($k) {
     $v = $_POST[$k] ?? '';
@@ -49,7 +57,7 @@ function encabezado($texto) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    responder(false, 'Método no permitido.', 405);
+    responder(false, t('Método no permitido.', 'Method not allowed.'), 405);
 }
 
 // Solo se aceptan envíos desde el propio sitio (si el navegador manda Origin, debe ser este dominio).
@@ -57,7 +65,7 @@ if (!empty($_SERVER['HTTP_ORIGIN'])) {
     $origen = strtolower((string)parse_url($_SERVER['HTTP_ORIGIN'], PHP_URL_HOST));
     $host   = strtolower(preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST'] ?? ''));
     if ($origen === '' || $origen !== $host) {
-        responder(false, 'Solicitud no permitida.', 403);
+        responder(false, t('Solicitud no permitida.', 'Request not allowed.'), 403);
     }
 }
 
@@ -65,10 +73,10 @@ if (!empty($_SERVER['HTTP_ORIGIN'])) {
 // "tiempo" lo calcula script.js en el navegador (ms desde que se abrió el formulario), así no depende del reloj del visitante.
 // Si falta o es menor al mínimo, se responde "Gracias" sin enviar, para no darle pistas al robot.
 if (campo('sitio_web') !== '') {
-    responder(true, 'Gracias.');
+    responder(true, t('Gracias.', 'Thank you.'));
 }
 if ((int)campo('tiempo') < $TIEMPO_MIN) {
-    responder(true, 'Gracias.');
+    responder(true, t('Gracias.', 'Thank you.'));
 }
 
 $nombre   = linea(campo('nombre'), 120);
@@ -87,13 +95,13 @@ $correoOk = filter_var($correo, FILTER_VALIDATE_EMAIL)
          && preg_match('/^[A-Za-z0-9._%+\-]+@[A-Za-z0-9\-]+(\.[A-Za-z0-9\-]+)*\.[A-Za-z]{2,}$/', $correo);
 
 if ($nombre === '' || $empresa === '' || $proceso === '' || !$correoOk) {
-    responder(false, 'Revisa los campos obligatorios.', 422);
+    responder(false, t('Revisa los campos obligatorios.', 'Please complete the required fields.'), 422);
 }
 if (!$acepta) {
-    responder(false, 'Es necesario aceptar el aviso de privacidad.', 422);
+    responder(false, t('Es necesario aceptar el aviso de privacidad.', 'You need to accept the privacy notice.'), 422);
 }
 if (preg_match_all('~https?://|www\.~i', "$nombre $empresa $telefono $proceso") > $MAX_ENLACES) {
-    responder(false, 'Tu mensaje tiene demasiados enlaces; quita algunos e intenta de nuevo.', 422);
+    responder(false, t('Tu mensaje tiene demasiados enlaces; quita algunos e intenta de nuevo.', 'Your message has too many links. Please remove some and try again.'), 422);
 }
 
 /* Límite de envíos por conexión.
@@ -121,7 +129,7 @@ if ($dirLim !== null) {
         foreach ($LIMITES as [$max, $ventana]) {
             if (count(array_filter($envios, fn($t) => $t > $ahora - $ventana)) >= $max) {
                 flock($fh, LOCK_UN); fclose($fh);
-                responder(false, 'Ya recibimos varios mensajes desde tu conexión. Intenta más tarde o escríbenos a ' . $DESTINO . '.', 429);
+                responder(false, t('Ya recibimos varios mensajes desde tu conexión. Intenta más tarde o escríbenos a ', "We've already received several messages from your connection. Please try again later or email us at ") . $DESTINO . '.', 429);
             }
         }
         $envios[] = $ahora;
@@ -136,7 +144,7 @@ if ($dirLim !== null) {
     }
 }
 
-$asunto = 'Contacto web – ' . $empresa;
+$asunto = ($EN ? 'Contacto web (EN) – ' : 'Contacto web – ') . $empresa;
 $cuerpo = "Nuevo contacto desde el sitio de 4ward Solutions\n"
         . "------------------------------------------------\n"
         . "Nombre:   $nombre\n"
@@ -147,6 +155,7 @@ $cuerpo = "Nuevo contacto desde el sitio de 4ward Solutions\n"
         . "¿Qué proceso quiere mejorar?\n$proceso\n\n"
         . "------------------------------------------------\n"
         . "Aceptó el aviso de privacidad: sí\n"
+        . "Idioma del sitio: " . ($EN ? 'inglés' : 'español') . "\n"
         . "Fecha: " . date('Y-m-d H:i') . "\n";
 // Quoted-printable: corta las líneas largas (límite de 998 caracteres del estándar de correo) sin cambiar el texto.
 $cuerpo = str_replace("\r\n", "\n", quoted_printable_encode(str_replace("\n", "\r\n", $cuerpo)));
@@ -162,6 +171,6 @@ $encabezados = [
 $enviado = mail($DESTINO, encabezado($asunto), $cuerpo, implode("\r\n", $encabezados), '-f' . $REMITENTE);
 
 if ($enviado) {
-    responder(true, 'Gracias. Recibimos tu mensaje y te contactaremos pronto.');
+    responder(true, t('Gracias. Recibimos tu mensaje y te contactaremos pronto.', 'Thank you. We received your message and will be in touch soon.'));
 }
-responder(false, 'No se pudo enviar. Escríbenos a ' . $DESTINO . '.', 500);
+responder(false, t('No se pudo enviar. Escríbenos a ', "We couldn't send your message. Please email us at ") . $DESTINO . '.', 500);

@@ -1,6 +1,6 @@
 # Documentación técnica — sitio 4ward Solutions
 
-Referencia para quien mantenga o modifique el sitio. Describe el código tal como está en la versión **`20261126b`** (ver [CAMBIOS.md](CAMBIOS.md)).
+Referencia para quien mantenga o modifique el sitio. Describe el código tal como está en la versión **`20261126c`** (ver [CAMBIOS.md](CAMBIOS.md)).
 La forma de probar y publicar está en el [README](README.md) y el historial en [CAMBIOS.md](CAMBIOS.md).
 
 **Regla de mantenimiento:** si un cambio contradice algo de este documento, el documento se actualiza en el mismo commit.
@@ -21,12 +21,13 @@ La forma de probar y publicar está en el [README](README.md) y el historial en 
 12. [Deuda técnica y pendientes conocidos](#12-deuda-técnica-y-pendientes-conocidos)
 13. [Lineamientos de diseño y contenido](#13-lineamientos-de-diseño-y-contenido)
 14. [Seguridad: servidor, tipografía y metadatos](#14-seguridad-servidor-tipografía-y-metadatos)
+15. [Versión en inglés](#15-versión-en-inglés)
 
 ---
 
 ## 1. Arquitectura y orden de carga
 
-- **Página única** (`index.html`) con desplazamiento vertical. El navegador "frena" en cada pantalla (`html { scroll-snap-type: y mandatory }`).
+- **Página única** (`index.html`) con desplazamiento vertical. La versión en inglés (`en/index.html`) es una copia con los textos en inglés y usa los mismos `styles.css`, `script.js`, `img/` y `fonts/` (§15). El navegador "frena" en cada pantalla (`html { scroll-snap-type: y mandatory }`).
 - **Sin dependencias:** no hay frameworks, librerías, compilación ni `package.json`. No hay cargas externas: la tipografía Space Grotesk se sirve desde `fonts/` (§14).
 - **Orden de carga de `index.html`:**
   1. Script en línea dentro de `<head>`: mide el alto visible y define `--vh` **antes de pintar** (§4). **Si se modifica, recalcular su hash en `.htaccess` (§14).**
@@ -188,7 +189,9 @@ Todas las alturas de sección son `calc(var(--vh) * N + var(--extra))`. **Parada
 | (ninguna) | `scrollY ≤ 50` | Logo grande a color en la portada; en escritorio, menú de 3 + 3 enlaces |
 | `.is-scrolled` | `scrollY > 50` | Píldora arriba; logo blanco pequeño |
 | `.is-shrunk` | Celular: siempre que hay `.is-scrolled`. Escritorio: mientras se desplaza después de la portada (se quita 400 ms después de dejar de moverse). | Píldora mínima: enlaces ocultos y sin clics |
-| `.mobile-menu-open` | Celular: al tocar el logo | Menú vertical con "Inicio" + 6 secciones |
+| `.mobile-menu-open` | Celular: al tocar el logo | Menú vertical con "Inicio" + 6 secciones + renglón ES / EN |
+
+**Selector de idioma** (§15): `.lang-switch` en escritorio, arriba a la derecha (portada: `top: 88px`, bajo la fila de enlaces; con `.is-scrolled`: `top: 40px`, a la altura de la píldora; se oculta con `.is-shrunk` y, entre 769 y 1199 px, con `.is-scrolled`, porque no cabe junto a la píldora). En celular se ve solo en la portada; después, `.lang-switch-m` dentro del menú vertical.
 
 **Enlaces del menú:**
 - Cada enlace hace un desplazamiento suave al inicio exacto de su sección.
@@ -229,7 +232,7 @@ Otros colores que se repiten sin variable: `#a51a2e` (vino al pasar el cursor), 
 |---|---|
 | Base / utilidades | `.edge-title` (títulos grandes en mayúsculas), `.hero-footer-title` ("4WARD SOLUTIONS"), `.text-dark`, `.text-light`, `.seq-desc` (párrafo de escena) |
 | Pantalla de carga | `#preloader`, `.quadrant`, `.q-tl/.q-tr/.q-bl/.q-br`, `.loaded` |
-| Menú | `.morph-container`, `.pill-bg`, `.brand-logo-wrapper`, `.logo-color`, `.logo-white`, `.nav-links`, `.nav-left`, `.nav-right`, `.mobile-menu-content`, `.menu-inicio`, estados del §5 |
+| Menú | `.morph-container`, `.pill-bg`, `.brand-logo-wrapper`, `.logo-color`, `.logo-white`, `.nav-links`, `.nav-left`, `.nav-right`, `.mobile-menu-content`, `.menu-inicio`, estados del §5; idioma: `.lang-switch`, `.lang-switch-m`, `.lang-actual` (idioma de la página), `.lang-sep` |
 | Portada | `.hero-section`, `.hero-slider`, `.slide`(`.active`), `.hero-bg-overlay-light`, `.hero-bottom-text`, `.scroll-indicator` |
 | Escenas fijas | `.sticky-sequence`, `.sticky-container`, `.snap-grid`, `.snap-point`, `.seq-bg`(`.active`), `.seq-overlay` (capa negra 70 %), `.text-slider-mask`, `.text-slider-track`, `.text-slider-item`, `.bg-picture`, `.is-past` |
 | Dilema | Solo clases comunes |
@@ -241,10 +244,11 @@ Otros colores que se repiten sin variable: `#a51a2e` (vino al pasar el cursor), 
 | Botón general | `.cta-btn` (vino con flecha →) |
 | Formulario | `.contacto-modal`(`.is-open`), `.contacto-fondo`, `.contacto-caja`, `.contacto-cerrar`, `.contacto-form`, `.cf-fila`, `.cf-opc`, `.cf-trampa`, `.cf-aviso`, `.cf-acepta`, `.cf-estado`(`.is-ok`), `.cf-enviar`, `.is-error`, `html.contacto-abierto` (bloquea el scroll de la página) |
 | Regreso al inicio | `.btn-subir`(`.is-visible`), `.fundido-inicio`(`.is-on`) |
+| Aviso de idioma | `.lang-aviso`(`.is-visible`), `.lang-aviso-botones`, `.lang-aviso-si`, `.lang-aviso-no` (lo crea `script.js` §9) |
 
 ### 6.3 Capas (`z-index`)
 
-`#preloader` 100000 › `.contacto-modal` 10000 › `.morph-container` (menú) 9999 › `.fundido-inicio` 9998 › `.btn-subir` 9000 › `.content-wrapper` 10 › `.footer-reveal` 1.
+`#preloader` 100000 › `.contacto-modal` 10000 › `.morph-container` (menú) 9999 › `.fundido-inicio` 9998 › `.lang-aviso` 9500 › `.btn-subir` 9000 › `.content-wrapper` 10 › `.footer-reveal` 1.
 
 ### 6.4 Puntos de quiebre (`@media`)
 
@@ -259,10 +263,11 @@ Otros colores que se repiten sin variable: `#a51a2e` (vino al pasar el cursor), 
 
 ## 7. Diccionario JavaScript
 
-`script.js` no expone nada global: todo vive dentro de `DOMContentLoaded` o de la función del formulario.
+`script.js` solo expone la constante `LANG`; todo lo demás vive dentro de `DOMContentLoaded` o de las funciones del formulario y del idioma.
 
 | Nombre | Tipo | Qué hace |
 |---|---|---|
+| `LANG` | constante global | `'en'` si `<html lang="en">`, si no `'es'`. La usan el formulario y el idioma. |
 | `screenH()` | función | Alto de una pantalla del sitio: alto del primer `.snap-point`. Si no existe, usa `innerHeight`. |
 | `sceneStep(section)` | función | Lo mismo, medido dentro de la sección indicada. |
 | `makeSpotSequence(section, track)` | función | Prepara una sección de puntos sobre imagen y devuelve su `onScroll(alto)`. Internas: `place()` (coloca puntos según escritorio o celular), `drawLines()` (líneas SVG de Ecosistema), `drawRoutes()` (rutas con puntos de luz desde `.op-hub`), `fitMobile()` (centra imagen + lista en celular) y `setScene(i)`. |
@@ -273,6 +278,11 @@ Otros colores que se repiten sin variable: `#a51a2e` (vino al pasar el cursor), 
 | `validar()` | función (formulario) | Revisa obligatorios, formato del correo y casilla de aceptación; marca `.is-error`. |
 | `respaldoCorreo()` | función (formulario) | Abre `mailto:` con los datos ya escritos cuando no hay PHP. |
 | `DESTINO` | constante | Correo que recibe los mensajes del respaldo `mailto:`. |
+| `T` | objeto (formulario) | Mensajes y etiquetas del formulario en el idioma de la página (`revisa`, `acepta`, `enviando`, `correo`, `etiquetas` del `mailto:`). |
+| `CLAVE` | constante (idioma) | Nombre del dato guardado en `localStorage`: `4w-idioma` (`'es'` o `'en'`). |
+| `leer()` / `guardar(v)` | funciones (idioma) | Leen y guardan la preferencia dentro de `try/catch` (en modo privado puede fallar; el sitio funciona igual). |
+| `irAlOtro()` | función (idioma) | Guarda el otro idioma y abre la otra versión conservando el `#ancla`. |
+| `quitarAlBajar()` | función (idioma) | Quita el aviso de idioma (sin guardar) cuando el visitante baja más del 60 % de la pantalla. |
 | `abiertoEn` | variable (formulario) | `performance.now()` al abrir el formulario. Al enviar, `performance.now() - abiertoEn` se escribe en el campo oculto `tiempo` (filtro anti-robots de §8). |
 | `PILARES_ULTIMA_ESCENA` | constante | Última escena de Experiencia (4). |
 
@@ -283,6 +293,7 @@ Otros colores que se repiten sin variable: `#a51a2e` (vino al pasar el cursor), 
 - `load`: quita la pantalla de carga y dibuja las líneas.
 - Slider de portada: `setInterval` de 4.5 s.
 - En el formulario: `click` (abrir y cerrar), `keydown` (Esc cierra), `input` (borra errores) y `submit`.
+- Idioma: `click` en los enlaces `[data-lang]`, `load` (muestra el aviso 1.6 s después) y `scroll` pasivo mientras el aviso está a la vista.
 
 ## 8. Formulario de contacto y `enviar.php`
 
@@ -301,14 +312,17 @@ Otros colores que se repiten sin variable: `#a51a2e` (vino al pasar el cursor), 
 | `acepta` | sí | — | Casilla del aviso de privacidad; aparece sin marcar |
 | `sitio_web` | — | — | **Trampa para robots**: está oculto; si llega con texto, se responde "Gracias" y no se envía nada |
 | `tiempo` | — | — | Milisegundos que el formulario estuvo abierto, medidos en el navegador (`performance.now()`). Si falta o es menor a 3000, se responde "Gracias" sin enviar. |
+| `idioma` | — | — | Solo en `en/index.html`, con valor `en`. `enviar.php` responde al visitante en inglés y marca el correo con "(EN)". |
+
+**Sector en inglés:** las opciones de `en/index.html` muestran el texto en inglés pero envían el valor en español (`<option value="Trenes">Rail</option>`), para que el correo llegue igual desde las dos versiones.
 
 **Flujo de envío:**
 1. `validar()` en el navegador.
-2. `fetch` POST a `enviar.php` (atributo `action` del formulario).
+2. `fetch` POST a `enviar.php` (atributo `action` del formulario; en `en/index.html` es `../enviar.php`).
 3. Si la respuesta es JSON: se muestra `msg`; si `ok` es verdadero, el formulario se limpia.
 4. Si la respuesta no es JSON o falla la red (por ejemplo, GitHub Pages, que no ejecuta PHP), se llama a `respaldoCorreo()`.
 
-**`enviar.php`** (configuración al inicio: `$DESTINO`, `$REMITENTE`, `$LIMITES`, `$MAX_ENLACES`, `$TIEMPO_MIN`):
+**`enviar.php`** (configuración al inicio: `$DESTINO`, `$REMITENTE`, `$LIMITES`, `$MAX_ENLACES`, `$TIEMPO_MIN`). `$EN` es verdadero si llegó `idioma=en`; `t($es, $en)` elige el texto de cada respuesta. El correo para 4ward siempre va en español:
 - **Seguridad, en este orden:**
   1. Nunca muestra errores de PHP (`display_errors` en 0) y responde con `Content-Type: application/json`, `nosniff` y `Cache-Control: no-store`.
   2. Solo POST (si no, 405).
@@ -319,7 +333,7 @@ Otros colores que se repiten sin variable: `#a51a2e` (vino al pasar el cursor), 
   7. Más de `$MAX_ENLACES` (2) enlaces (`http://`, `https://`, `www.`) en el mensaje → 422.
   8. **Límite por conexión** (`$LIMITES`: 3 cada 10 min y 10 cada 24 h) → 429. Guarda un HMAC-SHA256 de la IP (clave aleatoria creada en el servidor, archivo `clave`) con la hora de cada envío, un archivo JSON por IP, en `../formulario-limites/` (fuera de la carpeta pública; si no se puede escribir ahí, en la carpeta temporal del sistema). Archivos con permisos 0600; se borran solos a las 24 h.
 - **Validación:** obligatorios y correo inválido → 422; falta la aceptación → 422.
-- **Envío:** `mail()` de PHP, en texto plano UTF-8 con *quoted-printable* (ninguna línea pasa de 76 caracteres). Asunto (`Contacto web – <empresa>`), remitente y nombre del visitante van siempre en Base64 por trozos (`encabezado()`), así que comas, comillas o acentos no rompen el encabezado. `Reply-To` lleva el correo del visitante y `-f` el remitente del dominio, para que no caiga en spam.
+- **Envío:** `mail()` de PHP, en texto plano UTF-8 con *quoted-printable* (ninguna línea pasa de 76 caracteres). Asunto (`Contacto web – <empresa>`, o `Contacto web (EN) – <empresa>` desde la versión en inglés; el cuerpo termina con "Idioma del sitio"), remitente y nombre del visitante van siempre en Base64 por trozos (`encabezado()`), así que comas, comillas o acentos no rompen el encabezado. `Reply-To` lleva el correo del visitante y `-f` el remitente del dominio, para que no caiga en spam.
 - **Respuestas:** `{"ok": true|false, "msg": "…"}` con código 200, 403, 405, 422, 429 o 500. `script.js` muestra `msg` en todos los casos con JSON.
 - **No usa usuario ni contraseña SMTP, a propósito,** porque el repositorio es público. Si `mail()` no entrega en Hostinger, la alternativa prevista es PHPMailer con SMTP y la configuración en un archivo fuera del repositorio.
 
@@ -327,13 +341,16 @@ Otros colores que se repiten sin variable: `#a51a2e` (vino al pasar el cursor), 
 
 | Dato | Dónde aparece |
 |---|---|
-| Correo `rvertti@4wardcorp.com` | `index.html` (pie y aviso del formulario), `script.js` (`DESTINO`), `enviar.php` (`$DESTINO`, `$REMITENTE`), `aviso-de-privacidad.html` |
-| Razón social y domicilio | `index.html` (`.cf-aviso`), `aviso-de-privacidad.html` |
+| **Todo texto y toda estructura de la página** | `index.html` y `en/index.html` (§15) |
+| Correo `rvertti@4wardcorp.com` | `index.html` y `en/index.html` (pie y aviso del formulario), `script.js` (`DESTINO`), `enviar.php` (`$DESTINO`, `$REMITENTE`), `aviso-de-privacidad.html`, `en/privacy-notice.html` |
+| Razón social y domicilio | `index.html` y `en/index.html` (`.cf-aviso`), `aviso-de-privacidad.html`, `en/privacy-notice.html` |
+| Contenido del aviso de privacidad | `aviso-de-privacidad.html` (válido) y su resumen `en/privacy-notice.html`: si cambia el aviso, revisar el resumen |
+| Mensajes del formulario | `script.js` (`T`, en los dos idiomas) y `enviar.php` (`t()`, en los dos idiomas) |
 | Textos de Operaciones y Ecosistema | Dos veces cada uno: en la tarjeta de escritorio (`.op-card` / `.eco-card`) y en la lista del celular (`.op-list`). **En Ecosistema la lista lleva una versión corta**: si cambia el texto de una tarjeta, revisar que la versión corta siga diciendo lo mismo. La frase de "Capa de IA" está en `.eco-ia-label` y en la lista. |
 | Textos de Experiencia | Dos veces: `.pilares-mobile-view` y `.pilares-desktop-view` |
-| Versión de CSS / JS | Los dos enlaces de `index.html` |
-| Declaraciones `@font-face` de Space Grotesk | Inicio de `styles.css` y `<style>` de `aviso-de-privacidad.html` (rutas a `fonts/`) |
-| Script en línea de `--vh` | `<head>` de `index.html` y su hash `sha256-…` en la regla `script-src` de `.htaccess` (§14) |
+| Versión de CSS / JS | Los dos enlaces de `index.html` y los dos de `en/index.html` |
+| Declaraciones `@font-face` de Space Grotesk | Inicio de `styles.css`, `<style>` de `aviso-de-privacidad.html` (rutas a `fonts/`) y de `en/privacy-notice.html` (rutas a `../fonts/`) |
+| Script en línea de `--vh` | `<head>` de `index.html` y de `en/index.html` (**idéntico**, para que sirva el mismo hash) y su hash `sha256-…` en la regla `script-src` de `.htaccess` (§14) |
 | Tiempo mínimo del formulario (3 s) | `$TIEMPO_MIN` en `enviar.php` y el comentario de `abrir()` en `script.js` |
 
 ## 9. Imágenes
@@ -374,6 +391,7 @@ Optimización usada: 1280×800 o 1536×1024 (horizontal), 1024×1536 (vertical),
 
 Casos conocidos:
 - **Edge / Windows:** la barra de desplazamiento ocupa de 15 a 17 px de ancho. Es el navegador más propenso a fallar; revisarlo siempre.
+- **Imágenes en variables CSS en `en/`:** las tarjetas de Crecimiento y de los seis frentes llevan su imagen en `style="--img: url('../img/…')"`. Los navegadores actuales resuelven esa ruta respecto a la página que la declara (`en/`), por eso lleva `../`. Si alguna tarjeta en inglés apareciera sin foto en un navegador, revisar esto primero.
 - **iPad Air 2:** llega como máximo a iPadOS 15.8 (Safari 15.6), así que no tiene `cqw` ni `@property`. En horizontal, Ecosistema pierde las tarjetas de texto (pendiente en §12).
 
 ## 11. Cómo probar
@@ -384,6 +402,7 @@ Casos conocidos:
 3. Menú: cada enlace lleva al inicio exacto de su sección. Probar también el logo, "Inicio" y el botón ↑.
 4. Formulario: abrir, validar vacío, cerrar con Esc y con la ×; en celular no debe hacer zoom al escribir.
 5. Edge en Windows.
+6. **Las dos versiones:** repetir 1–4 en `en/` y revisar el selector ES / EN, el aviso de idioma (con el navegador en el otro idioma) y que la preferencia se recuerde.
 
 **Pruebas automatizadas** (no están en el repositorio; se hacen con Playwright y Chrome):
 - Servir el sitio con `python3 -m http.server` **en el mismo comando** que la prueba.
@@ -421,7 +440,8 @@ Ninguno de estos puntos afecta lo que hoy ve el visitante, salvo donde se indica
   - Revisar que Hostinger aplique el `.htaccess`: que lleguen los encabezados de §14 y que `README.md` responda 403.
   - El encabezado `Server` (versión del servidor) no se puede quitar desde `.htaccess`; depende de Hostinger.
 - **Seguridad pendiente:** la CSP y la `Referrer-Policy` podrían adelantarse en GitHub Pages con `<meta>` (sin aprobar).
-- **Versión en inglés:** planeada como página aparte (`/en/`) después de la migración.
+- **Etiquetas `hreflang`:** pendientes hasta la migración, porque necesitan la dirección completa del dominio final (§15).
+- **Dos páginas que mantener:** cada cambio de estructura se hace en `index.html` y en `en/index.html` (decisión del responsable del sitio). Si el sitio sigue cambiando mucho, se puede generar `en/index.html` con un script a partir de `index.html` y un archivo de textos.
 
 ## 13. Lineamientos de diseño y contenido
 
@@ -435,6 +455,7 @@ Ninguno de estos puntos afecta lo que hoy ve el visitante, salvo donde se indica
   - El protagonista es la tecnología (cámaras, sensores, redes, centros de control). Las personas, cuando aparecen, se ven ejecutivas.
   - Sin texto, logotipos ni rostros reconocibles.
 - **Textos:** español de México, en voz de 4ward (primera persona del plural) y tuteando al visitante.
+- **Textos en inglés:** inglés de EE. UU., interpretado y no traducido palabra por palabra, directo para un público ejecutivo; la misma voz ("we", hablándole de "you" al visitante). No cambian los nombres propios (SICE, Vista Alegre, NUCTECH, ENTELAR, "Agile Titan", ComprasMX, Bajío) ni la razón social, el domicilio o el correo.
 - **Datos:** no se publican cifras, clientes ni alianzas sin confirmación de 4ward.
 
 ## 14. Seguridad: servidor, tipografía y metadatos
@@ -463,3 +484,38 @@ python3 -c "import re,hashlib,base64;s=open('index.html').read();print(base64.b6
 
 **Metadatos de imágenes:** quitarlos sin recomprimir, eliminando de los JPG los segmentos APP1 (EXIF/XMP), APP13 (IPTC/Photoshop) y COM, y de los PNG los bloques `tEXt`, `zTXt`, `iTXt`, `eXIf` y `tIME`. Se conserva el perfil de color (APP2 / `iCCP`). Revisar después que los píxeles sean idénticos y que la imagen no dependa de la orientación EXIF.
 
+## 15. Versión en inglés
+
+**Archivos:** `en/index.html` (página) y `en/privacy-notice.html` (resumen del aviso). No hay CSS, JS ni imágenes propios: se usan los de la raíz.
+
+**Cómo está hecha `en/index.html`:** es una copia de `index.html` con estas diferencias, y nada más:
+
+| Qué | En `index.html` | En `en/index.html` |
+|---|---|---|
+| Idioma | `<html lang="es">` | `<html lang="en">` (de aquí lo lee `script.js`) |
+| Rutas | `styles.css`, `script.js`, `img/…`, `fonts/…`, `enviar.php` | `../styles.css`, `../script.js`, `../img/…` (también en `url('../img/…')` de los `style=""`), `../fonts/…`, `../enviar.php` |
+| Aviso de privacidad | `aviso-de-privacidad.html` | `privacy-notice.html` |
+| Selector y pie | ES actual; enlace `en/` con `data-lang="en"` | EN actual; enlace `../` con `data-lang="es"` |
+| Formulario | — | Campo oculto `idioma=en`; opciones de sector con `value` en español |
+| Textos, `alt`, `aria-label`, `title`, `meta description` | Español | Inglés |
+
+**Reglas al cambiar el sitio:**
+1. Todo cambio de estructura o diseño en `index.html` se repite igual en `en/index.html` (mismas clases, mismo orden, mismos atributos `data-…`).
+2. Todo texto nuevo lleva su versión en inglés, aprobada por 4ward.
+3. El script en línea de `<head>` debe ser idéntico en las dos páginas (mismo hash en `.htaccess`).
+4. La versión de `styles.css` y `script.js` se sube en las dos páginas.
+5. Probar las dos: los textos en inglés tienen otro largo y pueden cortarse o encimarse.
+
+**Idioma del visitante (`script.js` §9):**
+- La página abre en el idioma de su dirección: `/` español, `/en/` inglés. No se decide por país.
+- Si el visitante ya eligió un idioma (selector, pie o aviso), se guarda en `localStorage` (`4w-idioma`) y en sus siguientes visitas se le lleva a esa versión.
+- Si no ha elegido y el primer idioma de su navegador es el de la otra versión, aparece en la portada un aviso para cambiar; no se cambia de página por su cuenta (Google no recomienda redirigir por idioma o ubicación). El aviso aparece una vez por visita y se quita si el visitante baja sin contestar.
+- El aviso de privacidad (sección 9) menciona que se guarda el idioma elegido.
+
+**Pendiente al migrar a Hostinger:** agregar en el `<head>` de las dos páginas las etiquetas para buscadores, con la dirección completa del dominio:
+
+```html
+<link rel="alternate" hreflang="es" href="https://<dominio>/">
+<link rel="alternate" hreflang="en" href="https://<dominio>/en/">
+<link rel="alternate" hreflang="x-default" href="https://<dominio>/">
+```

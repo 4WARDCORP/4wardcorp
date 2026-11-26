@@ -1,14 +1,16 @@
 # 4ward Solutions — sitio web corporativo
 
-Sitio de una sola página de **4Ward Solutions, S.A. de C.V.** Es HTML, CSS y JavaScript sin dependencias, más un script PHP para el formulario de contacto.
+Sitio de una sola página de **4Ward Solutions, S.A. de C.V.**, en español y en inglés. Es HTML, CSS y JavaScript sin dependencias, más un script PHP para el formulario de contacto.
+
+> **Formulario:** solo envía correos desde Hostinger (PHP). En GitHub Pages no hay PHP: abre el correo del visitante con el mensaje ya escrito.
 
 | | |
 |---|---|
-| **Versión** | `20261126b` (ver [CAMBIOS.md](CAMBIOS.md)) |
+| **Versión** | `20261126c` (ver [CAMBIOS.md](CAMBIOS.md)) |
 | **Publicación actual** | GitHub Pages, rama `main` → <https://4wardcorp.github.io/4wardcorp/> (temporal) |
 | **Destino final** | Hostinger, con el dominio propio `4wardcorp.com` |
 | **Documentación técnica** | [DOCUMENTACION.md](DOCUMENTACION.md) |
-| **Idioma del sitio** | Español (México). La versión en inglés está planeada, no iniciada. |
+| **Idiomas** | Español de México (`index.html`) e inglés de EE. UU. (`en/index.html`), con selector ES / EN (DOCUMENTACION.md §15) |
 
 ---
 
@@ -21,6 +23,9 @@ Sitio de una sola página de **4Ward Solutions, S.A. de C.V.** Es HTML, CSS y Ja
 ├── script.js                  Escenas, menú, regreso al inicio y formulario
 ├── enviar.php                 Recibe el formulario y lo envía por correo (solo en Hostinger)
 ├── aviso-de-privacidad.html   Aviso de privacidad integral (estilos propios dentro del archivo)
+├── en/
+│   ├── index.html             Versión en inglés: copia de index.html con los textos en inglés (DOCUMENTACION.md §15)
+│   └── privacy-notice.html    Resumen en inglés del aviso; el válido es el español
 ├── img/                       Imágenes del sitio (ver DOCUMENTACION.md §9)
 ├── fonts/                     Tipografía Space Grotesk y su licencia (DOCUMENTACION.md §14)
 ├── .htaccess                  Seguridad del servidor en Hostinger (DOCUMENTACION.md §14)
@@ -39,7 +44,7 @@ No hay proceso de compilación, gestor de paquetes ni base de datos: lo que est�
 ```bash
 # Sitio (sin formulario real)
 python3 -m http.server 8765
-# Abrir http://localhost:8765
+# Abrir http://localhost:8765 (español) y http://localhost:8765/en/ (inglés)
 
 # Formulario con PHP, sin mandar correos (cada correo se guarda en /tmp/correos/)
 mkdir -p /tmp/correos && printf '#!/bin/sh\ncat > /tmp/correos/$(date +%%s%%N).eml\n' > /tmp/guardar-correo.sh && chmod +x /tmp/guardar-correo.sh
@@ -67,13 +72,14 @@ El detalle de cómo probar está en DOCUMENTACION.md §11.
 Se publica con un push a `main`; GitHub Pages actualiza el sitio en 2 a 5 minutos.
 
 1. **Respaldo.** Antes de un cambio grande o riesgoso, crear una rama `respaldo-AAAAMMDD<letra>` desde `main`.
-2. **Versión.** Si cambió `styles.css` o `script.js`, subir la versión en **los dos** enlaces de `index.html`:
+2. **Versión.** Si cambió `styles.css` o `script.js`, subir la versión en **los dos** enlaces de `index.html` **y** de `en/index.html`:
    `styles.css?v=AAAAMMDD<letra>` y `script.js?v=AAAAMMDD<letra>`. La letra cuenta las publicaciones del día (`a`, `b`, `c`…). Sin este paso, los navegadores siguen usando el archivo anterior durante unos 10 minutos.
-3. **Documentación.** Registrar el cambio en `CAMBIOS.md` y actualizar `DOCUMENTACION.md` si cambió algo que ahí se describe. Va **en el mismo commit** que el cambio.
-4. **Commit y push** a `main`. El mensaje del commit va en español y dice qué cambió y dónde.
-5. **Verificar** en línea con `?v=<versión>` al final de la dirección, en celular y en escritorio.
+3. **Las dos páginas.** Todo cambio de estructura o de diseño en `index.html` se repite en `en/index.html`, y todo texto nuevo lleva su versión en inglés (DOCUMENTACION.md §15).
+4. **Documentación.** Registrar el cambio en `CAMBIOS.md` y actualizar `DOCUMENTACION.md` si cambió algo que ahí se describe. Va **en el mismo commit** que el cambio.
+5. **Commit y push** a `main`. El mensaje del commit va en español y dice qué cambió y dónde.
+6. **Verificar** en línea con `?v=<versión>` al final de la dirección, en celular y en escritorio, en español y en inglés.
 
-Ramas de respaldo existentes: `respaldo-original` (sitio original), `respaldo-20261124b` (estado anterior a la medida `--vh`), `respaldo-20261125a` (antes de la limpieza del código) y `respaldo-20261125c` (antes de la revisión de seguridad).
+Ramas de respaldo existentes: `respaldo-original` (sitio original), `respaldo-20261124b` (estado anterior a la medida `--vh`), `respaldo-20261125a` (antes de la limpieza del código) y `respaldo-20261125c` (antes de la revisión de seguridad) y una por publicación desde entonces (la más reciente, `respaldo-20261126b`, antes de la versión en inglés).
 
 ## 4. Reglas que no se deben romper
 
@@ -88,9 +94,10 @@ Ramas de respaldo existentes: `respaldo-original` (sitio original), `respaldo-20
 
 Todavía no se hace. Cuando se haga:
 
-- Subir solo: `index.html`, `styles.css`, `script.js`, `enviar.php`, `aviso-de-privacidad.html`, `.htaccess`, `img/` y `fonts/`. **No subir** los `.md`, `_config.yml`, `.editorconfig` ni `.gitignore`.
+- Subir solo: `index.html`, `styles.css`, `script.js`, `enviar.php`, `aviso-de-privacidad.html`, `.htaccess`, `en/`, `img/` y `fonts/`. **No subir** los `.md`, `_config.yml`, `.editorconfig` ni `.gitignore`.
 - Probar `enviar.php` con un correo real y revisar que no llegue a spam.
 - Revisar que el `.htaccess` funcione: encabezados de seguridad presentes y `README.md` con 403 (DOCUMENTACION.md §14).
+- Agregar las etiquetas `hreflang` con el dominio final (DOCUMENTACION.md §15).
 - Las tareas abiertas de la migración están en DOCUMENTACION.md §12.
 
 ## 6. Propiedad

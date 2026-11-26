@@ -15,7 +15,26 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). L
 
 ---
 
-## [20261126b] — 2026-11-26
+## Sin publicar (versión prevista `20261126c`)
+
+### Agregado
+- **Versión en inglés** (`en/index.html`): todo el sitio en inglés de EE. UU., con los textos interpretados para un público ejecutivo (no traducidos palabra por palabra). Mismo diseño, escenas, imágenes, `styles.css` y `script.js` que la página en español.
+- **Resumen del aviso de privacidad en inglés** (`en/privacy-notice.html`). Aclara que el aviso válido es el español y enlaza a él.
+- **Selector de idioma ES / EN:** en escritorio, arriba a la derecha (en la portada, bajo la fila de enlaces; con el menú arriba, a su altura; entre 769 y 1199 px solo en la portada). En celular, en la portada y dentro del menú vertical. También en el pie de página.
+- **Aviso de idioma:** si el navegador del visitante está en el otro idioma y todavía no ha elegido, aparece en la portada "View this site in English?" (o "¿Ver este sitio en español?" en la versión en inglés). No cambia de página por su cuenta; si el visitante baja sin contestar, el aviso se quita.
+- **Preferencia de idioma:** la elección se guarda en el navegador (`localStorage`); en las siguientes visitas el sitio abre en ese idioma.
+- **Descripción para buscadores** (`meta description`) en las dos páginas.
+- **Formulario en inglés:** etiquetas, mensajes del navegador y de `enviar.php` en inglés. Campo oculto `idioma`. El correo para 4ward sigue en español: el asunto dice "Contacto web (EN) – Empresa" y el cuerpo agrega "Idioma del sitio".
+
+### Cambiado
+- **Dilema, Retención de Conocimiento:** "4ward garantiza cero rotación" pasa a "4ward mantiene una rotación mínima".
+- **Experiencia, Conectividad:** "Flexi WAN" pasa a "FLEXI WAN", como en Ecosistema.
+- **Ecosistema, tarjeta de SICE:** "monitorización algorítmica y autónoma" pasa a "monitoreo algorítmico y autónomo", como en el resto del sitio.
+- **Aviso de privacidad:** la sección 9 dice que el sitio guarda en el navegador el idioma elegido (no se envía a nadie). Fecha de actualización: 26 de noviembre de 2026. Enlace al resumen en inglés.
+- **Menú del celular:** la píldora abierta crece de 440 a 484 px para el renglón ES / EN.
+- Código: `script.js` lee el idioma de `<html lang>` (constante `LANG`) y la sección 7 solo intercepta enlaces a `#…`; nueva sección 9 (idioma). `styles.css`: `.lang-switch`, `.lang-switch-m` (§4) y sección 16 `.lang-aviso`. `enviar.php`: `$EN` y `t()`.
+
+## [20261126b] — 2026-11-26 · commit `8f22c0c`
 
 ### Cambiado
 - **IA, escenas 4 y 5:** el mismo encendido escalonado de los seis frentes (pulso vino de 2 s; cada elemento empieza 0.5 s después del anterior).

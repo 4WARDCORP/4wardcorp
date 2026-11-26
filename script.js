@@ -13,13 +13,17 @@
    5. Menú: estados al hacer scroll
    6. Regresar al inicio (logo, "Inicio" del menú y botón ↑)
    7. Enlaces del menú
-   8. Formulario de contacto (función independiente, al final del archivo)
+   8. Formulario de contacto (función independiente)
+   9. Idioma: selector ES / EN, preferencia guardada y aviso "View this site in English?" (al final del archivo)
 
    REGLAS
    - El alto de una pantalla se mide con screenH() / sceneStep(), nunca con window.innerHeight.
    - Las animaciones usan translateY(calc(var(--vh) * -N00)) para coincidir con el CSS.
    - "Celular" = window.innerWidth <= 768 (mismo umbral que el CSS).
+   - El mismo archivo sirve a index.html (español) y en/index.html (inglés): el idioma se lee de <html lang>.
    ========================================================================== */
+
+const LANG = document.documentElement.lang === 'en' ? 'en' : 'es';
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -393,8 +397,9 @@ document.addEventListener('DOMContentLoaded', () => {
        7. ENLACES DEL MENÚ
        Desplazamiento suave al inicio EXACTO de la sección (sin margen: con margen se asomaba
        la sección vecina en celular). #inicio usa volverInicio().
+       Solo los enlaces a "#…": el de idioma (ES / EN) del menú del celular es un enlace normal a la otra página.
        ---------------------------------------------------------------------- */
-    const menuLinks = document.querySelectorAll('.nav-links a, .mobile-menu-content a');
+    const menuLinks = document.querySelectorAll('.nav-links a[href^="#"], .mobile-menu-content a[href^="#"]');
     menuLinks.forEach(link => {
         link.addEventListener('click', function (e) {
             e.preventDefault();
@@ -425,6 +430,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const estado = form.querySelector('.cf-estado');
     const boton = form.querySelector('.cf-enviar');
     const DESTINO = 'rvertti@4wardcorp.com';
+    // Mensajes en los dos idiomas (los de enviar.php llegan ya traducidos según el campo oculto "idioma")
+    const T = LANG === 'en' ? {
+        revisa: 'Please check the highlighted fields.',
+        acepta: 'Please accept the privacy notice to send your message.',
+        enviando: 'Sending…',
+        correo: 'Your email app opened with the message ready — just hit send.',
+        etiquetas: ['Name', 'Company', 'Email', 'Phone', 'Industry', 'Which process would I like to improve?']
+    } : {
+        revisa: 'Revisa los campos marcados.',
+        acepta: 'Para enviar, acepta el aviso de privacidad.',
+        enviando: 'Enviando…',
+        correo: 'Se abrió tu correo con el mensaje listo; solo envíalo.',
+        etiquetas: ['Nombre', 'Empresa', 'Correo', 'Teléfono', 'Sector', '¿Qué proceso quiero mejorar?']
+    };
     let ultimoFoco = null;
     let abiertoEn = 0;   // performance.now() al abrir: mide el tiempo con el formulario abierto sin depender del reloj del equipo
 
@@ -459,19 +478,22 @@ document.addEventListener('DOMContentLoaded', () => {
             el.classList.toggle('is-error', malo);
             if (malo) ok = false;
         });
-        if (!ok) { estado.className = 'cf-estado'; estado.textContent = 'Revisa los campos marcados.'; return false; }
-        if (!form.elements.acepta.checked) { estado.className = 'cf-estado'; estado.textContent = 'Para enviar, acepta el aviso de privacidad.'; return false; }
+        if (!ok) { estado.className = 'cf-estado'; estado.textContent = T.revisa; return false; }
+        if (!form.elements.acepta.checked) { estado.className = 'cf-estado'; estado.textContent = T.acepta; return false; }
         return true;
     }
 
     function respaldoCorreo() {
         const f = form.elements;
-        const cuerpo = 'Nombre: ' + f.nombre.value + '\nEmpresa: ' + f.empresa.value + '\nCorreo: ' + f.correo.value +
-            '\nTeléfono: ' + (f.telefono.value || '—') + '\nSector: ' + (f.sector.value || '—') +
-            '\n\n¿Qué proceso quiero mejorar?\n' + f.proceso.value;
-        window.location.href = 'mailto:' + DESTINO + '?subject=' + encodeURIComponent('Contacto web – ' + f.empresa.value) + '&body=' + encodeURIComponent(cuerpo);
+        const e = T.etiquetas;
+        const sector = f.sector.selectedIndex > 0 ? f.sector.options[f.sector.selectedIndex].text : '—';
+        const cuerpo = e[0] + ': ' + f.nombre.value + '\n' + e[1] + ': ' + f.empresa.value + '\n' + e[2] + ': ' + f.correo.value +
+            '\n' + e[3] + ': ' + (f.telefono.value || '—') + '\n' + e[4] + ': ' + sector +
+            '\n\n' + e[5] + '\n' + f.proceso.value;
+        const asunto = (LANG === 'en' ? 'Contacto web (EN) – ' : 'Contacto web – ') + f.empresa.value;
+        window.location.href = 'mailto:' + DESTINO + '?subject=' + encodeURIComponent(asunto) + '&body=' + encodeURIComponent(cuerpo);
         estado.className = 'cf-estado is-ok';
-        estado.textContent = 'Se abrió tu correo con el mensaje listo; solo envíalo.';
+        estado.textContent = T.correo;
     }
 
     form.addEventListener('input', e => {
@@ -484,7 +506,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!validar()) return;
         boton.disabled = true;
         estado.className = 'cf-estado';
-        estado.textContent = 'Enviando…';
+        estado.textContent = T.enviando;
         form.elements.tiempo.value = Math.round(performance.now() - abiertoEn);
         try {
             const r = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } });
@@ -504,4 +526,69 @@ document.addEventListener('DOMContentLoaded', () => {
             boton.disabled = false;
         }
     });
+})();
+
+/* ==========================================================================
+   9. IDIOMA
+   - Páginas: index.html (es) y en/index.html (en). Los enlaces [data-lang] llevan a la otra versión.
+   - Preferencia: al elegir un idioma (selector, pie o aviso) se guarda en localStorage ("4w-idioma").
+     Si el visitante ya eligió el otro idioma, al entrar se le lleva a esa versión (conserva el #ancla).
+   - Aviso: si no ha elegido y el idioma principal de su navegador es el de la otra versión, aparece en la
+     portada "View this site in English?" / "¿Ver este sitio en español?". No se cambia de página a la fuerza.
+     Si baja sin contestar, el aviso se quita (sin guardar nada) para no tapar las escenas.
+   - localStorage puede fallar (modo privado, bloqueos): todo va en try/catch y el sitio funciona igual.
+   ========================================================================== */
+(function () {
+    const CLAVE = '4w-idioma';
+    const OTRO = LANG === 'en' ? 'es' : 'en';
+    const enlaceOtro = document.querySelector('[data-lang="' + OTRO + '"]');
+    if (!enlaceOtro) return;
+    const urlOtro = enlaceOtro.getAttribute('href');
+    const leer = () => { try { return localStorage.getItem(CLAVE); } catch (e) { return null; } };
+    const guardar = v => { try { localStorage.setItem(CLAVE, v); } catch (e) { /* sin almacenamiento: no pasa nada */ } };
+    const irAlOtro = () => { guardar(OTRO); window.location.href = urlOtro + window.location.hash; };
+
+    // Ya eligió el otro idioma en una visita anterior
+    const elegido = leer();
+    if (elegido === OTRO) { window.location.replace(urlOtro + window.location.hash); return; }
+
+    // Cualquier enlace al otro idioma guarda la elección (y conserva el #ancla)
+    document.querySelectorAll('[data-lang="' + OTRO + '"]').forEach(a => a.addEventListener('click', ev => { ev.preventDefault(); irAlOtro(); }));
+
+    if (elegido === LANG) return;
+    const idiomas = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ''];
+    if (!String(idiomas[0] || '').toLowerCase().startsWith(OTRO)) return;
+
+    const textos = OTRO === 'en'
+        ? { pregunta: 'View this site in English?', si: 'English', no: 'Stay in Spanish', lang: 'en' }
+        : { pregunta: '¿Ver este sitio en español?', si: 'Español', no: 'Seguir en inglés', lang: 'es' };
+    const aviso = document.createElement('div');
+    aviso.className = 'lang-aviso';
+    aviso.setAttribute('role', 'dialog');
+    aviso.setAttribute('aria-label', textos.pregunta);
+    aviso.lang = textos.lang;
+    aviso.innerHTML = '<p></p><div class="lang-aviso-botones"><button type="button" class="lang-aviso-si"></button><button type="button" class="lang-aviso-no"></button></div>';
+    aviso.querySelector('p').textContent = textos.pregunta;
+    aviso.querySelector('.lang-aviso-si').textContent = textos.si;
+    aviso.querySelector('.lang-aviso-no').textContent = textos.no;
+    aviso.querySelector('.lang-aviso-si').addEventListener('click', irAlOtro);
+    aviso.querySelector('.lang-aviso-no').addEventListener('click', () => {
+        guardar(LANG);
+        aviso.classList.remove('is-visible');
+        setTimeout(() => aviso.remove(), 400);
+    });
+    // Aparece después de la pantalla de carga y solo en la portada: si el visitante baja sin contestar,
+    // se quita (sin guardar nada) para no tapar las escenas; en su siguiente visita vuelve a aparecer.
+    const quitarAlBajar = () => {
+        if (window.scrollY < window.innerHeight * 0.6) return;
+        window.removeEventListener('scroll', quitarAlBajar);
+        aviso.classList.remove('is-visible');
+        setTimeout(() => aviso.remove(), 400);
+    };
+    window.addEventListener('load', () => setTimeout(() => {
+        if (window.scrollY >= window.innerHeight * 0.6) return;
+        document.body.appendChild(aviso);
+        requestAnimationFrame(() => requestAnimationFrame(() => aviso.classList.add('is-visible')));
+        window.addEventListener('scroll', quitarAlBajar, { passive: true });
+    }, 1600));
 })();
