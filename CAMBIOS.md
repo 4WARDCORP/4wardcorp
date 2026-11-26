@@ -19,7 +19,17 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). L
 
 _(Nada pendiente.)_
 
-## [20261125e] — 2026-11-25
+## [20261125f] — 2026-11-25
+
+### Cambiado
+- **Ecosistema** pasa de 6 escenas a 2: el título y la maqueta con todo a la vista, igual que Operaciones. El recorrido completo del sitio baja de 33 a 29 paradas.
+  - Desde el cubo central (Capa de IA) salen rutas con puntos de luz hacia SICE, Vista Alegre, NUCTECH (puerto y tren) y ENTELAR; van sobre las líneas vino propias de la maqueta.
+  - "Capa de IA" deja de ser una tarjeta: ahora es una etiqueta destacada sobre el cubo, con su frase y un brillo que late.
+  - Las 4 tarjetas aparecen una tras otra (SICE, Vista Alegre, NUCTECH y ENTELAR), cada una con su línea, y ya no llevan "01 / 04" (conservan el sector). Foco general fijo.
+  - En celular, nombres sobre la maqueta y una lista con versiones cortas de los textos.
+  - Código: Ecosistema usa `.op-hub`, `.op-routes`, `.op-list` y la nueva `.eco-ia-label`; se quita la tarjeta `.eco-card-ia`. Las demás secciones no cambian (comparadas escena por escena contra 20261125e en 5 tamaños).
+
+## [20261125e] — 2026-11-25 · commit `1c8cc8c`
 
 ### Cambiado
 - **Operaciones** pasa de 5 escenas a 2: el título y el mapa con las 4 regiones a la vista. Antes había que avanzar una pantalla por región; el recorrido completo del sitio baja de 36 a 33 paradas.

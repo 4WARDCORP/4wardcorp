@@ -27,7 +27,7 @@
     </script>
     <link rel="preload" href="fonts/space-grotesk-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="stylesheet" href="styles.css?v=20261125e">
+    <link rel="stylesheet" href="styles.css?v=20261125f">
 </head>
 <body>
 
@@ -500,11 +500,9 @@
             </div>
         </section>
 
-        <!-- 6. ECOSISTEMA (escenas fijas: título, 4 alianzas señaladas en la maqueta y capa de IA) -->
+        <!-- 6. ECOSISTEMA (2 escenas fijas: título y maqueta con las 4 alianzas a la vista, unidas desde la capa de IA) -->
         <section id="ecosistema" class="sticky-sequence ecosistema-sequence spot-sequence" data-scene="0">
             <div class="snap-grid">
-                <div class="snap-point"></div><div class="snap-point"></div>
-                <div class="snap-point"></div><div class="snap-point"></div>
                 <div class="snap-point"></div><div class="snap-point"></div>
             </div>
             <div class="sticky-container" id="sticky-ecosistema">
@@ -518,25 +516,25 @@
                         <div class="op-shade"></div>
                         <svg class="eco-lines" aria-hidden="true">
                             <line data-scene="1" data-from="sice"/>
-                            <line data-scene="2" data-from="va"/>
-                            <line data-scene="3" data-from="nuc"/>
-                            <line data-scene="3" data-from="nuc-tren"/>
-                            <line data-scene="4" data-from="ent"/>
-                            <line data-scene="5" data-from="ia"/>
+                            <line data-scene="1" data-from="va"/>
+                            <line data-scene="1" data-from="nuc"/>
+                            <line data-scene="1" data-from="nuc-tren"/>
+                            <line data-scene="1" data-from="ent"/>
                         </svg>
+                        <!-- Rutas desde la capa de IA (cubo central) hacia cada punto, con puntos de luz (las dibuja script.js) -->
+                        <div class="op-routes" aria-hidden="true"></div>
                         <div class="op-spots">
                             <div class="op-spot" id="spot-sice" data-scene="1" data-x="33.9" data-y="28.3" data-xv="31.3" data-yv="37.8"><span class="eco-dot"></span><span class="op-name">SICE</span></div>
-                            <div class="op-spot" id="spot-va" data-scene="2" data-x="60.5" data-y="24.4" data-xv="63.5" data-yv="36.5"><span class="eco-dot"></span><span class="op-name">Vista Alegre</span></div>
-                            <div class="op-spot" id="spot-nuc" data-scene="3" data-x="67.7" data-y="54.7" data-xv="72.8" data-yv="55.3"><span class="eco-dot"></span><span class="op-name">NUCTECH</span></div>
-                            <div class="op-spot spot-extra" id="spot-nuc-tren" data-scene="3" data-x="50.8" data-y="67.4" data-xv="54.7" data-yv="61.2"><span class="eco-dot"></span></div>
-                            <div class="op-spot" id="spot-ent" data-scene="4" data-x="28.0" data-y="48.8" data-xv="28.3" data-yv="50.8"><span class="eco-dot"></span><span class="op-name">ENTELAR</span></div>
-                            <div class="op-spot spot-core" id="spot-ia" data-scene="5" data-x="49.8" data-y="39.0" data-xv="49.8" data-yv="44.9"><span class="eco-dot"></span></div>
+                            <div class="op-spot" id="spot-va" data-scene="1" data-x="60.5" data-y="24.4" data-xv="63.5" data-yv="36.5"><span class="eco-dot"></span><span class="op-name">Vista Alegre</span></div>
+                            <div class="op-spot" id="spot-nuc" data-scene="1" data-x="67.7" data-y="54.7" data-xv="72.8" data-yv="55.3"><span class="eco-dot"></span><span class="op-name">NUCTECH</span></div>
+                            <div class="op-spot spot-extra" id="spot-nuc-tren" data-scene="1" data-x="50.8" data-y="67.4" data-xv="54.7" data-yv="61.2"><span class="eco-dot"></span></div>
+                            <div class="op-spot" id="spot-ent" data-scene="1" data-x="28.0" data-y="48.8" data-xv="28.3" data-yv="50.8"><span class="eco-dot"></span><span class="op-name">ENTELAR</span></div>
+                            <div class="op-spot spot-core op-hub" id="spot-ia" data-scene="1" data-x="49.8" data-y="39.0" data-xv="49.8" data-yv="44.9"><span class="eco-dot"></span><span class="op-name eco-ia-label"><b>Capa de IA</b><small>Conecta los datos de los cuatro frentes</small></span></div>
                         </div>
-                        <div class="eco-card c-tl" data-scene="1" data-for="sice"><span class="op-num">01 / 04 · Movilidad</span><h3>SICE</h3><p><strong>Sistemas ITS, peaje inteligente</strong> con IA (Free-Flow) y monitorización algorítmica y autónoma de túneles vehiculares.</p></div>
-                        <div class="eco-card c-tr" data-scene="2" data-for="va"><span class="op-num">02 / 04 · Suministro</span><h3>Vista Alegre</h3><p><strong>Provisión ininterrumpida</strong> de materiales estructurales y operación de red logística pesada para la cimentación de la infraestructura civil.</p></div>
-                        <div class="eco-card c-br" data-scene="3" data-for="nuc nuc-tren"><span class="op-num">03 / 04 · Seguridad</span><h3>NUCTECH</h3><p><strong>Inspección tecnológica</strong> profunda de carga de mercancías y validación de alto flujo en sistemas de boletaje ferroviario.</p></div>
-                        <div class="eco-card c-bl" data-scene="4" data-for="ent"><span class="op-num">04 / 04 · Conectividad</span><h3>ENTELAR</h3><p><strong>Diseño e instalación de</strong> infraestructura de fibra óptica troncal y configuración del ecosistema de conectividad privada FLEXI WAN.</p></div>
-                        <div class="eco-card c-tr eco-card-ia" data-scene="5" data-for="ia"><span class="op-num">4ward</span><h3>Capa de IA</h3><p>Conecta los datos de los cuatro frentes.</p></div>
+                        <div class="eco-card c-tl" data-scene="1" data-for="sice"><span class="op-num">Movilidad</span><h3>SICE</h3><p><strong>Sistemas ITS, peaje inteligente</strong> con IA (Free-Flow) y monitorización algorítmica y autónoma de túneles vehiculares.</p></div>
+                        <div class="eco-card c-tr" data-scene="1" data-for="va"><span class="op-num">Suministro</span><h3>Vista Alegre</h3><p><strong>Provisión ininterrumpida</strong> de materiales estructurales y operación de red logística pesada para la cimentación de la infraestructura civil.</p></div>
+                        <div class="eco-card c-br" data-scene="1" data-for="nuc nuc-tren"><span class="op-num">Seguridad</span><h3>NUCTECH</h3><p><strong>Inspección tecnológica</strong> profunda de carga de mercancías y validación de alto flujo en sistemas de boletaje ferroviario.</p></div>
+                        <div class="eco-card c-bl" data-scene="1" data-for="ent"><span class="op-num">Conectividad</span><h3>ENTELAR</h3><p><strong>Diseño e instalación de</strong> infraestructura de fibra óptica troncal y configuración del ecosistema de conectividad privada FLEXI WAN.</p></div>
                     </div>
                 </div>
 
@@ -545,30 +543,15 @@
                         <div class="text-slider-item">
                             <h2 class="edge-title text-dark">El Ecosistema en Acción</h2>
                         </div>
+                        <!-- Celular: las alianzas en lista corta bajo la maqueta (en escritorio se ven las tarjetas completas) -->
                         <div class="text-slider-item op-cap">
-                            <span class="op-num">01 / 04 · Movilidad</span>
-                            <h3 class="edge-title text-light">SICE</h3>
-                            <p class="seq-desc">Sistemas ITS, peaje inteligente con IA (Free-Flow) y monitorización algorítmica y autónoma de túneles vehiculares.</p>
-                        </div>
-                        <div class="text-slider-item op-cap">
-                            <span class="op-num">02 / 04 · Suministro</span>
-                            <h3 class="edge-title text-light">Vista Alegre</h3>
-                            <p class="seq-desc">Provisión ininterrumpida de materiales estructurales y operación de red logística pesada para la cimentación de la infraestructura civil.</p>
-                        </div>
-                        <div class="text-slider-item op-cap">
-                            <span class="op-num">03 / 04 · Seguridad</span>
-                            <h3 class="edge-title text-light">NUCTECH</h3>
-                            <p class="seq-desc">Inspección tecnológica profunda de carga de mercancías y validación de alto flujo en sistemas de boletaje ferroviario.</p>
-                        </div>
-                        <div class="text-slider-item op-cap">
-                            <span class="op-num">04 / 04 · Conectividad</span>
-                            <h3 class="edge-title text-light">ENTELAR</h3>
-                            <p class="seq-desc">Diseño e instalación de infraestructura de fibra óptica troncal y configuración del ecosistema de conectividad privada FLEXI WAN.</p>
-                        </div>
-                        <div class="text-slider-item op-cap">
-                            <span class="op-num">4ward</span>
-                            <h3 class="edge-title text-light">Capa de IA</h3>
-                            <p class="seq-desc">Conecta los datos de los cuatro frentes.</p>
+                            <ul class="op-list">
+                                <li><b>Capa de IA · 4ward</b> Conecta los datos de los cuatro frentes.</li>
+                                <li><b>SICE · Movilidad</b> Peaje inteligente con IA (Free-Flow) y monitoreo autónomo de túneles.</li>
+                                <li><b>Vista Alegre · Suministro</b> Materiales estructurales y red logística pesada para obra civil.</li>
+                                <li><b>NUCTECH · Seguridad</b> Inspección de carga y validación de boletaje ferroviario.</li>
+                                <li><b>ENTELAR · Conectividad</b> Fibra óptica troncal y conectividad privada FLEXI WAN.</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -636,6 +619,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=20261125e"></script>
+    <script src="script.js?v=20261125f"></script>
 </body>
 </html>

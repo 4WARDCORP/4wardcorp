@@ -301,7 +301,7 @@ html {
 
 /* Rutas desde Centro: barra girada con 2 puntos de luz (misma animación flowX del diagrama de IA) */
 .op-routes { position: absolute; inset: 0; pointer-events: none; z-index: 1; opacity: 0; transition: opacity 0.8s ease 0.3s; }
-.operaciones-sequence[data-scene="1"] .op-routes { opacity: 1; }
+[data-scene="1"] > .sticky-container .op-routes { opacity: 1; }
 .op-route { position: absolute; height: 2px; margin-top: -1px; transform-origin: 0 50%; background: linear-gradient(90deg, rgba(196,33,58,0.85), rgba(255,255,255,0.35)); }
 .op-route i { position: absolute; top: -6px; left: 0; width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle, #fff 0 22%, #c4213a 45%, var(--brand) 100%); box-shadow: 0 0 12px 3px rgba(196,33,58,0.85), 0 0 26px 6px rgba(137,20,37,0.55); animation: flowX var(--dur, 1.8s) linear infinite; }
 .op-route i:nth-child(2) { animation-delay: calc(var(--dur, 1.8s) / -2); }
@@ -637,11 +637,14 @@ html {
 }
 
 /* ======================================================================
-   12. ECOSISTEMA (#ecosistema) — puntos sobre la maqueta
-   6 escenas. Usa los puntos de Operaciones (sección 8) más tarjetas en las esquinas (.eco-card, .c-tl…)
-   unidas a su punto con líneas SVG (.eco-lines). Las tarjetas miden en cqw/cqh del lienzo .eco-stage.
+   12. ECOSISTEMA (#ecosistema) — maqueta con las 4 alianzas
+   2 escenas: título y maqueta. Usa los puntos, rutas y foco general de Operaciones (sección 8): todos los
+   puntos con data-scene="1"; el cubo central (#spot-ia, .op-hub) es el origen de las rutas y lleva la etiqueta
+   destacada "Capa de IA" (.eco-ia-label). Tarjetas en las esquinas (.eco-card, .c-tl…) unidas a su punto con
+   líneas SVG (.eco-lines); aparecen una tras otra. Miden en cqw/cqh del lienzo .eco-stage.
+   En celular: sin tarjetas ni líneas; nombres sobre la maqueta y lista corta .op-list abajo.
    ====================================================================== */
-.ecosistema-sequence { height: calc(var(--vh) * 600 + var(--extra)); }
+.ecosistema-sequence { height: calc(var(--vh) * 200 + var(--extra)); }
 .eco-bg { background: #000; }
 .eco-stage { position: relative; width: min(100vw, calc(var(--vh) * 150)); aspect-ratio: 3 / 2; container-type: size; }
 .eco-stage picture, .eco-img { display: block; width: 100%; height: 100%; }
@@ -650,13 +653,28 @@ html {
 .ecosistema-sequence .eco-dot { width: 20px; height: 20px; left: -10px; top: -10px; }
 /* Etiquetas de los puntos en vino */
 .ecosistema-sequence .op-name { background: var(--brand); border-color: rgba(255,255,255,0.55); }
-.spot-extra .op-name, .spot-core .op-name { display: none; }
-.op-spot.spot-extra.is-seen { opacity: 0; }
+.spot-extra .op-name { display: none; }
+/* Foco general sobre el centro de la maqueta */
+.ecosistema-sequence .op-shade { background: radial-gradient(ellipse 46% 58% at 50% 47%, rgba(0,0,0,0) 0, rgba(0,0,0,0) 60%, rgba(0,0,0,0.55) 100%); opacity: 0; transition: opacity 1s ease; }
+.ecosistema-sequence[data-scene="1"] .op-shade { opacity: 1; }
+/* Cubo central: punto más grande y etiqueta destacada "Capa de IA" (siempre visible, con brillo que late) */
+.ecosistema-sequence .op-hub .eco-dot { width: 26px; height: 26px; left: -13px; top: -13px; }
+.ecosistema-sequence .eco-ia-label { display: flex; flex-direction: column; align-items: center; gap: 0.35em; bottom: 30px; padding: 0.75em 1.5em 0.8em; border-radius: 1.2em; background: var(--brand); border: 1px solid rgba(255,255,255,0.75); letter-spacing: 0; text-transform: none; animation: iaGlow 2.4s ease-in-out infinite; }
+.eco-ia-label b { font-size: clamp(1rem, 1.6cqw, 1.5rem); letter-spacing: 3px; text-transform: uppercase; }
+.eco-ia-label small { font-size: clamp(0.72rem, 0.95cqw, 0.95rem); font-weight: 400; color: rgba(255,255,255,0.88); }
+.ecosistema-sequence .op-spot.is-on .eco-ia-label { opacity: 1; }
+@keyframes iaGlow { 0%, 100% { box-shadow: 0 0 18px 2px rgba(196,33,58,0.55), 0 4px 18px rgba(0,0,0,0.6); } 50% { box-shadow: 0 0 34px 8px rgba(196,33,58,0.8), 0 4px 18px rgba(0,0,0,0.6); } }
+/* Aparición escalonada: etiqueta de IA, SICE, Vista Alegre, NUCTECH y ENTELAR (tarjeta y su línea) */
+.ecosistema-sequence .op-hub { transition-delay: 0.2s; }
+.eco-card.c-tl, .eco-lines line[data-from="sice"] { --delay: 0.6s; }
+.eco-card.c-tr, .eco-lines line[data-from="va"] { --delay: 0.9s; }
+.eco-card.c-br, .eco-lines line[data-from^="nuc"] { --delay: 1.2s; }
+.eco-card.c-bl, .eco-lines line[data-from="ent"] { --delay: 1.5s; }
 .ecosistema-sequence .eco-img { -webkit-mask-image: linear-gradient(to right, transparent 0, #000 5%, #000 95%, transparent 100%); mask-image: linear-gradient(to right, transparent 0, #000 5%, #000 95%, transparent 100%); }
 .eco-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; overflow: visible; }
-.eco-lines line { stroke: #fff; stroke-width: 1.5; opacity: 0; transition: opacity 0.5s ease 0.2s; }
+.eco-lines line { stroke: #fff; stroke-width: 1.5; opacity: 0; transition: opacity 0.8s ease var(--delay, 0.2s); }
 .eco-lines line.is-on { opacity: 0.85; }
-.eco-card { position: absolute; z-index: 4; width: 23cqw; padding: 1.6cqw 1.8cqw; background: rgba(8,8,8,0.84); border: 1px solid rgba(137,20,37,0.7); border-radius: 1.6cqw; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); opacity: 0; transform: translateY(10px); transition: opacity 0.6s ease 0.25s, transform 0.6s ease 0.25s; pointer-events: none; }
+.eco-card { position: absolute; z-index: 4; width: 23cqw; padding: 1.6cqw 1.8cqw; background: rgba(8,8,8,0.84); border: 1px solid rgba(137,20,37,0.7); border-radius: 1.6cqw; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); opacity: 0; transform: translateY(10px); transition: opacity 0.8s ease var(--delay, 0.25s), transform 0.8s ease var(--delay, 0.25s); pointer-events: none; }
 .eco-card::before { content: ''; position: absolute; top: 0; left: 1.8cqw; width: 3.4cqw; height: 3px; background: var(--brand); }
 .eco-card.is-on { opacity: 1; transform: translateY(0); }
 .eco-card .op-num { font-size: clamp(0.6rem, 0.85cqw, 0.8rem); letter-spacing: 2px; }
@@ -672,13 +690,21 @@ html {
     .eco-card, .eco-lines { display: none; }
     .ecosistema-sequence .op-name { font-size: 0.72rem; letter-spacing: 2px; padding: 6px 11px; bottom: 16px; }
     .ecosistema-sequence .eco-dot { width: 15px; height: 15px; left: -7.5px; top: -7.5px; }
-    .ecosistema-sequence .op-spot.is-on .op-name { background: #fff; color: var(--brand); border-color: #fff; }
+    .ecosistema-sequence .eco-ia-label { bottom: 20px; padding: 0.55em 1.1em; }
+    .eco-ia-label b { font-size: 0.8rem; letter-spacing: 2px; }
+    .eco-ia-label small { display: none; }
+    .ecosistema-sequence .op-hub .eco-dot { width: 19px; height: 19px; left: -9.5px; top: -9.5px; }
+    .ecosistema-sequence .op-shade { background: radial-gradient(ellipse 60% 40% at 50% 47%, rgba(0,0,0,0) 0, rgba(0,0,0,0) 60%, rgba(0,0,0,0.55) 100%); }
+    /* Maqueta más arriba para dejar lugar a la lista */
+    .ecosistema-sequence .eco-stage { transform: translateY(calc(var(--vh) * -19)); }
+    .ecosistema-sequence .op-cap { padding-bottom: calc(var(--vh) * 4); }
     .ecosistema-sequence .eco-img { -webkit-mask-image: none; mask-image: none; }
 }
 @media (max-width: 768px) and (max-height: 720px) {
-    /* Pantallas bajas (tipo iPhone SE): el pentágono sube para no encimarse con el texto */
-    .ecosistema-sequence .eco-stage { transform: translateY(calc(var(--vh) * -8)); }
-    .ecosistema-sequence .op-cap { padding-bottom: calc(var(--vh) * 6); }
+    /* Pantallas bajas (tipo iPhone SE): maqueta más chica y lista más compacta para que no se encimen */
+    .ecosistema-sequence .eco-stage { width: min(100vw, calc(var(--vh) * 54)); transform: translateY(calc(var(--vh) * -22)); }
+    .ecosistema-sequence .op-list li { font-size: calc(var(--vh) * 2); padding: calc(var(--vh) * 0.6) 0; }
+    .ecosistema-sequence .op-list b { font-size: calc(var(--vh) * 1.7); }
 }
 
 /* ======================================================================

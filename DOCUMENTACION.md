@@ -1,6 +1,6 @@
 # Documentación técnica — sitio 4ward Solutions
 
-Referencia para quien mantenga o modifique el sitio. Describe el código tal como está en la versión **`20261125e`** (ver [CAMBIOS.md](CAMBIOS.md)).
+Referencia para quien mantenga o modifique el sitio. Describe el código tal como está en la versión **`20261125f`** (ver [CAMBIOS.md](CAMBIOS.md)).
 La forma de probar y publicar está en el [README](README.md) y el historial en [CAMBIOS.md](CAMBIOS.md).
 
 **Regla de mantenimiento:** si un cambio contradice algo de este documento, el documento se actualiza en el mismo commit.
@@ -48,11 +48,11 @@ Orden en la página (igual al del menú). **"Escena" = una pantalla completa con
 | 3 | `crecimiento` | Crecimiento | 2 | `200` (`.crecimiento-sequence`) | `makeSimpleSequence()` |
 | 4 | `ia` | IA | 11 | `1100` (`.ia-sequence`) | en línea, en el `scroll` |
 | 5 | `experiencia` | Experiencia | 5 | `500` (valor base) | en línea, en el `scroll` |
-| 6 | `ecosistema` | Ecosistema | 6 | `600` (`.ecosistema-sequence`) | `makeSpotSequence()` |
+| 6 | `ecosistema` | Ecosistema | 2 | `200` (`.ecosistema-sequence`) | `makeSpotSequence()` |
 | — | (pie) | — | 1 | `calc(var(--vh) * 70)` | — |
 
 \* "Inicio" solo aparece en el menú del celular; en escritorio se regresa con el logo (§5).
-Todas las alturas de sección son `calc(var(--vh) * N + var(--extra))`. **Paradas totales al recorrer con Av Pág: 33** (1 + 31 escenas + pie).
+Todas las alturas de sección son `calc(var(--vh) * N + var(--extra))`. **Paradas totales al recorrer con Av Pág: 29** (1 + 27 escenas + pie).
 
 **Contenido por escena** (la escena 0 es siempre el título sobre fondo blanco, salvo en Experiencia, que usa fondo negro):
 
@@ -63,7 +63,7 @@ Todas las alturas de sección son `calc(var(--vh) * N + var(--extra))`. **Parada
 | Crecimiento | 1 Tres tarjetas: Representación Comercial (c1), Integración de Soluciones (c2), Comercialización Tech (c3) |
 | IA | 1 Introducción (ia-hero) · 2 Diagrama "Cómo trabaja la IA en tu día a día" · 3–8 Frentes 01/06 a 06/06 (ia-01…ia-06) · 9 Desarrollos 4ward · 10 Nuestro proceso es simple (con el botón del formulario) |
 | Experiencia | 1 Movilidad · SICE (p1) · 2 Suministro · Vista Alegre (p2) · 3 Seguridad · NUCTECH (p3) · 4 Conectividad · ENTELAR (p4) |
-| Ecosistema | Maqueta `ecosistema.jpg` · 1 SICE · 2 Vista Alegre · 3 NUCTECH (2 puntos: puerto y tren) · 4 ENTELAR · 5 Capa de IA (cubo central) |
+| Ecosistema | 1 Maqueta `ecosistema.jpg` con todo a la vista: Capa de IA (cubo central, origen de las rutas), SICE, Vista Alegre, NUCTECH (2 puntos: puerto y tren) y ENTELAR, con sus 4 tarjetas |
 
 **Experiencia tiene dos vistas** en el HTML: `.pilares-mobile-view` (celular: fondo y texto por escena) y `.pilares-desktop-view` (escritorio: 4 cuadros que entran desde sus esquinas con la clase `.is-in`, uno por escena). El nombre "pilares" es histórico: la sección se llamaba Pilares.
 
@@ -114,18 +114,22 @@ Todas las alturas de sección son `calc(var(--vh) * N + var(--extra))`. **Parada
   - `data-scene`: escena en que se enciende.
   - `data-x` / `data-y`: posición en % del lienzo, en escritorio.
   - `data-xv` / `data-yv`: posición en % en celular (imagen vertical). El cambio ocurre en ≤ 768 px de ancho.
-- Estados: `.is-on` (escena actual, con pulso) e `.is-seen` (escenas pasadas: queda visible con su nombre).
-- Foco de luz: `.op-shade` oscurece todo menos un círculo centrado en `--fx` / `--fy`, que el JS iguala a la posición del punto activo.
+- Estados: `.is-on` (escena actual, con pulso) e `.is-seen` (escenas pasadas: queda visible con su nombre). Hoy, en las dos secciones, todos los puntos tienen `data-scene="1"` y se encienden juntos.
+- Foco de luz: el JS centra `.op-shade` en `--fx` / `--fy` (posición del punto activo), pero Operaciones y Ecosistema lo reemplazan en CSS por un foco general fijo (elipse que oscurece las orillas).
 - **Operaciones:** una sola escena de mapa; los 4 puntos tienen `data-scene="1"`, así que se encienden juntos.
   - La tarjeta (`.op-card`) vive dentro del punto: `.op-side-r` / `.op-side-l` / `.op-side-b` la ponen a la derecha, a la izquierda o abajo. Aparecen una tras otra con `--delay` (Centro 0.3 s, Norte 0.6 s, Bajío 0.9 s, Sur 1.2 s).
   - **Rutas:** el punto con `.op-hub` (Centro) es el origen. `drawRoutes()` crea dentro de `.op-routes` una `.op-route` por cada otro punto: una barra girada del largo exacto, con 2 puntos de luz `<i>` que la recorren con la animación `flowX` del diagrama de IA. La duración (`--dur`) es proporcional al largo (170 px por segundo, mínimo 1.6 s). Se recalculan con `place()` al cambiar el tamaño.
   - **Foco general:** en Operaciones, `.op-shade` es una elipse fija que deja a la vista la zona de las 4 regiones (no usa `--fx` / `--fy`).
   - La imagen del mapa ya trae sus propias líneas vino (son parte del render); las rutas rectas se suman a ellas a propósito.
   - **Celular:** sin tarjetas; los nombres van sobre el mapa (Bajío a la izquierda y Centro abajo, para que no choquen) y las 4 frases en la lista `.op-list` debajo. El mapa se sube 15 `--vh` para dejarle lugar.
-- **Ecosistema:** las tarjetas (`.eco-card`) están en las esquinas (`.c-tl`, `.c-tr`, `.c-bl`, `.c-br`) y una línea SVG las une a su punto:
+- **Ecosistema:** una sola escena de maqueta, con el mismo esquema de Operaciones:
+  - El cubo central (`#spot-ia`, `.op-hub`) es el origen de las rutas hacia los 5 puntos (`drawRoutes()`), que coinciden con las líneas vino propias de la imagen. Lleva la etiqueta destacada `.eco-ia-label` ("Capa de IA" y su frase; en celular solo el nombre), siempre visible y con brillo que late (`iaGlow`).
+  - Aparición escalonada con `--delay`: etiqueta de IA, SICE (0.6 s), Vista Alegre (0.9 s), NUCTECH (1.2 s) y ENTELAR (1.5 s); cada tarjeta y su línea usan el mismo retraso.
+  - **Celular:** nombres sobre la maqueta y lista `.op-list` con textos cortos (versión resumida de las tarjetas). La maqueta sube 19 `--vh`; en pantallas de 720 px de alto o menos se achica y la lista se compacta.
+- Las tarjetas (`.eco-card`) están en las esquinas (`.c-tl`, `.c-tr`, `.c-bl`, `.c-br`) y una línea SVG las une a su punto:
   - `<line data-from="X">` se conecta con `#spot-X` y con la tarjeta cuyo `data-for` contiene `X`.
   - `drawLines()` recalcula las líneas al cambiar el tamaño de la ventana.
-- **En celular** no hay tarjetas ni líneas de Ecosistema: el texto se ve abajo con `.op-cap`, que en escritorio está oculto (`visibility: hidden`).
+- **En celular** no hay tarjetas ni líneas de Ecosistema: el texto se ve abajo en `.op-cap` (con su `.op-list`), que en escritorio está oculto (`visibility: hidden`).
 - `.is-past` en la `<section>`: cuando el pie de página empieza a subir, desvanece los textos para que no se asomen bajo el menú.
 
 ### 3.4 Agregar o quitar una escena (lista de verificación)
@@ -139,7 +143,7 @@ Todas las alturas de sección son `calc(var(--vh) * N + var(--extra))`. **Parada
    - **Spot:** agregar el `.op-spot` con su `data-scene` y sus 4 coordenadas.
    - **Ecosistema:** además, su `.eco-card` y su `<line>`.
 6. Actualizar los comentarios con el mapa de escenas en `index.html` y la tabla del §2 de este documento.
-7. Probar el recorrido completo con Av Pág: el número de paradas debe cambiar exactamente en las escenas agregadas o quitadas (hoy son 33).
+7. Probar el recorrido completo con Av Pág: el número de paradas debe cambiar exactamente en las escenas agregadas o quitadas (hoy son 29).
 
 ### 3.5 Botones dentro de una escena
 
@@ -226,7 +230,7 @@ Otros colores que se repiten sin variable: `#a51a2e` (vino al pasar el cursor), 
 | Portada | `.hero-section`, `.hero-slider`, `.slide`(`.active`), `.hero-bg-overlay-light`, `.hero-bottom-text`, `.scroll-indicator` |
 | Escenas fijas | `.sticky-sequence`, `.sticky-container`, `.snap-grid`, `.snap-point`, `.seq-bg`(`.active`), `.seq-overlay` (capa negra 70 %), `.text-slider-mask`, `.text-slider-track`, `.text-slider-item`, `.bg-picture`, `.is-past` |
 | Dilema | Solo clases comunes |
-| Operaciones / Ecosistema | `.op-stage`, `.eco-stage`, `.eco-img`, `.op-shade`, `.op-spots`, `.op-spot`, `.eco-dot`, `.op-name`, `.op-card`, `.op-num`, `.op-side-r/-l/-b`, `.op-cap`, `.op-hub` (Centro, origen de las rutas), `.op-routes`, `.op-route`, `.op-list` (lista del celular), `.eco-lines`, `.eco-card`, `.eco-card-ia`, `.c-tl/-tr/-bl/-br`, `.spot-extra` (punto sin nombre), `.spot-core` (cubo de IA) |
+| Operaciones / Ecosistema | `.op-stage`, `.eco-stage`, `.eco-img`, `.op-shade`, `.op-spots`, `.op-spot`, `.eco-dot`, `.op-name`, `.op-card`, `.op-num`, `.op-side-r/-l/-b`, `.op-cap`, `.op-hub` (Centro, origen de las rutas), `.op-routes`, `.op-route`, `.op-list` (lista del celular), `.eco-ia-label` (etiqueta "Capa de IA"), `.eco-lines`, `.eco-card`, `.eco-card-ia`, `.c-tl/-tr/-bl/-br`, `.spot-extra` (punto sin nombre), `.spot-core` (cubo de IA) |
 | Crecimiento | `.crec-scene`, `.crec-b-grid`, `.crec-b-card` |
 | IA | `.ia-kicker`(`-dark`), `.ia-num`, `.ia-intro`, `.ia-intro-sub`, `.ia-overlay`, `.ia-scene-num`, `.ia-scene-title`, `.ia-scene-list`; diagrama: `.ia-diag`, `.ia-diag-bg`, `.diag-flow`, `.flow-step`(`.is-core`), `.flow-conn`, `.flow-ico`, `.flow-num`, `.ia-diag-msg`; escenas 9–10: `.casos-item`, `.casos-bg`, `.casos-bg-2`, `.ia-cases`, `.v-a`, `.ia-case`, `.ia-process-block`, `.ia-process-img`, `.ia-process-content`, `.ia-steps`, `.ia-step`, `.role`, `.role-client`, `.role-4w`, `.proceso-cta` |
 | Experiencia | `.pilares-mobile-view`, `.pilares-desktop-view`, `.quadrant-card`(`.is-in`), `.q-top-left/-right`, `.q-bottom-left/-right`, `.quadrant-content`, `.ally-tag`, `.sector-title`, `.sector-title-m`, `.z-background` |
@@ -322,7 +326,7 @@ Otros colores que se repiten sin variable: `#a51a2e` (vino al pasar el cursor), 
 |---|---|
 | Correo `rvertti@4wardcorp.com` | `index.html` (pie y aviso del formulario), `script.js` (`DESTINO`), `enviar.php` (`$DESTINO`, `$REMITENTE`), `aviso-de-privacidad.html` |
 | Razón social y domicilio | `index.html` (`.cf-aviso`), `aviso-de-privacidad.html` |
-| Textos de Operaciones y Ecosistema | Dos veces cada uno: en la tarjeta de escritorio (`.op-card` / `.eco-card`) y en el texto de celular (`.op-list` en Operaciones, `.op-cap` en Ecosistema) |
+| Textos de Operaciones y Ecosistema | Dos veces cada uno: en la tarjeta de escritorio (`.op-card` / `.eco-card`) y en la lista del celular (`.op-list`). **En Ecosistema la lista lleva una versión corta**: si cambia el texto de una tarjeta, revisar que la versión corta siga diciendo lo mismo. La frase de "Capa de IA" está en `.eco-ia-label` y en la lista. |
 | Textos de Experiencia | Dos veces: `.pilares-mobile-view` y `.pilares-desktop-view` |
 | Versión de CSS / JS | Los dos enlaces de `index.html` |
 | Declaraciones `@font-face` de Space Grotesk | Inicio de `styles.css` y `<style>` de `aviso-de-privacidad.html` (rutas a `fonts/`) |
@@ -372,7 +376,7 @@ Casos conocidos:
 ## 11. Cómo probar
 
 **Revisión manual mínima de cada cambio:**
-1. Recorrer el sitio completo con Av Pág en escritorio. Deben ser 33 paradas; ningún texto debe quedar cortado ni debajo del menú, y cada escena debe cambiar con su transición.
+1. Recorrer el sitio completo con Av Pág en escritorio. Deben ser 29 paradas; ningún texto debe quedar cortado ni debajo del menú, y cada escena debe cambiar con su transición.
 2. Lo mismo en un celular, o en el emulador del navegador con los tamaños del README.
 3. Menú: cada enlace lleva al inicio exacto de su sección. Probar también el logo, "Inicio" y el botón ↑.
 4. Formulario: abrir, validar vacío, cerrar con Esc y con la ×; en celular no debe hacer zoom al escribir.
