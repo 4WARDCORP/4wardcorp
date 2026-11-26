@@ -19,6 +19,16 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). L
 
 _(Nada pendiente.)_
 
+## [20261125e] — 2026-11-25
+
+### Cambiado
+- **Operaciones** pasa de 5 escenas a 2: el título y el mapa con las 4 regiones a la vista. Antes había que avanzar una pantalla por región; el recorrido completo del sitio baja de 36 a 33 paradas.
+  - Desde Centro salen rutas hacia Norte, Bajío y Sur, con puntos de luz que viajan por ellas (la misma animación del diagrama "Cómo trabaja la IA en tu día a día"). Centro tiene un punto un poco más grande.
+  - Las 4 tarjetas aparecen una tras otra (Centro, Norte, Bajío y Sur) con desvanecido y deslizamiento corto. Son más compactas y ya no llevan "01 / 04".
+  - El foco de luz ya no sigue a una región: es un foco general que oscurece las orillas.
+  - En celular, los nombres van sobre el mapa y las 4 frases en una lista debajo.
+  - Código: `drawRoutes()` en `makeSpotSequence` (`script.js`); clases nuevas `.op-routes`, `.op-route`, `.op-hub`, `.op-side-b` y `.op-list`. Las demás secciones no cambian (comparadas escena por escena contra 20261125d en 5 tamaños).
+
 ## [20261125d] — 2026-11-25 · commit `ab359de`
 
 Revisión de seguridad (diagnóstico del 25-nov-2026). Lo visible del sitio no cambia: se comparó contra 20261125c el estilo computado de cada elemento y una captura en las 36 paradas (1440×900, 1280×720, 1462×663, 390×844 y 375×667) y los estados del menú y del formulario.

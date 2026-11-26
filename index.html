@@ -27,7 +27,7 @@
     </script>
     <link rel="preload" href="fonts/space-grotesk-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="stylesheet" href="styles.css?v=20261125d">
+    <link rel="stylesheet" href="styles.css?v=20261125e">
 </head>
 <body>
 
@@ -140,12 +140,10 @@
             </div>
         </section>
 
-        <!-- 2. OPERACIONES (escenas fijas: título y 4 regiones señaladas en el mapa) -->
+        <!-- 2. OPERACIONES (2 escenas fijas: título y mapa con las 4 regiones a la vista, unidas desde Centro) -->
         <section id="operaciones" class="sticky-sequence operaciones-sequence" data-scene="0">
             <div class="snap-grid">
                 <div class="snap-point"></div><div class="snap-point"></div>
-                <div class="snap-point"></div><div class="snap-point"></div>
-                <div class="snap-point"></div>
             </div>
             <div class="sticky-container" id="sticky-operaciones">
                 <div class="seq-bg active" style="background-color: var(--bg-white);"></div>
@@ -156,22 +154,24 @@
                             <img src="img/dominio.jpg" alt="Mapa de la República Mexicana en cristal con cuatro regiones señaladas: Norte, Bajío, Centro y Sur" class="eco-img">
                         </picture>
                         <div class="op-shade"></div>
+                        <!-- Rutas desde Centro hacia cada región, con puntos de luz que viajan (las dibuja script.js) -->
+                        <div class="op-routes" aria-hidden="true"></div>
                         <div class="op-spots">
                             <div class="op-spot op-side-r" data-scene="1" data-x="53.3" data-y="34.4" data-xv="53.9" data-yv="42.6">
                                 <span class="eco-dot"></span><span class="op-name">Norte</span>
-                                <div class="op-card"><span class="op-num">01 / 04</span><h3>Norte</h3><p>Potencia industrial y fronteriza.</p></div>
+                                <div class="op-card"><h3>Norte</h3><p>Potencia industrial y fronteriza.</p></div>
                             </div>
-                            <div class="op-spot op-side-l" data-scene="2" data-x="42.7" data-y="51.4" data-xv="42.8" data-yv="50.3">
+                            <div class="op-spot op-side-l" data-scene="1" data-x="42.7" data-y="51.4" data-xv="42.8" data-yv="50.3">
                                 <span class="eco-dot"></span><span class="op-name">Bajío</span>
-                                <div class="op-card"><span class="op-num">02 / 04</span><h3>Bajío</h3><p>El motor logístico y manufacturero.</p></div>
+                                <div class="op-card"><h3>Bajío</h3><p>El motor logístico y manufacturero.</p></div>
                             </div>
-                            <div class="op-spot op-side-r" data-scene="3" data-x="50.0" data-y="61.6" data-xv="50.7" data-yv="55.1">
+                            <div class="op-spot op-side-b op-hub" data-scene="1" data-x="50.0" data-y="61.6" data-xv="50.7" data-yv="55.1">
                                 <span class="eco-dot"></span><span class="op-name">Centro</span>
-                                <div class="op-card"><span class="op-num">03 / 04</span><h3>Centro</h3><p>El núcleo corporativo y de consumo.</p></div>
+                                <div class="op-card"><h3>Centro</h3><p>El núcleo corporativo y de consumo.</p></div>
                             </div>
-                            <div class="op-spot op-side-l" data-scene="4" data-x="77.3" data-y="72.0" data-xv="80.0" data-yv="59.8">
+                            <div class="op-spot op-side-r" data-scene="1" data-x="77.3" data-y="72.0" data-xv="80.0" data-yv="59.8">
                                 <span class="eco-dot"></span><span class="op-name">Sur</span>
-                                <div class="op-card"><span class="op-num">04 / 04</span><h3>Sur</h3><p>La nueva frontera de desarrollo e infraestructura.</p></div>
+                                <div class="op-card"><h3>Sur</h3><p>La nueva frontera de desarrollo e infraestructura.</p></div>
                             </div>
                         </div>
                     </div>
@@ -183,25 +183,14 @@
                             <h2 class="edge-title text-dark">Dominio Táctico: Operaciones</h2>
                             <p class="seq-desc">No diluimos nuestros esfuerzos en promesas globales. <br/>Somos especialistas quirúrgicos en la República Mexicana, conectando los polos económicos más vitales del país.</p>
                         </div>
+                        <!-- Celular: las 4 regiones en lista bajo el mapa (en escritorio se ven las tarjetas) -->
                         <div class="text-slider-item op-cap">
-                            <span class="op-num">01 / 04</span>
-                            <h3 class="edge-title text-light">Norte</h3>
-                            <p class="seq-desc">Potencia industrial y fronteriza.</p>
-                        </div>
-                        <div class="text-slider-item op-cap">
-                            <span class="op-num">02 / 04</span>
-                            <h3 class="edge-title text-light">Bajío</h3>
-                            <p class="seq-desc">El motor logístico y manufacturero.</p>
-                        </div>
-                        <div class="text-slider-item op-cap">
-                            <span class="op-num">03 / 04</span>
-                            <h3 class="edge-title text-light">Centro</h3>
-                            <p class="seq-desc">El núcleo corporativo y de consumo.</p>
-                        </div>
-                        <div class="text-slider-item op-cap">
-                            <span class="op-num">04 / 04</span>
-                            <h3 class="edge-title text-light">Sur</h3>
-                            <p class="seq-desc">La nueva frontera de desarrollo e infraestructura.</p>
+                            <ul class="op-list">
+                                <li><b>Norte</b> Potencia industrial y fronteriza.</li>
+                                <li><b>Bajío</b> El motor logístico y manufacturero.</li>
+                                <li><b>Centro</b> El núcleo corporativo y de consumo.</li>
+                                <li><b>Sur</b> La nueva frontera de desarrollo e infraestructura.</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -647,6 +636,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=20261125d"></script>
+    <script src="script.js?v=20261125e"></script>
 </body>
 </html>

@@ -82,8 +82,35 @@ document.addEventListener('DOMContentLoaded', () => {
         const cards = section.querySelectorAll('.eco-card');
         const svg = section.querySelector('.eco-lines');
         const lines = svg ? svg.querySelectorAll('line') : [];
+        const routes = section.querySelector('.op-routes');
+        const hub = section.querySelector('.op-hub');
         const count = section.querySelectorAll('.snap-point').length;
         let current = -1;
+
+        // Operaciones: una ruta recta de Centro (.op-hub) a cada región, con 2 puntos de luz que la recorren.
+        // Cada ruta es una barra girada; los puntos usan la misma animación flowX del diagrama de IA.
+        function drawRoutes() {
+            if (!routes || !hub || !stage) return;
+            const sr = stage.getBoundingClientRect();
+            const pos = el => [parseFloat(el.style.left) / 100 * sr.width, parseFloat(el.style.top) / 100 * sr.height];
+            const [hx, hy] = pos(hub);
+            routes.innerHTML = '';
+            spots.forEach(spot => {
+                if (spot === hub) return;
+                const [x, y] = pos(spot);
+                const len = Math.hypot(x - hx, y - hy);
+                const route = document.createElement('span');
+                route.className = 'op-route';
+                route.style.left = hx + 'px';
+                route.style.top = hy + 'px';
+                route.style.width = len + 'px';
+                route.style.transform = `rotate(${Math.atan2(y - hy, x - hx)}rad)`;
+                // Misma velocidad en todas las rutas (~170 px/s), sin bajar de 1.6 s
+                route.style.setProperty('--dur', Math.max(1.6, len / 170).toFixed(2) + 's');
+                route.innerHTML = '<i></i><i></i>';
+                routes.appendChild(route);
+            });
+        }
 
         // Une cada tarjeta con su punto: la línea sale del borde de la tarjeta más cercano al punto
         function drawLines() {
@@ -112,6 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 spot.style.top = (vertical ? spot.dataset.yv : spot.dataset.y) + '%';
             });
             drawLines();
+            drawRoutes();
             if (current >= 0) { const c = current; current = -1; setScene(c); }
         }
 
@@ -138,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         place();
         window.addEventListener('resize', place);
-        window.addEventListener('load', drawLines);
+        window.addEventListener('load', () => { drawLines(); drawRoutes(); });
 
         return function onScroll(windowHeight) {
             const rect = section.getBoundingClientRect();

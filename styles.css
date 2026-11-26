@@ -273,12 +273,16 @@ html {
    ====================================================================== */
 
 /* ======================================================================
-   8. OPERACIONES (#operaciones) — puntos sobre el mapa
-   5 escenas. Lienzo .op-stage (imagen 3:2 o 2:3), foco de luz .op-shade centrado en --fx/--fy,
-   puntos .op-spot (.is-on = escena actual, .is-seen = ya vistos) con su tarjeta .op-card al lado.
-   En celular no hay tarjetas: el texto va abajo en .op-cap. Ecosistema reutiliza .op-spot, .eco-dot y .op-name.
+   8. OPERACIONES (#operaciones) — mapa con las 4 regiones
+   2 escenas: título y mapa. En el mapa se ven a la vez los 4 puntos .op-spot (todos con data-scene="1")
+   y sus tarjetas .op-card, que aparecen una tras otra (Centro, Norte, Bajío, Sur) con desvanecido y deslizamiento corto. Desde Centro (.op-hub) salen rutas
+   .op-route (las dibuja script.js) con puntos de luz que viajan, como el diagrama de IA.
+   El foco .op-shade es general: oscurece las orillas y deja a la vista la zona de las 4 regiones.
+   La imagen del mapa trae sus propias líneas vino (del render); las rutas rectas se suman a ellas a propósito.
+   En celular no hay tarjetas: nombres sobre el mapa y lista .op-list abajo.
+   Ecosistema reutiliza .op-spot, .eco-dot, .op-name, .op-shade (foco en --fx/--fy) y .op-cap.
    ====================================================================== */
-.operaciones-sequence { height: calc(var(--vh) * 500 + var(--extra)); }
+.operaciones-sequence { height: calc(var(--vh) * 200 + var(--extra)); }
 .op-stage { transition: --fx 0.9s cubic-bezier(0.65, 0, 0.35, 1), --fy 0.9s cubic-bezier(0.65, 0, 0.35, 1); }
 .op-shade { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at var(--fx) var(--fy), rgba(0,0,0,0) 0, rgba(0,0,0,0) 8%, rgba(0,0,0,0.55) 26%); }
 .op-spot { position: absolute; width: 0; height: 0; opacity: 0; transition: opacity 0.6s ease; pointer-events: none; z-index: 2; }
@@ -288,27 +292,63 @@ html {
 .eco-dot { position: absolute; left: -8px; top: -8px; width: 16px; height: 16px; border-radius: 50%; background: var(--brand); border: 2px solid #fff; }
 @keyframes ecoPulse { 0% { box-shadow: 0 0 0 0 rgba(137,20,37,0.75); } 100% { box-shadow: 0 0 0 22px rgba(137,20,37,0); } }
 .op-name { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); white-space: nowrap; font-size: 0.78rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #fff; background: rgba(0,0,0,0.72); border: 1px solid rgba(255,255,255,0.25); border-radius: 30px; padding: 6px 13px; transition: opacity 0.4s ease; }
-.op-spot.is-on .op-name { opacity: 0; }
-.op-card { position: absolute; width: 340px; padding: 24px 26px; background: rgba(8,8,8,0.82); border: 1px solid rgba(137,20,37,0.7); border-radius: 22px; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); opacity: 0; transition: opacity 0.6s ease 0.25s, transform 0.6s ease 0.25s; }
-.op-card::before { content: ''; position: absolute; top: 0; left: 26px; width: 48px; height: 3px; background: var(--brand); }
-.op-spot.is-on .op-card { opacity: 1; }
-.op-card h3 { font-size: clamp(2rem, 3vw, 2.8rem); text-transform: uppercase; letter-spacing: -0.03em; line-height: 1; margin: 6px 0 12px; color: #fff; }
-.op-card p { color: #d0d0d0; font-size: 1.05rem; line-height: 1.5; }
 .op-num { display: block; font-size: 0.8rem; font-weight: 700; letter-spacing: 3px; color: #fff; opacity: 0.8; }
-.op-side-r .op-card { left: 34px; top: 0; transform: translate(10px, -50%); }
-.op-side-r.is-on .op-card { transform: translate(0, -50%); }
-.op-side-l .op-card { right: 34px; top: 0; transform: translate(-10px, -50%); }
-.op-side-l.is-on .op-card { transform: translate(0, -50%); }
 .op-cap { visibility: hidden; }
+
+/* Foco general: elipse que cubre las 4 regiones y oscurece las orillas */
+.operaciones-sequence .op-shade { background: radial-gradient(ellipse 36% 46% at 58% 54%, rgba(0,0,0,0) 0, rgba(0,0,0,0) 55%, rgba(0,0,0,0.6) 100%); opacity: 0; transition: opacity 1s ease; }
+.operaciones-sequence[data-scene="1"] .op-shade { opacity: 1; }
+
+/* Rutas desde Centro: barra girada con 2 puntos de luz (misma animación flowX del diagrama de IA) */
+.op-routes { position: absolute; inset: 0; pointer-events: none; z-index: 1; opacity: 0; transition: opacity 0.8s ease 0.3s; }
+.operaciones-sequence[data-scene="1"] .op-routes { opacity: 1; }
+.op-route { position: absolute; height: 2px; margin-top: -1px; transform-origin: 0 50%; background: linear-gradient(90deg, rgba(196,33,58,0.85), rgba(255,255,255,0.35)); }
+.op-route i { position: absolute; top: -6px; left: 0; width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle, #fff 0 22%, #c4213a 45%, var(--brand) 100%); box-shadow: 0 0 12px 3px rgba(196,33,58,0.85), 0 0 26px 6px rgba(137,20,37,0.55); animation: flowX var(--dur, 1.8s) linear infinite; }
+.op-route i:nth-child(2) { animation-delay: calc(var(--dur, 1.8s) / -2); }
+
+/* Centro, punto de partida: un poco más grande */
+.operaciones-sequence .op-hub .eco-dot { width: 22px; height: 22px; left: -11px; top: -11px; }
+
+/* Tarjetas: las 4 a la vez, más compactas, con aparición suave (desvanecido + deslizamiento corto) */
+.op-card { position: absolute; width: 270px; padding: 18px 20px 16px; background: rgba(8,8,8,0.82); border: 1px solid rgba(137,20,37,0.7); border-radius: 18px; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); opacity: 0; transition: opacity 0.8s ease var(--delay, 0.3s), transform 0.8s ease var(--delay, 0.3s); }
+.op-card::before { content: ''; position: absolute; top: 0; left: 20px; width: 40px; height: 3px; background: var(--brand); }
+.op-card h3 { font-size: clamp(1.4rem, 2vw, 2rem); text-transform: uppercase; letter-spacing: -0.03em; line-height: 1; margin: 4px 0 8px; color: #fff; }
+.op-card p { color: #d0d0d0; font-size: 0.95rem; line-height: 1.45; }
+.op-spot.is-on .op-name { opacity: 0; }
+.op-spot.is-on .op-card { opacity: 1; }
+.op-side-r .op-card { left: 30px; top: 0; transform: translate(12px, -50%); }
+.op-side-r.is-on .op-card { transform: translate(0, -50%); }
+.op-side-l .op-card { right: 30px; top: 0; transform: translate(-12px, -50%); }
+.op-side-l.is-on .op-card { transform: translate(0, -50%); }
+.op-side-b .op-card { left: 0; top: 30px; transform: translate(-50%, 12px); }
+.op-side-b.is-on .op-card { transform: translate(-50%, 0); }
+/* Aparecen una tras otra, empezando por Centro (Norte, Bajío, Centro, Sur es el orden en el HTML) */
+.operaciones-sequence .op-hub { --delay: 0.3s; }
+.operaciones-sequence .op-spot:nth-child(1) { --delay: 0.6s; }
+.operaciones-sequence .op-spot:nth-child(2) { --delay: 0.9s; }
+.operaciones-sequence .op-spot:nth-child(4) { --delay: 1.2s; }
+.op-list { list-style: none; }
+
 @media (max-width: 768px) {
     .op-card { display: none; }
     .op-spot.is-on .op-name { opacity: 1; border-color: var(--brand); background: var(--brand); }
     .op-name { font-size: 0.62rem; letter-spacing: 2px; padding: 5px 10px; bottom: 15px; }
     .eco-dot { width: 13px; height: 13px; left: -6.5px; top: -6.5px; }
+    .operaciones-sequence .op-hub .eco-dot { width: 17px; height: 17px; left: -8.5px; top: -8.5px; }
+    .op-route i { width: 11px; height: 11px; top: -4.5px; }
+    .operaciones-sequence .op-shade { background: radial-gradient(ellipse 50% 32% at 58% 52%, rgba(0,0,0,0) 0, rgba(0,0,0,0) 55%, rgba(0,0,0,0.6) 100%); }
     .op-cap { visibility: visible; justify-content: flex-end; padding-bottom: calc(var(--vh) * 9); }
     .op-cap .edge-title { font-size: 11vw; }
     .op-cap .seq-desc { margin-top: 14px; font-size: 1rem; }
     .op-cap .op-num { margin-bottom: 12px; }
+    /* Mapa más arriba para dejar lugar a la lista; nombres hacia lados distintos para que no choquen */
+    .operaciones-sequence .eco-stage { transform: translateY(calc(var(--vh) * -15)); }
+    .operaciones-sequence .op-side-l .op-name { left: auto; right: 12px; bottom: auto; top: 0; transform: translateY(-50%); }
+    .operaciones-sequence .op-side-b .op-name { bottom: auto; top: 16px; }
+    .operaciones-sequence .op-cap { padding-bottom: calc(var(--vh) * 7); }
+    .op-list { width: 100%; max-width: 420px; text-align: left; }
+    .op-list li { color: #d0d0d0; font-size: min(0.95rem, calc(var(--vh) * 2.2)); line-height: 1.35; padding: calc(var(--vh) * 0.9) 0; border-top: 1px solid rgba(255,255,255,0.14); }
+    .op-list b { display: block; color: #fff; font-size: min(0.8rem, calc(var(--vh) * 1.9)); letter-spacing: 3px; text-transform: uppercase; }
 }
 
 /* ======================================================================
