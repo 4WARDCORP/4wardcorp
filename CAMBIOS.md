@@ -15,7 +15,7 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). L
 
 ---
 
-## Sin publicar (versión prevista `20261126c`)
+## [20261126c] — 2026-11-26 · commit `5d7877a` (primera publicación en Hostinger)
 
 ### Agregado
 - **Versión en inglés** (`en/index.html`): todo el sitio en inglés de EE. UU., con los textos interpretados para un público ejecutivo (no traducidos palabra por palabra). Mismo diseño, escenas, imágenes, `styles.css` y `script.js` que la página en español.
