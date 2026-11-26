@@ -15,7 +15,15 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). L
 
 ---
 
-## [20261126a] — 2026-11-26
+## [20261126b] — 2026-11-26
+
+### Cambiado
+- **IA, escenas 4 y 5:** el mismo encendido escalonado de los seis frentes (pulso vino de 2 s; cada elemento empieza 0.5 s después del anterior).
+  - **Desarrollos 4ward:** las 3 tarjetas empiezan apagadas y se encienden una tras otra. El número (01, 02, 03) se cambia por un ícono de línea: documento con lupa (licitaciones), carrito (proveedores) y cajas (inventarios). En celular el ícono va al lado del título.
+  - **Nuestro proceso es simple:** los 3 pasos se encienden en orden; el número de cada paso brilla y una línea vino recorre su borde inferior. Los números se quedan porque marcan la secuencia. El acomodo no cambia.
+  - Código: clase nueva `.ia-case-ico` (sustituye a `.ia-case-num`); encendido con `data-scene="4"` y `data-scene="5"` en `#ia`. Las demás escenas y secciones no cambian (comparadas escena por escena contra 20261126a en 5 tamaños).
+
+## [20261126a] — 2026-11-26 · commit `b1554af`
 
 ### Cambiado
 - **IA** pasa de 11 escenas a 6. Los seis frentes, que ocupaban una pantalla cada uno, ahora están juntos en una sola: 6 tarjetas (3 × 2) con su imagen, un ícono de línea y 3 viñetas cada una (antes 4 o 5). El recorrido completo del sitio baja de 29 a 24 paradas.

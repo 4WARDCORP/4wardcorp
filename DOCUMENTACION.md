@@ -1,6 +1,6 @@
 # Documentación técnica — sitio 4ward Solutions
 
-Referencia para quien mantenga o modifique el sitio. Describe el código tal como está en la versión **`20261126a`** (ver [CAMBIOS.md](CAMBIOS.md)).
+Referencia para quien mantenga o modifique el sitio. Describe el código tal como está en la versión **`20261126b`** (ver [CAMBIOS.md](CAMBIOS.md)).
 La forma de probar y publicar está en el [README](README.md) y el historial en [CAMBIOS.md](CAMBIOS.md).
 
 **Regla de mantenimiento:** si un cambio contradice algo de este documento, el documento se actualiza en el mismo commit.
@@ -97,7 +97,7 @@ Todas las alturas de sección son `calc(var(--vh) * N + var(--extra))`. **Parada
 4. Con la escena activa:
    - `.text-slider-track` recibe `translateY(calc(var(--vh) * -<escena>00))` y sube con una transición de 0.8 s.
    - El `.seq-bg` con el mismo índice recibe `.active` y aparece con un fundido de 0.8 s; los demás lo pierden.
-   - En Operaciones, Crecimiento, Ecosistema e IA se escribe además `data-scene="<escena>"` en la `<section>`, que el CSS usa (por ejemplo, la entrada escalonada de las tarjetas de Crecimiento o el encendido de los frentes de IA).
+   - En Operaciones, Crecimiento, Ecosistema e IA se escribe además `data-scene="<escena>"` en la `<section>`, que el CSS usa (por ejemplo, la entrada escalonada de las tarjetas de Crecimiento o el encendido de los frentes, Desarrollos y Proceso de IA).
 
 ### 3.3 Los tres motores de escenas
 
@@ -127,6 +127,7 @@ Todas las alturas de sección son `calc(var(--vh) * N + var(--extra))`. **Parada
   - Aparición escalonada con `--delay`: etiqueta de IA, SICE (0.6 s), Vista Alegre (0.9 s), NUCTECH (1.2 s) y ENTELAR (1.5 s); cada tarjeta y su línea usan el mismo retraso.
   - **Celular:** nombres al lado de su punto, hacia afuera de la maqueta para que no se junten alrededor del cubo (SICE y ENTELAR a la izquierda, Vista Alegre a la derecha, NUCTECH abajo, Capa de IA arriba del cubo), y lista `.op-list` con textos cortos (versión resumida de las tarjetas). Maqueta y lista se acomodan con `fitMobile()`; en pantallas de 720 px de alto o menos la lista además usa letra más chica.
 - **IA, escena 3 (seis frentes):** las 6 tarjetas `.ia-frente` (3 × 2 en escritorio, 1 columna en celular) empiezan apagadas (opacidad y brillo bajos) y se encienden en ola cuando `#ia` tiene `data-scene="3"`: cada encendido dura 2 s (pulso de luz vino `iaEncendido`, borde y ícono vino) y la siguiente tarjeta empieza 0.5 s después (`--t` = 0.2 s + `--i` × 0.5 s). Sin número: el orden no importa. Ícono de línea `.ia-frente-ico` (SVG en el HTML, mismo trazo que el diagrama). En laptops bajas (alto ≤ 720 px) el ícono va al lado del título; en celular solo se ven el título y la primera viñeta.
+- **IA, escenas 4 y 5 (Desarrollos y Proceso):** el mismo encendido en ola, con 3 elementos (`--i` 0–2). Con `data-scene="4"` se encienden las tarjetas `.ia-case` (pulso `iaEncendido`, borde vino e ícono `.ia-case-ico` con fondo vino; el ícono reemplaza al número porque las tarjetas no tienen orden; en celular va al lado del título). Con `data-scene="5"` se encienden los pasos `.ia-step`: suben opacidad y brillo, el número `.ia-num` brilla y una línea vino (`.ia-step::after`) recorre el borde inferior. Los números de los pasos se conservan porque sí indican la secuencia. Fuera de su escena, tarjetas y pasos vuelven a quedar apagados.
 - **Acomodo en celular (`fitMobile()`, Operaciones y Ecosistema):** la imagen vertical tiene fondo negro arriba y abajo; el atributo `data-contenido="arriba abajo"` del lienzo indica qué parte del alto tiene contenido (Operaciones `0.28 0.68`, Ecosistema `0.22 0.76`). Con eso, el alto de pantalla (`screenH()`) y el alto real de la lista, el JS centra imagen + lista entre el menú (84 px) y el borde inferior (24 px), con 18 px de separación. Escribe en la `<section>` `--map-shift` (desplazamiento del lienzo), `--map-scale` (reducción, solo si no cabe; mínimo 0.6, desde el borde superior; por eso `drawRoutes()` y `drawLines()` miden el lienzo con `offsetWidth/offsetHeight`, su tamaño de diseño, y no con `getBoundingClientRect()`, que ya incluye la reducción) y `--cap-pad` (espacio bajo la lista). El CSS de celular tiene valores fijos de respaldo por si el JS no corre. Se recalcula al cambiar el tamaño, al cargar y cuando termina de cargar la letra. En escritorio no hace nada.
 - Las tarjetas (`.eco-card`) están en las esquinas (`.c-tl`, `.c-tr`, `.c-bl`, `.c-br`) y una línea SVG las une a su punto:
   - `<line data-from="X">` se conecta con `#spot-X` y con la tarjeta cuyo `data-for` contiene `X`.
@@ -234,7 +235,7 @@ Otros colores que se repiten sin variable: `#a51a2e` (vino al pasar el cursor), 
 | Dilema | Solo clases comunes |
 | Operaciones / Ecosistema | `.op-stage`, `.eco-stage`, `.eco-img`, `.op-shade`, `.op-spots`, `.op-spot`, `.eco-dot`, `.op-name`, `.op-card`, `.op-num`, `.op-side-r/-l/-b`, `.op-cap`, `.op-hub` (Centro, origen de las rutas), `.op-routes`, `.op-route`, `.op-list` (lista del celular), `.eco-ia-label` (etiqueta "Capa de IA"), `.eco-lines`, `.eco-card`, `.eco-card-ia`, `.c-tl/-tr/-bl/-br`, `.spot-extra` (punto sin nombre), `.spot-core` (cubo de IA) |
 | Crecimiento | `.crec-scene`, `.crec-b-grid`, `.crec-b-card` |
-| IA | `.ia-kicker`(`-dark`), `.ia-num`, `.ia-intro`, `.ia-intro-sub`, `.ia-overlay`, seis frentes: `.ia-frentes`, `.ia-frentes-bg`, `.ia-frentes-grid`, `.ia-frente`, `.ia-frente-ico`; diagrama: `.ia-diag`, `.ia-diag-bg`, `.diag-flow`, `.flow-step`(`.is-core`), `.flow-conn`, `.flow-ico`, `.flow-num`, `.ia-diag-msg`; escenas 4–5: `.casos-item`, `.casos-bg`, `.casos-bg-2`, `.ia-cases`, `.v-a`, `.ia-case`, `.ia-process-block`, `.ia-process-img`, `.ia-process-content`, `.ia-steps`, `.ia-step`, `.role`, `.role-client`, `.role-4w`, `.proceso-cta` |
+| IA | `.ia-kicker`(`-dark`), `.ia-num`, `.ia-intro`, `.ia-intro-sub`, `.ia-overlay`, seis frentes: `.ia-frentes`, `.ia-frentes-bg`, `.ia-frentes-grid`, `.ia-frente`, `.ia-frente-ico`; diagrama: `.ia-diag`, `.ia-diag-bg`, `.diag-flow`, `.flow-step`(`.is-core`), `.flow-conn`, `.flow-ico`, `.flow-num`, `.ia-diag-msg`; escenas 4–5: `.casos-item`, `.casos-bg`, `.casos-bg-2`, `.ia-cases`, `.v-a`, `.ia-case`, `.ia-case-ico`, `.ia-process-block`, `.ia-process-img`, `.ia-process-content`, `.ia-steps`, `.ia-step`, `.role`, `.role-client`, `.role-4w`, `.proceso-cta` |
 | Experiencia | `.pilares-mobile-view`, `.pilares-desktop-view`, `.quadrant-card`(`.is-in`), `.q-top-left/-right`, `.q-bottom-left/-right`, `.quadrant-content`, `.ally-tag`, `.sector-title`, `.sector-title-m`, `.z-background` |
 | Pie | `.footer-reveal`, `.footer-content`, `.footer-info`, `.footer-contact`, `.footer-legal`, `.footer-cta` |
 | Botón general | `.cta-btn` (vino con flecha →) |
