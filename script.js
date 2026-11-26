@@ -91,7 +91,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Cada ruta es una barra girada; los puntos usan la misma animación flowX del diagrama de IA.
         function drawRoutes() {
             if (!routes || !hub || !stage) return;
-            const sr = stage.getBoundingClientRect();
+            // Tamaño de diseño del lienzo (offsetWidth/Height), no el visible: en celular el lienzo puede estar
+            // reducido con scale() y las rutas viven dentro de él, así que ya se reducen junto con la imagen.
+            const sr = { width: stage.offsetWidth, height: stage.offsetHeight };
             const pos = el => [parseFloat(el.style.left) / 100 * sr.width, parseFloat(el.style.top) / 100 * sr.height];
             const [hx, hy] = pos(hub);
             routes.innerHTML = '';
@@ -115,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Une cada tarjeta con su punto: la línea sale del borde de la tarjeta más cercano al punto
         function drawLines() {
             if (!svg || !stage) return;
-            const sr = stage.getBoundingClientRect();
+            const sr = { width: stage.offsetWidth, height: stage.offsetHeight };   // tamaño de diseño (ver drawRoutes)
             svg.setAttribute('viewBox', `0 0 ${sr.width} ${sr.height}`);
             lines.forEach(line => {
                 const spot = section.querySelector('#spot-' + line.dataset.from);

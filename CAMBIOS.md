@@ -19,7 +19,12 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). L
 
 _(Nada pendiente.)_
 
-## [20261125h] — 2026-11-25
+## [20261125i] — 2026-11-25
+
+### Corregido
+- **Celular, Ecosistema:** en pantallas donde la maqueta se reduce para caber (por ejemplo iPhone en Chrome), las rutas de luz no llegaban a sus puntos y parecían apuntar todas hacia SICE (desvío de 35 a 107 px). `drawRoutes()` y `drawLines()` medían el lienzo ya reducido y la reducción se aplicaba dos veces; ahora usan su tamaño de diseño. Verificado: cada ruta termina en su punto (error ≤ 2 px) en 7 tamaños de escritorio y celular, en Operaciones y Ecosistema.
+
+## [20261125h] — 2026-11-25 · commit `f9c121f`
 
 ### Cambiado
 - **Celular, Ecosistema:** los nombres de SICE, Vista Alegre, NUCTECH y ENTELAR van al lado de su punto, hacia afuera de la maqueta (antes todos iban arriba del punto y se juntaban alrededor del cubo de IA). Solo CSS de celular; en escritorio esos nombres no se muestran porque están las tarjetas.

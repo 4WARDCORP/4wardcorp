@@ -4,7 +4,7 @@ Sitio de una sola página de **4Ward Solutions, S.A. de C.V.** Es HTML, CSS y Ja
 
 | | |
 |---|---|
-| **Versión** | `20261125h` (ver [CAMBIOS.md](CAMBIOS.md)) |
+| **Versión** | `20261125i` (ver [CAMBIOS.md](CAMBIOS.md)) |
 | **Publicación actual** | GitHub Pages, rama `main` → <https://4wardcorp.github.io/4wardcorp/> (temporal) |
 | **Destino final** | Hostinger, con el dominio propio `4wardcorp.com` |
 | **Documentación técnica** | [DOCUMENTACION.md](DOCUMENTACION.md) |
