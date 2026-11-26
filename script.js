@@ -11,8 +11,8 @@
       4.2 makeSimpleSequence — fondos con fundido (Crecimiento)
       4.3 Escenas de Dilema, IA y Experiencia (en el scroll)
    5. Menú: estados al hacer scroll
-   6. Regresar al inicio (logo, "Inicio" del menú y botón ↑)
-   7. Enlaces del menú
+   6. Regresar al inicio y saltar a una sección con fundido (logo, menú y botón ↑)
+   7. Enlaces del menú (usan el salto con fundido del §6)
    8. Formulario de contacto (función independiente)
    9. Idioma: selector ES / EN, preferencia guardada y aviso "View this site in English?" (al final del archivo)
 
@@ -362,20 +362,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /* ----------------------------------------------------------------------
-       6. REGRESAR AL INICIO
-       Fundido a negro (.fundido-inicio, 0.35 s), salto directo a la portada y fundido de regreso.
-       Se usa desde: logo (escritorio), "Inicio" del menú (celular) y botón flotante ↑.
+       6. REGRESAR AL INICIO Y SALTAR A UNA SECCIÓN
+       saltarA(top): fundido a negro (.fundido-inicio, 0.35 s), salto directo (sin recorrer las escenas
+       intermedias) y fundido de regreso. volverInicio() = saltarA(0).
+       Se usa desde: logo (escritorio), "Inicio" y enlaces del menú (§7) y botón flotante ↑.
        ---------------------------------------------------------------------- */
     const fundido = document.querySelector('.fundido-inicio');
-    function volverInicio() {
+    let saltando = false;
+    function saltarA(top) {
         morphNav.classList.remove('mobile-menu-open');
-        if (!fundido) { window.scrollTo({ top: 0, behavior: 'instant' }); return; }
+        if (!fundido) { window.scrollTo({ top, behavior: 'instant' }); return; }
+        if (saltando) return;
+        saltando = true;
         fundido.classList.add('is-on');
         setTimeout(() => {
-            window.scrollTo({ top: 0, behavior: 'instant' });
-            setTimeout(() => fundido.classList.remove('is-on'), 80);
+            window.scrollTo({ top, behavior: 'instant' });
+            setTimeout(() => { fundido.classList.remove('is-on'); saltando = false; }, 80);
         }, 380);
     }
+    function volverInicio() { saltarA(0); }
 
     // Botón flotante ↑: visible después del 60 % de la portada
     const btnSubir = document.querySelector('.btn-subir');
@@ -398,8 +403,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* ----------------------------------------------------------------------
        7. ENLACES DEL MENÚ
-       Desplazamiento suave al inicio EXACTO de la sección (sin margen: con margen se asomaba
-       la sección vecina en celular). #inicio usa volverInicio().
+       Fundido y salto directo (saltarA, §6) al inicio EXACTO de la sección (sin margen: con margen se asomaba
+       la sección vecina en celular). Antes era un desplazamiento suave que recorría todas las escenas intermedias.
+       #inicio usa volverInicio().
        Solo los enlaces a "#…": el de idioma (ES / EN) del menú del celular es un enlace normal a la otra página.
        ---------------------------------------------------------------------- */
     const menuLinks = document.querySelectorAll('.nav-links a[href^="#"], .mobile-menu-content a[href^="#"]');
@@ -410,9 +416,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (targetId === 'inicio') { volverInicio(); return; }
             const targetSection = document.getElementById(targetId);
             if (targetSection) {
-                morphNav.classList.remove('mobile-menu-open');
-                const offsetPosition = targetSection.getBoundingClientRect().top + window.pageYOffset;
-                window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                saltarA(targetSection.getBoundingClientRect().top + window.pageYOffset);
             }
         });
     });

@@ -15,6 +15,11 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). L
 
 ---
 
+## Sin publicar (versión prevista `20261126d`)
+
+### Cambiado
+- **Menú (escritorio y celular, en `/` y `/en/`):** al elegir una sección, la pantalla se funde a negro, salta directo a esa sección y vuelve a aparecer, igual que el botón ↑. Antes hacía un desplazamiento suave que recorría a toda velocidad todas las escenas intermedias. Código: nueva función `saltarA(top)` en `script.js` §6 (`volverInicio()` ahora es `saltarA(0)`); los enlaces del §7 la usan. Mientras dura un salto se ignoran clics repetidos.
+
 ## [20261126c] — 2026-11-26 · commit `5d7877a` (primera publicación en Hostinger)
 
 ### Agregado

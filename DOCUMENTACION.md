@@ -194,8 +194,9 @@ Todas las alturas de sección son `calc(var(--vh) * N + var(--extra))`. **Parada
 **Selector de idioma** (§15): `.lang-switch` en escritorio, arriba a la derecha (portada: `top: 88px`, bajo la fila de enlaces; con `.is-scrolled`: `top: 40px`, a la altura de la píldora; se oculta con `.is-shrunk` y, entre 769 y 1199 px, con `.is-scrolled`, porque no cabe junto a la píldora). En celular se ve solo en la portada; después, `.lang-switch-m` dentro del menú vertical.
 
 **Enlaces del menú:**
-- Cada enlace hace un desplazamiento suave al inicio exacto de su sección.
-- `#inicio` no se desplaza: llama a `volverInicio()`.
+- Cada enlace llama a `saltarA(top)` con el inicio exacto de su sección: fundido a negro, salto directo y fundido de regreso (los mismos tiempos que `volverInicio()`, abajo). No se usa desplazamiento suave porque recorría a toda velocidad todas las escenas intermedias.
+- `#inicio` llama a `volverInicio()`, que es `saltarA(0)`.
+- Mientras dura un salto (variable `saltando`) se ignoran clics repetidos.
 
 **Regreso al inicio (`volverInicio()`):**
 1. Cierra el menú del celular.
@@ -272,7 +273,8 @@ Otros colores que se repiten sin variable: `#a51a2e` (vino al pasar el cursor), 
 | `sceneStep(section)` | función | Lo mismo, medido dentro de la sección indicada. |
 | `makeSpotSequence(section, track)` | función | Prepara una sección de puntos sobre imagen y devuelve su `onScroll(alto)`. Internas: `place()` (coloca puntos según escritorio o celular), `drawLines()` (líneas SVG de Ecosistema), `drawRoutes()` (rutas con puntos de luz desde `.op-hub`), `fitMobile()` (centra imagen + lista en celular) y `setScene(i)`. |
 | `makeSimpleSequence(section, track)` | función | Prepara una sección de fondos con fundido y devuelve su `onScroll(alto)`. |
-| `volverInicio()` | función | Fundido a negro, salto a la portada y fundido de regreso (§5). |
+| `saltarA(top)` | función | Fundido a negro, salto sin animación a `top` y fundido de regreso (§5). Lo usan los enlaces del menú. |
+| `volverInicio()` | función | `saltarA(0)`: regreso a la portada (§5). |
 | `toggleSubir()` | función | Muestra u oculta `.btn-subir`. |
 | `abrir(e)` / `cerrar()` | funciones (formulario) | Abren y cierran la ventana del formulario. Al abrir, guardan `performance.now()` en `abiertoEn` (al enviar, el tiempo transcurrido se escribe en `tiempo`) y recuerdan el foco; al cerrar, lo regresan. En celular no ponen el foco en el primer campo, para no abrir el teclado. |
 | `validar()` | función (formulario) | Revisa obligatorios, formato del correo y casilla de aceptación; marca `.is-error`. |
