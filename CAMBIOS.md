@@ -15,7 +15,7 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). L
 
 ---
 
-## Sin publicar (versión prevista `20261126e`)
+## [20261126e] — 2026-11-26 · commit `310be66`
 
 ### Corregido
 - **Pie de página (escritorio y celular, en `/` y `/en/`):** al llegar al final ya no se asoma arriba del pie un pedazo cortado de la última escena de Ecosistema (la maqueta). El pie ocupa ahora la pantalla completa y su contenido se centra bajo el menú; en laptops bajas (1280×580, Windows al 150 %) los datos de contacto se compactan para que el título no quede bajo el menú. Código: `styles.css` §6 (`.content-wrapper`, `.content-wrapper::after`: 100 pantallas-% + `--extra`) y §13 (`.footer-reveal`). El recorrido sigue en 24 paradas.
