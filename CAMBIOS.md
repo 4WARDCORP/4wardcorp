@@ -15,7 +15,7 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). L
 
 ---
 
-## Sin publicar (rama `adaptativo-20261126f`, versión `20261126f`)
+## [20261126f] — 2026-11-27 · commit `cd21993`
 
 ### Corregido
 - **Celular en horizontal (lado corto ≤ 500 px, p. ej. 844×390 o 915×412):** antes recibía el diseño de escritorio a tamaño real y casi todas las escenas quedaban bajo el menú, encimadas o cortadas. Ahora el sitio se dibuja como una laptop de 1280 px de ancho (el acomodo que ya se prueba en 1280×580) y el navegador lo reduce para que quepa completo; al regresar a vertical vuelve al diseño de celular. Código: script en línea del `<head>` (`ajustarVista()` cambia `<meta name="viewport">` y pone la clase `cel-horizontal` en `<html>`); hash nuevo en `.htaccess`.
