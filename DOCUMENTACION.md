@@ -94,7 +94,7 @@ Todas las alturas de sección son `calc(var(--vh) * N + var(--extra))`. **Parada
 1. La sección mide **N pantallas**. `.snap-grid` tiene N `.snap-point` de una pantalla cada uno, y el navegador frena en cada uno.
 2. `.sticky-container` (`position: sticky`) se queda fijo, así que la pantalla no "se desplaza": solo cambia lo de adentro.
 3. En cada evento `scroll`, el JS calcula la escena activa:
-   `escena = Math.round(-rect.top / sceneStep(sección))`, limitada a `N − 1`. Solo calcula mientras la sección cubre la pantalla, con 2 px de tolerancia: `rect.top <= 2 && rect.bottom >= alto − 2`.
+   `escena = Math.round(-rect.top / sceneStep(sección))`, limitada a `N − 1`, mientras la sección cubre la pantalla (2 px de tolerancia: `rect.top <= 2 && rect.bottom >= alto − 2`). Lo decide `escenaDe()`: si la sección ya quedó **arriba** de la pantalla, su escena es la última; si todavía está **abajo**, la 0; si solo cubre una parte (entra o sale), no se cambia. Fuera de pantalla, `moverTrack()` coloca el contenido sin transición, para que al regresar hacia arriba (o después de un salto del menú) la sección no "rebobine" sus escenas.
 4. Con la escena activa:
    - `.text-slider-track` recibe `translateY(calc(var(--vh) * -<escena>00))` y sube con una transición de 0.8 s.
    - El `.seq-bg` con el mismo índice recibe `.active` y aparece con un fundido de 0.8 s; los demás lo pierden.
@@ -276,6 +276,8 @@ Otros colores que se repiten sin variable: `#a51a2e` (vino al pasar el cursor), 
 | `LANG` | constante global | `'en'` si `<html lang="en">`, si no `'es'`. La usan el formulario y el idioma. |
 | `screenH()` | función | Alto de una pantalla del sitio: alto del primer `.snap-point`. Si no existe, usa `innerHeight`. |
 | `sceneStep(section)` | función | Lo mismo, medido dentro de la sección indicada. |
+| `escenaDe(section, rect, alto, ultima)` | función | Escena que le toca a una sección: la del scroll si cubre la pantalla, la última si ya quedó arriba, la 0 si está abajo, `null` si entra o sale (§3.2). |
+| `moverTrack(track, index, fuera)` | función | Mueve `.text-slider-track` a su escena; con `fuera` verdadero, sin transición. |
 | `makeSpotSequence(section, track)` | función | Prepara una sección de puntos sobre imagen y devuelve su `onScroll(alto)`. Internas: `place()` (coloca puntos según escritorio o celular), `drawLines()` (líneas SVG de Ecosistema), `drawRoutes()` (rutas con puntos de luz desde `.op-hub`), `fitMobile()` (centra imagen + lista en celular) y `setScene(i)`. |
 | `makeSimpleSequence(section, track)` | función | Prepara una sección de fondos con fundido y devuelve su `onScroll(alto)`. |
 | `saltarA(top)` | función | Fundido a negro, salto sin animación a `top` y fundido de regreso (§5). Lo usan los enlaces del menú. |

@@ -18,6 +18,7 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). L
 ## Sin publicar (rama `horizontal-20261127a`, versión `20261127a`)
 
 ### Corregido
+- **Al regresar hacia arriba (escritorio y celular):** al subir a una sección que se había dejado en su escena inicial (por ejemplo, después de saltar con el menú a Experiencia y subir a IA), la sección aparecía en su escena 0 y "rebobinaba" a toda velocidad todas sus escenas hasta la última. Ahora cada sección que está fuera de la pantalla espera en la escena que le toca —la última si ya se pasó, la 0 si todavía no se llega— y se coloca ahí sin animación; al aparecer ya está en su lugar. Aplica a Dilema, Operaciones, Crecimiento, IA, Experiencia y Ecosistema. Código: `script.js` §3 (`escenaDe()`, `moverTrack()`) y los motores de §4.
 - **Pantallas bajas (≤ 620 px de alto: celular en horizontal —que se dibuja como laptop de ~1280×550— y ventanas de escritorio bajas como 1280×580):** el mapa de Operaciones y la maqueta de Ecosistema se cortaban arriba, bajo el menú (visto en iPhone 13 Pro Max en horizontal con las barras de Chrome). Ahora se achican para quedar completos entre el menú y el borde inferior, y en Ecosistema las 4 tarjetas van a los lados de la maqueta, en el espacio negro, con la esquina del botón ↑ libre. Código: `styles.css` §12 (`@media (min-width: 769px) and (max-height: 620px)`: `.eco-stage`, `.ecosistema-sequence .eco-card`, `.c-*`).
 
 ## [20261126f] — 2026-11-27 · commit `cd21993`

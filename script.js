@@ -71,6 +71,27 @@ document.addEventListener('DOMContentLoaded', () => {
         return h > 0 ? h : window.innerHeight;
     }
 
+    /* Escena que debe mostrar una sección según dónde está:
+       - cubre la pantalla → la escena que marca el scroll;
+       - ya quedó arriba (se pasó hacia abajo) → su última escena;
+       - todavía está abajo (no se ha llegado) → la escena 0;
+       - entra o sale (cubre solo una parte) → null: no se cambia a medio camino.
+       Así, al regresar hacia arriba (o después de un salto del menú) cada sección ya espera en la escena
+       correcta y no "rebobina" sus escenas al aparecer. */
+    function escenaDe(section, rect, alto, ultima) {
+        if (rect.top <= 2 && rect.bottom >= alto - 2) return Math.min(ultima, Math.round(Math.max(0, -rect.top) / sceneStep(section)));
+        if (rect.bottom <= 0) return ultima;
+        if (rect.top >= alto) return 0;
+        return null;
+    }
+    // Mueve el contenido a su escena; fuera de pantalla, sin animación (para que no se vea un rebobinado)
+    function moverTrack(track, index, fuera) {
+        if (!track) return;
+        if (fuera) track.style.transition = 'none';
+        track.style.transform = `translateY(calc(var(--vh) * -${index * 100}))`;
+        if (fuera) { void track.offsetHeight; track.style.transition = ''; }
+    }
+
     /* ----------------------------------------------------------------------
        4.1 ESCENAS CON PUNTOS SOBRE UNA IMAGEN (Operaciones y Ecosistema)
        Escena 0: título sobre blanco. Escenas 1+: se enciende el punto de esa escena (.is-on),
@@ -181,11 +202,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (current >= 0) { const c = current; current = -1; setScene(c); }
         }
 
-        function setScene(index) {
+        function setScene(index, fuera) {
             if (index === current) return;
             current = index;
             section.dataset.scene = index;
-            if (track) track.style.transform = `translateY(calc(var(--vh) * -${index * 100}))`;
+            moverTrack(track, index, fuera);
             // Solo 2 fondos: 0 = blanco (título), 1 = imagen (todas las demás escenas)
             bgs.forEach((bg, idx) => bg.classList.toggle('active', idx === Math.min(index, 1)));
             let focus = null;
@@ -212,11 +233,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Al pasar el final de la sección (sube el pie de página), los textos se desvanecen
             section.classList.toggle('is-past', rect.bottom < windowHeight - 2);
             // Una escena por pantalla, alineada con los .snap-point (tolerancia de 2 px por decimales)
-            if (rect.top <= 2 && rect.bottom >= windowHeight - 2) {
-                let activeIndex = Math.round(Math.max(0, -rect.top) / sceneStep(section));
-                if (activeIndex >= count) activeIndex = count - 1;
-                setScene(activeIndex);
-            }
+            const index = escenaDe(section, rect, windowHeight, count - 1);
+            if (index !== null) setScene(index, rect.bottom <= 0 || rect.top >= windowHeight);
         };
     }
 
@@ -231,15 +249,12 @@ document.addEventListener('DOMContentLoaded', () => {
         let current = -1;
         return function onScroll(windowHeight) {
             const rect = section.getBoundingClientRect();
-            if (rect.top <= 2 && rect.bottom >= windowHeight - 2) {
-                let index = Math.round(Math.max(0, -rect.top) / sceneStep(section));
-                if (index >= count) index = count - 1;
-                if (index === current) return;
-                current = index;
-                section.dataset.scene = index;
-                if (track) track.style.transform = `translateY(calc(var(--vh) * -${index * 100}))`;
-                bgs.forEach((bg, idx) => bg.classList.toggle('active', idx === index));
-            }
+            const index = escenaDe(section, rect, windowHeight, count - 1);
+            if (index === null || index === current) return;
+            current = index;
+            section.dataset.scene = index;
+            moverTrack(track, index, rect.bottom <= 0 || rect.top >= windowHeight);
+            bgs.forEach((bg, idx) => bg.classList.toggle('active', idx === index));
         };
     }
 
@@ -276,6 +291,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const operacionesScroll = sequenceSectionOperaciones ? makeSpotSequence(sequenceSectionOperaciones, operacionesTrack) : null;
     const ecosistemaScroll = sequenceSectionEcosistema ? makeSpotSequence(sequenceSectionEcosistema, ecosistemaTrack) : null;
 
+    let escenaDilema = -1, escenaIA = -1, escenaPilares = -1;   // última escena aplicada a cada sección
     window.addEventListener('scroll', () => {
         const currentScrollY = window.scrollY;
         const windowHeight = screenH();
@@ -288,10 +304,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (sequenceSectionDilema) {
             const rect = sequenceSectionDilema.getBoundingClientRect();
-            if (rect.top <= 2 && rect.bottom >= windowHeight - 2) {
-                let activeIndex = Math.round(Math.max(0, -rect.top) / sceneStep(sequenceSectionDilema));
-                if (activeIndex >= dilemaBgs.length) activeIndex = dilemaBgs.length - 1;
-                if (dilemaTrack) dilemaTrack.style.transform = `translateY(calc(var(--vh) * -${activeIndex * 100}))`;
+            const activeIndex = escenaDe(sequenceSectionDilema, rect, windowHeight, dilemaBgs.length - 1);
+            if (activeIndex !== null && activeIndex !== escenaDilema) {
+                escenaDilema = activeIndex;
+                moverTrack(dilemaTrack, activeIndex, rect.bottom <= 0 || rect.top >= windowHeight);
                 dilemaBgs.forEach((bg, idx) => bg.classList.toggle('active', idx === activeIndex));
             }
         }
@@ -301,10 +317,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (sequenceSectionIA) {
             const rect = sequenceSectionIA.getBoundingClientRect();
-            if (rect.top <= 2 && rect.bottom >= windowHeight - 2) {
-                let activeIndex = Math.round(Math.max(0, -rect.top) / sceneStep(sequenceSectionIA));
-                if (activeIndex >= iaBgs.length) activeIndex = iaBgs.length - 1;
-                if (iaTrack) iaTrack.style.transform = `translateY(calc(var(--vh) * -${activeIndex * 100}))`;
+            const activeIndex = escenaDe(sequenceSectionIA, rect, windowHeight, iaBgs.length - 1);
+            if (activeIndex !== null && activeIndex !== escenaIA) {
+                escenaIA = activeIndex;
+                moverTrack(iaTrack, activeIndex, rect.bottom <= 0 || rect.top >= windowHeight);
                 iaBgs.forEach((bg, idx) => bg.classList.toggle('active', idx === activeIndex));
                 sequenceSectionIA.dataset.scene = activeIndex;   // el CSS enciende las tarjetas de los frentes en la escena 3
             }
@@ -312,10 +328,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (sequenceSectionPilares) {
             const rect = sequenceSectionPilares.getBoundingClientRect();
-            if (rect.top <= 2 && rect.bottom >= windowHeight - 2) {
-                let activeIndex = Math.round(Math.max(0, -rect.top) / sceneStep(sequenceSectionPilares));
-                if (activeIndex > PILARES_ULTIMA_ESCENA) activeIndex = PILARES_ULTIMA_ESCENA;
-                if (pilaresTrack) pilaresTrack.style.transform = `translateY(calc(var(--vh) * -${activeIndex * 100}))`;
+            const activeIndex = escenaDe(sequenceSectionPilares, rect, windowHeight, PILARES_ULTIMA_ESCENA);
+            if (activeIndex !== null && activeIndex !== escenaPilares) {
+                escenaPilares = activeIndex;
+                moverTrack(pilaresTrack, activeIndex, rect.bottom <= 0 || rect.top >= windowHeight);
                 // Celular: un fondo por escena. Escritorio: los cuadros entran uno por escena y se quedan.
                 pilaresBgs.forEach((bg, idx) => bg.classList.toggle('active', idx === activeIndex));
                 pilaresDesktopCards.forEach((card, index) => card.classList.toggle('is-in', activeIndex >= index + 1));
