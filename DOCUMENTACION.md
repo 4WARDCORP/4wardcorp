@@ -264,6 +264,7 @@ Otros colores que se repiten sin variable: `#a51a2e` (vino al pasar el cursor), 
 | `max-width: 768px and max-height: 720px` | Celular chico (tipo iPhone SE, 375×667) |
 | `min-width: 769px and max-height: 700px` | Escritorio muy bajo: título de Proceso más chico; cuadros de arriba de Pilares bajan 64 px |
 | `769px – 1279px` | Tarjeta de Sur del mapa de Operaciones debajo de su punto |
+| `min-width: 769px and max-height: 620px` | Mapa y maqueta más chicos, debajo del menú; tarjetas de Ecosistema a los lados de la maqueta |
 | Celular en horizontal | No es un `@media`: el script del `<head>` lo dibuja como laptop de 1280 px (§4) |
 
 ## 7. Diccionario JavaScript

@@ -750,6 +750,17 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
 .eco-bg { background: #000; }
 .eco-stage { position: relative; width: min(100vw, calc(var(--vh) * 150)); aspect-ratio: 3 / 2; container-type: size; }
 .eco-stage picture, .eco-img { display: block; width: 100%; height: 100%; }
+/* Pantallas bajas (celular en horizontal, que se dibuja como laptop de ~1280×550, y ventanas de escritorio bajas):
+   el mapa de Operaciones y la maqueta de Ecosistema se achican para quedar completos debajo del menú (84 px) y no cortarse arriba. */
+@media (min-width: 769px) and (max-height: 620px) {
+    .eco-stage { width: min(100vw, calc((var(--vh) * 100 - 92px) * 1.5)); transform: translateY(38px); }
+    /* Ecosistema: con la maqueta más chica, las tarjetas no caben dentro; van a los lados, en el espacio negro */
+    .ecosistema-sequence .eco-card { --lado: min(240px, calc((100vw - 100cqw) / 2 - 24px)); width: var(--lado); padding: 12px 14px; border-radius: 12px; }
+    .ecosistema-sequence .c-tl, .ecosistema-sequence .c-bl { left: calc(-1 * var(--lado) - 10px); }
+    .ecosistema-sequence .c-tr, .ecosistema-sequence .c-br { right: calc(-1 * var(--lado) - 10px); }
+    .ecosistema-sequence .c-tl, .ecosistema-sequence .c-tr { top: 2cqh; }
+    .ecosistema-sequence .c-bl, .ecosistema-sequence .c-br { bottom: 72px; } /* libre la esquina del botón ↑ */
+}
 .eco-img { object-fit: cover; }
 .ecosistema-sequence .op-name { font-size: clamp(0.85rem, 1.3cqw, 1.2rem); padding: 0.5em 1.1em; bottom: 22px; background: rgba(0,0,0,0.88); border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 4px 18px rgba(0,0,0,0.6); }
 .ecosistema-sequence .eco-dot { width: 20px; height: 20px; left: -10px; top: -10px; }
