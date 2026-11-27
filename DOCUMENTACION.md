@@ -35,7 +35,7 @@ La forma de probar y publicar está en el [README](README.md) y el historial en 
   3. Contenido: pantalla de carga, menú, botón ↑, `<main>` con las secciones, `<footer>` y la ventana del formulario.
   4. `script.js?v=<versión>` al final del `<body>`. Todo su código corre en `DOMContentLoaded`, excepto el formulario, que es una función autoejecutable independiente.
 - **Pantalla de carga (`#preloader`):** 4 cuadros negros que se abren hacia las esquinas 300 ms después del evento `load` (se agrega la clase `.loaded`).
-- **Pie de página "revelado":** el `<footer class="footer-reveal">` está fijo detrás del contenido (`z-index: 1`). `.content-wrapper` deja un margen inferior de 70 pantallas-% (`calc(var(--vh) * 70)`) para que, al llegar al final, el contenido se levante y descubra el pie. Ese freno lo da `.content-wrapper::after`.
+- **Pie de página "revelado":** el `<footer class="footer-reveal">` está fijo detrás del contenido (`z-index: 1`). El pie es de pantalla completa (`calc(var(--vh) * 100)`) y `.content-wrapper` deja un margen inferior de una pantalla más `--extra` (`calc(var(--vh) * 100 + var(--extra))`) para que, al llegar al final, el contenido se levante por completo y descubra el pie (con 70 % se asomaba cortada la última escena de Ecosistema). Ese freno lo da `.content-wrapper::after`. El contenido del pie se centra bajo el menú (`padding-top: 96px`); en laptops bajas (alto ≤ 700 px) los datos de contacto se compactan para que todo quepa.
 
 ## 2. Mapa del sitio: secciones y escenas
 
@@ -50,7 +50,7 @@ Orden en la página (igual al del menú). **"Escena" = una pantalla completa con
 | 4 | `ia` | IA | 6 | `600` (`.ia-sequence`) | en línea, en el `scroll` |
 | 5 | `experiencia` | Experiencia | 5 | `500` (valor base) | en línea, en el `scroll` |
 | 6 | `ecosistema` | Ecosistema | 2 | `200` (`.ecosistema-sequence`) | `makeSpotSequence()` |
-| — | (pie) | — | 1 | `calc(var(--vh) * 70)` | — |
+| — | (pie) | — | 1 | `calc(var(--vh) * 100)` (pantalla completa) | — |
 
 \* "Inicio" solo aparece en el menú del celular; en escritorio se regresa con el logo (§5).
 Todas las alturas de sección son `calc(var(--vh) * N + var(--extra))`. **Paradas totales al recorrer con Av Pág: 24** (1 + 22 escenas + pie).

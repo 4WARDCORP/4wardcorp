@@ -243,7 +243,7 @@ html {
    ====================================================================== */
 .content-wrapper {
     position: relative; z-index: 10; background-color: var(--bg-dark); 
-    margin-bottom: calc(var(--vh) * 70); box-shadow: 0 30px 100px rgba(0,0,0,0.9);
+    margin-bottom: calc(var(--vh) * 100 + var(--extra)); box-shadow: 0 30px 100px rgba(0,0,0,0.9);
 }
 .sticky-sequence { height: calc(var(--vh) * 500 + var(--extra)); position: relative; background: var(--bg-dark); }
 .sticky-container { position: sticky; top: 0; height: calc(var(--vh) * 100 + var(--extra)); width: 100%; overflow: hidden; z-index: 1;}
@@ -264,14 +264,16 @@ html {
     scroll-snap-align: start;
     scroll-snap-stop: always;
 }
-/* Última parada del scroll: un bloque invisible de 70 pantallas-% bajo el contenido para descubrir el pie */
+/* Última parada del scroll: un bloque invisible de una pantalla bajo el contenido para descubrir el pie completo
+   (con 70 % se asomaba cortada la última escena de Ecosistema arriba del pie). Lleva + --extra para que, en celular
+   con las barras del navegador escondidas, tampoco se asome una franja del contenido arriba del pie. */
 .content-wrapper::after {
     content: '';
     position: absolute;
-    bottom: calc(var(--vh) * -70);
+    bottom: calc(var(--vh) * -100 - var(--extra));
     left: 0;
     width: 100%;
-    height: calc(var(--vh) * 70);
+    height: calc(var(--vh) * 100 + var(--extra));
     scroll-snap-align: end;
     pointer-events: none;
 }
@@ -803,9 +805,9 @@ html {
 
 /* ======================================================================
    13. PIE DE PÁGINA (.footer-reveal)
-   Fijo detrás del contenido: .content-wrapper deja 70 pantallas-% libres al final para descubrirlo.
+   Fijo detrás del contenido y de pantalla completa: .content-wrapper deja una pantalla libre al final para descubrirlo.
    ====================================================================== */
-.footer-reveal { position: fixed; bottom: 0; left: 0; width: 100%; height: calc(var(--vh) * 70); background-color: var(--bg-dark); z-index: 1; display: flex; justify-content: center; align-items: center; padding: 40px 3%; color: #fff; }
+.footer-reveal { position: fixed; bottom: 0; left: 0; width: 100%; height: calc(var(--vh) * 100); background-color: var(--bg-dark); z-index: 1; display: flex; justify-content: center; align-items: center; padding: 96px 3% 32px; color: #fff; } /* 96 px arriba: el contenido se centra bajo el menú */
 .footer-content { text-align: center; width: 100%; }
 .footer-info { margin-bottom: 30px; color: #272727; font-size: 1.1rem; line-height: 1.7; }
 .footer-info a { color: #545454; text-decoration: none; }
@@ -826,6 +828,14 @@ html {
 .footer-cta { margin-top: 22px; }
 .footer-contact p:last-of-type { color: #8a8a8a; }
 .footer-legal a { color: inherit; }
+/* Laptop baja (1280x580, Windows al 150 %): datos de contacto más compactos para que todo quepa bajo el menú
+   (el título no se achica: va justificado de orilla a orilla) */
+@media (min-width: 769px) and (max-height: 700px) {
+    .footer-reveal { padding-top: 88px; padding-bottom: 20px; }
+    .footer-info.footer-contact p { font-size: 1.05rem; line-height: 1.5; }
+    .footer-info.footer-contact p:first-child { font-size: 1.2rem; }
+    .footer-cta { margin-top: 14px; }
+}
 @media (max-width: 768px) {
     .footer-info, .footer-info p, .footer-info a { font-size: 0.75rem; line-height: 1.5; }
     .footer-info.footer-contact p { font-size: 1rem; line-height: 1.7; }
