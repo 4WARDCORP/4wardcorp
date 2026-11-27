@@ -71,6 +71,28 @@ document.addEventListener('DOMContentLoaded', () => {
         return h > 0 ? h : window.innerHeight;
     }
 
+    /* Pantallas táctiles: 250 ms después del último movimiento se considera que la pantalla quedó quieta y se
+       vuelve a calcular la escena de cada sección (respaldo por si el navegador no termina exactamente en un freno). */
+    const TACTIL = window.matchMedia('(pointer: coarse)').matches;
+    const PANTALLA_QUIETA = 250;
+    let pantallaQuieta = false, tiempoQuieta = 0, dedosAbajo = 0;
+    if (TACTIL) {
+        const esperarQuieta = () => {
+            clearTimeout(tiempoQuieta);
+            tiempoQuieta = setTimeout(() => {
+                if (dedosAbajo > 0) return;           // con el dedo en la pantalla no se cambia de escena
+                pantallaQuieta = true;
+                window.dispatchEvent(new Event('scroll'));
+                pantallaQuieta = false;
+            }, PANTALLA_QUIETA);
+        };
+        window.addEventListener('scroll', () => { if (!pantallaQuieta) esperarQuieta(); }, { passive: true });
+        window.addEventListener('touchstart', e => { dedosAbajo = e.touches.length; }, { passive: true });
+        const soltar = e => { dedosAbajo = e.touches.length; if (!dedosAbajo) esperarQuieta(); };
+        window.addEventListener('touchend', soltar, { passive: true });
+        window.addEventListener('touchcancel', soltar, { passive: true });
+    }
+
     /* Escena que debe mostrar una sección según dónde está:
        - cubre la pantalla → la escena que marca el scroll;
        - ya quedó arriba (se pasó hacia abajo) → su última escena;
@@ -79,7 +101,14 @@ document.addEventListener('DOMContentLoaded', () => {
        Así, al regresar hacia arriba (o después de un salto del menú) cada sección ya espera en la escena
        correcta y no "rebobina" sus escenas al aparecer. */
     function escenaDe(section, rect, alto, ultima) {
-        if (rect.top <= 2 && rect.bottom >= alto - 2) return Math.min(ultima, Math.round(Math.max(0, -rect.top) / sceneStep(section)));
+        if (rect.top <= 2 && rect.bottom >= alto - 2) {
+            const paso = sceneStep(section), pos = Math.max(0, -rect.top), k = Math.round(pos / paso);
+            // Pantallas táctiles: la escena cambia solo cuando la pantalla queda quieta en su freno (o deja de
+            // moverse, ver PANTALLA_QUIETA). Mientras el dedo arrastra a medio camino no cambia: si el navegador
+            // regresa a la escena donde estaba, el contenido no "parpadea" ni "rebobina".
+            if (TACTIL && !pantallaQuieta && Math.abs(pos - k * paso) > 3) return null;
+            return Math.min(ultima, k);
+        }
         if (rect.bottom <= 0) return ultima;
         if (rect.top >= alto) return 0;
         return null;
