@@ -15,7 +15,7 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). L
 
 ---
 
-## Sin publicar (rama `horizontal-20261127a`, versión `20261127a`)
+## [20261127a] — 2026-11-27 · commit `df6d9f7`
 
 ### Corregido
 - **Al regresar hacia arriba (escritorio y celular):** al subir a una sección que se había dejado en su escena inicial (por ejemplo, después de saltar con el menú a Experiencia y subir a IA), la sección aparecía en su escena 0 y "rebobinaba" a toda velocidad todas sus escenas hasta la última. Ahora cada sección que está fuera de la pantalla espera en la escena que le toca —la última si ya se pasó, la 0 si todavía no se llega— y se coloca ahí sin animación; al aparecer ya está en su lugar. Aplica a Dilema, Operaciones, Crecimiento, IA, Experiencia y Ecosistema. Código: `script.js` §3 (`escenaDe()`, `moverTrack()`) y los motores de §4.
