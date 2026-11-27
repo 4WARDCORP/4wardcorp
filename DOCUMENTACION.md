@@ -1,6 +1,6 @@
 # Documentación técnica — sitio 4ward Solutions
 
-Referencia para quien mantenga o modifique el sitio. Describe el código tal como está en la versión **`20261127a`** (ver [CAMBIOS.md](CAMBIOS.md)).
+Referencia para quien mantenga o modifique el sitio. Describe el código tal como está en la versión **`20261127b`** (ver [CAMBIOS.md](CAMBIOS.md)).
 La forma de probar y publicar está en el [README](README.md) y el historial en [CAMBIOS.md](CAMBIOS.md).
 
 **Regla de mantenimiento:** si un cambio contradice algo de este documento, el documento se actualiza en el mismo commit.

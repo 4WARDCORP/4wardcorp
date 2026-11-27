@@ -15,7 +15,7 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). L
 
 ---
 
-## Sin publicar (rama `tactil-20261127b`, versión `20261127b`)
+## [20261127b] — 2026-11-27 · commit `3ece6a0`
 
 ### Corregido
 - **Celular y tableta (pantallas táctiles), escenas que "parpadean" o se regresan:** en iPhone (Safari y Chrome, vertical y horizontal) la escena cambiaba en cuanto el dedo pasaba la mitad de la pantalla, antes de soltar; si el navegador regresaba a la escena donde estaba, se veía por un momento la escena anterior (por ejemplo, "Diseñamos y ponemos…" aparecía de nuevo estando en "Cómo trabaja la IA"). Ahora, en pantallas táctiles, la escena cambia solo cuando la pantalla queda quieta en su lugar: al llegar exactamente a un freno o, como respaldo, 250 ms después del último movimiento y sin ningún dedo en la pantalla. En computadora no cambia nada. Código: `script.js` §3 (`TACTIL`, `PANTALLA_QUIETA`, `escenaDe()`).
