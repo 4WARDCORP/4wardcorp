@@ -16,9 +16,22 @@
     /* Alto visible real de la pantalla → variable --vh (1 % del alto). Se mide al cargar, al girar el celular
        y al cambiar el tamaño de la ventana en computadora. En celular NO se vuelve a medir cuando el navegador
        esconde o muestra sus barras durante el scroll (eso haría brincar las escenas). */
+    /* Celular en horizontal (lado corto de la pantalla <= 500 px): el sitio se dibuja como una laptop de 1280 px
+       de ancho y el navegador lo reduce para que quepa completo (mismo acomodo que una laptop baja).
+       Al regresar a vertical se vuelve al ancho normal del celular. */
     (function () {
         var root = document.documentElement, lastW = 0, lastH = 0;
         var touch = window.matchMedia('(pointer: coarse)').matches;
+        var vista = document.querySelector('meta[name="viewport"]');
+        function ajustarVista() {
+            if (!vista || !touch || !window.screen) return;
+            var horizontal = window.matchMedia('(orientation: landscape)').matches;
+            var celular = Math.min(screen.width, screen.height) <= 500;
+            var quiero = (celular && horizontal) ? 'width=1280' : 'width=device-width, initial-scale=1.0';
+            if (vista.getAttribute('content') !== quiero) vista.setAttribute('content', quiero);
+            root.classList.toggle('cel-horizontal', celular && horizontal);
+        }
+        ajustarVista();
         function medir(forzar) {
             var w = window.innerWidth, h = window.innerHeight;
             if (!forzar && touch && w === lastW) return;
@@ -27,13 +40,13 @@
             root.style.setProperty('--vh', (h / 100) + 'px');
         }
         medir(true);
-        window.addEventListener('resize', function () { medir(false); });
-        window.addEventListener('orientationchange', function () { setTimeout(function () { medir(true); }, 300); });
+        window.addEventListener('resize', function () { ajustarVista(); medir(false); });
+        window.addEventListener('orientationchange', function () { ajustarVista(); setTimeout(function () { medir(true); }, 300); });
     })();
     </script>
     <link rel="preload" href="../fonts/space-grotesk-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="../fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="stylesheet" href="../styles.css?v=20261126e">
+    <link rel="stylesheet" href="../styles.css?v=20261126f">
 </head>
 <body>
 
@@ -622,6 +635,6 @@
         </div>
     </div>
 
-    <script src="../script.js?v=20261126e"></script>
+    <script src="../script.js?v=20261126f"></script>
 </body>
 </html>

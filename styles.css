@@ -68,7 +68,7 @@ body {
     font-family: 'Space Grotesk', sans-serif;
     overflow-x: hidden;
 }
-html {
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
 }
@@ -349,6 +349,14 @@ html {
 .operaciones-sequence .op-spot:nth-child(1) { --delay: 0.6s; }
 .operaciones-sequence .op-spot:nth-child(2) { --delay: 0.9s; }
 .operaciones-sequence .op-spot:nth-child(4) { --delay: 1.2s; }
+
+/* Mapa de Operaciones en tabletas y laptops angostas (769–1279 px): la tarjeta de Sur no cabe a la derecha de su punto;
+   va debajo del punto, pegada a la orilla derecha del mapa (16 px), para no salir de la pantalla ni tapar la de Centro.
+   El punto de Sur está en el 77.3 % del ancho del mapa (data-x) → hasta la orilla quedan 22.7cqw (vw en navegadores viejos). */
+@media (min-width: 769px) and (max-width: 1279px) {
+    .operaciones-sequence .op-spot:nth-child(4) .op-card { width: 230px; left: auto; right: calc(-22.7vw + 16px); right: calc(-22.7cqw + 16px); top: 24px; transform: translateY(12px); }
+    .operaciones-sequence .op-spot:nth-child(4).is-on .op-card { transform: translateY(0); }
+}
 .op-list { list-style: none; }
 
 @media (max-width: 768px) {
@@ -713,6 +721,10 @@ html {
 .ally-tag::before { content: ''; position: absolute; left: 0; top: 50%; width: 7px; height: 7px; background: var(--brand); transform: translateY(-50%); border-radius: 1px; }
 .quadrant-content .ally-tag { opacity: 0.85; transform: none; margin-top: 0; font-size: 0.85rem; color: #fff; }
 .quadrant-content .sector-title { font-size: clamp(2.2rem, 4.6vw, 6vw); }
+/* Laptops bajas y celular horizontal: el bloque de los cuadros de arriba baja para que "Alianza · …" no quede bajo el menú */
+@media (min-width: 769px) and (max-height: 700px) {
+    .pilares-desktop-view .q-top-left .quadrant-content, .pilares-desktop-view .q-top-right .quadrant-content { padding-top: 64px; }
+}
 .sector-title-m { font-size: 13vw; }
 .pilares-desktop-view .quadrant-card { opacity: 1; border-radius: 80px; transition: transform 0.9s cubic-bezier(0.77, 0, 0.175, 1), border-radius 0.9s ease; }
 .pilares-desktop-view .q-top-left { transform: translate(-100%, -100%); }

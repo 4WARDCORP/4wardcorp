@@ -180,6 +180,8 @@ Todas las alturas de sección son `calc(var(--vh) * N + var(--extra))`. **Parada
 - **Tarjetas de Ecosistema** (`.eco-card`, `.c-*`): miden en `cqw` / `cqh` del lienzo (`.eco-stage`, con `container-type: size`).
 - Requieren navegadores recientes (§10).
 
+**Celular en horizontal (desde 20261126f):** si el lado corto de la pantalla (`screen.width/height`) mide 500 px o menos y el teléfono está en horizontal, el script del `<head>` (`ajustarVista()`) cambia `<meta name="viewport">` a `width=1280`: el sitio se dibuja con el acomodo de una laptop de 1280 px (≈ 1280×590) y el navegador lo reduce para que quepa. Al girar a vertical regresa a `width=device-width, initial-scale=1.0`. Se revisa al cargar, en `orientationchange` y en `resize`; `<html>` lleva la clase `cel-horizontal` mientras está activo. Tabletas (lado corto ≥ 744 px) y computadoras no cambian. Consecuencia: en horizontal **no** aplican las reglas de celular (`max-width: 768px`), sino las de laptop baja.
+
 ## 5. Navegación y regreso al inicio
 
 **Estados del menú (`#morph-nav`), que pone `script.js` según el scroll:**
@@ -260,7 +262,9 @@ Otros colores que se repiten sin variable: `#a51a2e` (vino al pasar el cursor), 
 | `min-width: 769px and max-height: 820px` | Laptop con pantalla baja (1280×720, 1462×663): bloques compactos |
 | `min-width: 769px and min-height: 821px` | Escritorio normal: versión compacta del bloque de Proceso |
 | `max-width: 768px and max-height: 720px` | Celular chico (tipo iPhone SE, 375×667) |
-| `min-width: 769px and max-height: 700px` | Escritorio muy bajo: título de Proceso más chico |
+| `min-width: 769px and max-height: 700px` | Escritorio muy bajo: título de Proceso más chico; cuadros de arriba de Pilares bajan 64 px |
+| `769px – 1279px` | Tarjeta de Sur del mapa de Operaciones debajo de su punto |
+| Celular en horizontal | No es un `@media`: el script del `<head>` lo dibuja como laptop de 1280 px (§4) |
 
 ## 7. Diccionario JavaScript
 

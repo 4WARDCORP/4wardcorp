@@ -15,6 +15,14 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). L
 
 ---
 
+## Sin publicar (rama `adaptativo-20261126f`, versión `20261126f`)
+
+### Corregido
+- **Celular en horizontal (lado corto ≤ 500 px, p. ej. 844×390 o 915×412):** antes recibía el diseño de escritorio a tamaño real y casi todas las escenas quedaban bajo el menú, encimadas o cortadas. Ahora el sitio se dibuja como una laptop de 1280 px de ancho (el acomodo que ya se prueba en 1280×580) y el navegador lo reduce para que quepa completo; al regresar a vertical vuelve al diseño de celular. Código: script en línea del `<head>` (`ajustarVista()` cambia `<meta name="viewport">` y pone la clase `cel-horizontal` en `<html>`); hash nuevo en `.htaccess`.
+- **Mapa de Operaciones en tabletas y laptops angostas (769–1279 px):** la tarjeta de Sur salía por la orilla derecha. Ahora va debajo de su punto, pegada a la orilla derecha del mapa. Código: `styles.css` §8 (`.operaciones-sequence .op-spot:nth-child(4) .op-card`).
+- **Experiencia (Pilares) en laptops bajas (≤ 700 px de alto, p. ej. 1280×580) y en celular horizontal:** las etiquetas "Alianza · …" de los dos cuadros de arriba quedaban bajo el menú; el bloque baja 64 px. Código: `styles.css` §11.
+- **iPhone:** `text-size-adjust: 100%` en `html` para que Safari no agrande el texto al girar el teléfono.
+
 ## [20261126e] — 2026-11-26 · commit `310be66`
 
 ### Corregido

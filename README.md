@@ -62,7 +62,8 @@ php -d "sendmail_path=/tmp/guardar-correo.sh" -S localhost:8767
 |---|---|
 | Escritorio | 1440×900, 1920×1080, 1536×864, 1366×768, 1280×720, 1462×663 y **1280×580** (laptop con la escala de Windows al 150 %: el área útil en CSS es mucho menor que la resolución) |
 | Celular | 375×667, 390×844, 428×926, 430×932 |
-| Tableta | 768×954, 1024×698 |
+| Tableta | 768×954, 1024×698, 820×1180, 1180×820 |
+| Celular horizontal | 844×390, 915×412 (se dibuja como laptop de 1280 px, ver DOCUMENTACION §4) |
 | Navegadores reales | Chrome en iPhone y Mac, **Edge en Windows (el más propenso a fallar)**, Firefox en Linux |
 
 El detalle de cómo probar está en DOCUMENTACION.md §11.

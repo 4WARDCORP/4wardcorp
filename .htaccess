@@ -37,7 +37,7 @@ RedirectMatch 404 /\.(git|svn|hg)(/|$)
     Header always set Strict-Transport-Security "max-age=31536000"
 
     # Qué puede cargar la página: solo archivos del propio sitio (letra, imágenes, CSS, JS)
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'sha256-EKKfKGkUFGsXvjWTEqmnvm03lHA9e6SGeOEKnXNt9yk='; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'sha256-PGuElaF30/xXnpF//zz3eBGrYHmdRGPfTgUtsp0ihJ4='; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
 
     # Nadie puede mostrar el sitio dentro de otra página (evita engaños de clic)
     Header always set X-Frame-Options "DENY"
